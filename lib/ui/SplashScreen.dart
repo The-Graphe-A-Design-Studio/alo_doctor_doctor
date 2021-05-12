@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool rememberMe = prefs.getBool("rememberMe");
     if (rememberMe == true) {
-      doctor = Doctor.fromJson(json.decode(prefs.getString("doctorData")));
+      doctor = Doctor.fromJson(json.decode(prefs.getString("patientData")));
     }
     return Future.value(rememberMe);
   }
