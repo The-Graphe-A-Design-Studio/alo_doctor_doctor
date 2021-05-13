@@ -1,3 +1,4 @@
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
 import 'package:flutter/material.dart';
 import 'package:search_widget/search_widget.dart';
@@ -63,20 +64,35 @@ class _DashboardTabState extends State<DashboardTab> {
           ),
         ),
       ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            child: Text(
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               'Upcoming Appointments',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
             ),
-          ),
-          AppointmentMini(Name: 'Akash Bose', time: '4:30'),
-          AppointmentMini(Name: 'Priya Shetty', time: '5:30'),
-          AppointmentMini(Name: 'Pooja Bhel', time: '6:30'),
-        ],
+            AppointmentMini(
+              Name: 'Akash Bose',
+              time: '4:30',
+              isSelected: false,
+              onTap: () {},
+            ),
+            AppointmentMini(
+              Name: 'Priya Shetty',
+              time: '5:30',
+              isSelected: false,
+              onTap: () {},
+            ),
+            AppointmentMini(
+              Name: 'Pooja Bhel',
+              time: '6:30',
+              isSelected: false,
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
       Padding(
         padding: const EdgeInsets.only(top: 10, left: 30, right: 25, bottom: 2),
@@ -115,7 +131,9 @@ class _DashboardTabState extends State<DashboardTab> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Categories('Appointments', () {}, 'appointments'),
+            Categories('Appointments', () {
+              Navigator.pushNamed(context, appointmentScreen);
+            }, 'appointments'),
             Categories('Consultation', () {}, 'consultation'),
             Categories('Calendar', () {}, 'calendar'),
           ],

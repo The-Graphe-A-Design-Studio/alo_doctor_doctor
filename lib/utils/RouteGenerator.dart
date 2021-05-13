@@ -1,6 +1,8 @@
 import 'package:alo_doctor_doctor/ui/HomePage.dart';
 import 'package:alo_doctor_doctor/ui/LoginPage.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
+import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Appointments.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,13 @@ class RouteGenerator {
         return FadeRoute(
           page: RegisterPage(),
         );
+
+      case appointmentScreen:
+        return FadeRoute(
+          page: Appointments(),
+        );
+      case appointmentDetails:
+        return FadeRoute(page: AppointmentDetails());
       default:
         return _errorRoute();
     }
