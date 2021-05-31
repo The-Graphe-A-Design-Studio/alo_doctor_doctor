@@ -1,6 +1,7 @@
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
+import 'package:alo_doctor_doctor/widgets/customDropDown.dart';
 import 'package:alo_doctor_doctor/widgets/documentUpload.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   List<Modal> uploadList = [];
   List<Modal> locationchoice = [];
   int locChoice;
+  String _chosenValue = "Physiotherapy";
 
   @override
   void initState() {
@@ -225,6 +227,73 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Widget getCategoryWidget() {
+    _onChangeModelDropdown(String choosen) {
+      setState(() {
+        _chosenValue = choosen;
+        print(_chosenValue);
+      });
+    }
+
+    List items = <String>[
+      'Physiotherapy',
+      'Cardiology',
+      'Gynacology',
+    ].map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Text(
+            'Select which category Doctor are you?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 22.0,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 40, left: 40, right: 40),
+          child: CustomDropdown(
+            dropdownMenuItemList: items,
+            onChanged: _onChangeModelDropdown,
+            value: _chosenValue,
+            isEnabled: true,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getSubCategoryWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        direction: Axis.horizontal,
+        children: [
+          Wrap(
+            children: <Widget>[
+              SubCategory(text: 'Physiotherapy'),
+              SubCategory(text: 'Physiotherapy'),
+              SubCategory(text: 'Radio'),
+              SubCategory(text: 'Physiotherapy'),
+              SubCategory(text: 'Physiotherapy'),
+              SubCategory(text: 'Physiotherapy'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget getBirthdayWidget() {
     return Column(
       children: [
@@ -396,8 +465,12 @@ class _RegisterPageState extends State<RegisterPage> {
       case 3:
         return getBirthdayWidget();
       case 4:
-        return getDocumentsWidget(context);
+        return getCategoryWidget();
       case 5:
+        return getSubCategoryWidget();
+      case 6:
+        return getDocumentsWidget(context);
+      case 7:
         return getLocationWidget();
     }
     return getUserNameWidget();
@@ -436,7 +509,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Expanded(child: Container()),
                     GestureDetector(
                       onTap: () {
-                        selectedWidget == 5
+                        selectedWidget == 7
                             ? Navigator.pushReplacementNamed(context, homePage)
                             : setState(() {
                                 selectedWidget++;
@@ -564,6 +637,37 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SubCategory extends StatelessWidget {
+  final String text;
+  const SubCategory({
+    @required this.text,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+      child: Container(
+        decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.1),
+                  blurRadius: 4,
+                  offset: Offset(0, 4))
+            ],
+            color: Colors.white,
+            border: Border.all(color: Color(0xffCFCFCF), width: 1),
+            borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(text),
         ),
       ),
     );
