@@ -32,11 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
         if (doctor.verified == "1") {
           Navigator.pushReplacementNamed(context, homePage, arguments: doctor);
         } else {
-          Navigator.pushReplacementNamed(context, registerPage,
-              arguments: doctor);
+          Navigator.pushReplacementNamed(context, signIn, arguments: doctor);
         }
       } else {
-        Navigator.pushReplacementNamed(context, loginPage);
+        Navigator.pushReplacementNamed(context, signIn);
       }
     });
   }

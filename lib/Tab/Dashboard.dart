@@ -134,8 +134,12 @@ class _DashboardTabState extends State<DashboardTab> {
             Categories('Appointments', () {
               Navigator.pushNamed(context, appointmentScreen);
             }, 'appointments'),
-            Categories('Consultation', () {}, 'consultation'),
-            Categories('Calendar', () {}, 'calendar'),
+            Categories('Consultation', () {
+              Navigator.pushNamed(context, consultPage);
+            }, 'consultation'),
+            Categories('Calendar', () {
+              Navigator.pushNamed(context, calendarScreen);
+            }, 'calendar'),
           ],
         ),
       ),
@@ -144,9 +148,15 @@ class _DashboardTabState extends State<DashboardTab> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Categories('Reminders', () {}, 'reminder'),
-            Categories('Records', () {}, 'record'),
-            Categories('Payments', () {}, 'payments'),
+            Categories('Reminders', () {
+              Navigator.pushNamed(context, reminderScreen);
+            }, 'reminder'),
+            Categories('Records', () {
+              Navigator.pushNamed(context, recordScreen);
+            }, 'record'),
+            Categories('Payments', () {
+              Navigator.pushNamed(context, paymentScreen);
+            }, 'payments'),
           ],
         ),
       ),

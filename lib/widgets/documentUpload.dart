@@ -44,7 +44,7 @@ class _documentUploadState extends State<documentUpload> {
                       width: 1),
                   borderRadius: BorderRadius.circular(20)),
               width: double.infinity,
-              height: 58,
+              height: 38,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(

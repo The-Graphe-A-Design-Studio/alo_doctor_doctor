@@ -1,3 +1,4 @@
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/styles.dart';
@@ -10,27 +11,32 @@ class NavigationDrawer extends StatelessWidget {
         color: Colors.white,
         child: ListView(
           children: <Widget>[
-            ListTile(
-              leading: Image(
-                image: AssetImage(
-                  'assets/images/user.png',
-                ),
-                height: 50.0,
-                width: 50.0,
-              ),
-              title: Text(
-                "Dr.Ramya",
-                style: Styles.boldHeading,
-              ),
-              subtitle: Text('View and edit profile'),
-              trailing: RotatedBox(
-                quarterTurns: 2,
-                child: Image(
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, profileDetails);
+              },
+              child: ListTile(
+                leading: Image(
                   image: AssetImage(
-                    'assets/images/planeArrow.png',
+                    'assets/images/user.png',
                   ),
-                  height: 14.0,
-                  width: 14.0,
+                  height: 50.0,
+                  width: 50.0,
+                ),
+                title: Text(
+                  "Dr.Ramya",
+                  style: Styles.boldHeading,
+                ),
+                subtitle: Text('View and edit profile'),
+                trailing: RotatedBox(
+                  quarterTurns: 2,
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/planeArrow.png',
+                    ),
+                    height: 14.0,
+                    width: 14.0,
+                  ),
                 ),
               ),
             ),

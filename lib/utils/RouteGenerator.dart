@@ -1,8 +1,18 @@
 import 'package:alo_doctor_doctor/ui/HomePage.dart';
 import 'package:alo_doctor_doctor/ui/LoginPage.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
+import 'package:alo_doctor_doctor/ui/Screens/AddPhoto.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Appointments.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Consultation.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ConsultationFee.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ConsultationSchedule.dart';
+import 'package:alo_doctor_doctor/ui/Screens/PaymentScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ProfileDetails.dart';
+import 'package:alo_doctor_doctor/ui/Screens/RecordScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
+import 'package:alo_doctor_doctor/ui/Screens/calendarScreen.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +47,49 @@ class RouteGenerator {
           page: Appointments(),
         );
       case appointmentDetails:
-        return FadeRoute(page: AppointmentDetails());
+        return FadeRoute(
+          page: AppointmentDetails(),
+        );
+      case consultPage:
+        return FadeRoute(
+          page: Consultation(),
+        );
+      case consultSched:
+        return FadeRoute(
+          page: ConsultationSchedule(),
+        );
+      case consultFee:
+        return FadeRoute(
+          page: ConsultationFee(),
+        );
+      case calendarScreen:
+        return FadeRoute(
+          page: CalendarScreen(),
+        );
+      case reminderScreen:
+        return FadeRoute(
+          page: ReminderScreen(),
+        );
+      case recordScreen:
+        return FadeRoute(
+          page: RecordScreen(),
+        );
+      case profileDetails:
+        return FadeRoute(
+          page: ProfileDetails(),
+        );
+      case addPhoto:
+        return FadeRoute(
+          page: AddPhoto(),
+        );
+      case paymentScreen:
+        return FadeRoute(
+          page: PaymentScreen(),
+        );
+      case signIn:
+        return FadeRoute(
+          page: SignInPage(),
+        );
       default:
         return _errorRoute();
     }

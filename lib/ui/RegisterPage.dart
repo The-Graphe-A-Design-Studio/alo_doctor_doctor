@@ -282,7 +282,8 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget getDocumentsWidget() {
+  Widget getDocumentsWidget(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Padding(
@@ -305,10 +306,11 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         Padding(
-            padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
+            padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
             child: Container(
-              height: 350,
+              height: 250,
               child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: uploadList.length,
                   itemBuilder: (context, index) {
                     return documentUpload(
@@ -383,7 +385,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget getCustomWidget() {
+  Widget getCustomWidget(BuildContext context) {
     switch (selectedWidget) {
       case 0:
         return getUserNameWidget();
@@ -394,7 +396,7 @@ class _RegisterPageState extends State<RegisterPage> {
       case 3:
         return getBirthdayWidget();
       case 4:
-        return getDocumentsWidget();
+        return getDocumentsWidget(context);
       case 5:
         return getLocationWidget();
     }
@@ -406,121 +408,163 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 100),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  getCustomWidget(),
-                ],
-              ),
-            ),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox.fromSize(
-                      size: Size(56, 56), // button width and height
-                      child: ClipOval(
-                        child: Material(
-                          color: Colors.white, // button color
-                          child: InkWell(
-                            splashColor: Color(0xFFECF89C),
-                            // splash color
-                            onTap: () {
-                              setState(() {
-                                if (selectedWidget != 0)
-                                  setState(() {
-                                    selectedWidget--;
-                                  });
+                    GestureDetector(
+                      onTap: () {
+                        print('hey');
+                        setState(() {
+                          if (selectedWidget != 0)
+                            setState(() {
+                              selectedWidget--;
+                            });
+                        });
+                      },
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                    ),
+                    Expanded(child: Container()),
+                    GestureDetector(
+                      onTap: () {
+                        selectedWidget == 5
+                            ? Navigator.pushReplacementNamed(context, homePage)
+                            : setState(() {
+                                selectedWidget++;
                               });
-                            },
-                            // button pressed
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Image(
-                                  image: AssetImage(
-                                    'assets/images/planeArrow.png',
-                                  ),
-                                  height: 32.0,
-                                  width: 22.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '${selectedWidget + 1}/6',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    SizedBox.fromSize(
-                      size: Size(56, 56), // button width and height
-                      child: ClipOval(
-                        child: Material(
-                          color: Colors.white, // button color
-                          child: InkWell(
-                            splashColor: Color(0xFFECF89C), // splash color
-                            onTap: () {
-                              selectedWidget == 5
-                                  ? Navigator.pushReplacementNamed(
-                                      context, homePage)
-                                  : setState(() {
-                                      selectedWidget++;
-                                    });
-                            }, // button pressed
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                RotatedBox(
-                                  quarterTurns: 2,
-                                  child: Image(
-                                    image: AssetImage(
-                                      'assets/images/planeArrow.png',
-                                    ),
-                                    height: 32.0,
-                                    width: 22.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      },
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.black,
+                        size: 25,
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  child: Container(
-                    height: 20,
-                  )),
-              Container(
-                height: 30,
-                width: double.infinity,
-                decoration: BoxDecoration(color: accentBlueLight),
-              )
-            ],
-          ),
-        ],
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    getCustomWidget(context),
+                  ],
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       SizedBox.fromSize(
+                //         size: Size(56, 56), // button width and height
+                //         child: ClipOval(
+                //           child: Material(
+                //             color: Colors.white, // button color
+                //             child: InkWell(
+                //               splashColor: Color(0xFFECF89C),
+                //               // splash color
+                //               onTap: () {
+                //                 setState(() {
+                //                   if (selectedWidget != 0)
+                //                     setState(() {
+                //                       selectedWidget--;
+                //                     });
+                //                 });
+                //               },
+                //               // button pressed
+                //               child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 children: <Widget>[
+                //                   Image(
+                //                     image: AssetImage(
+                //                       'assets/images/planeArrow.png',
+                //                     ),
+                //                     height: 32.0,
+                //                     width: 22.0,
+                //                   ),
+                //                 ],
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       // Text(
+                //       //   '${selectedWidget + 1}/6',
+                //       //   textAlign: TextAlign.center,
+                //       //   style: TextStyle(
+                //       //     color: Colors.black87,
+                //       //     fontSize: 20.0,
+                //       //   ),
+                //       // ),
+                //       SizedBox.fromSize(
+                //         size: Size(56, 56), // button width and height
+                //         child: ClipOval(
+                //           child: Material(
+                //             color: Colors.white, // button color
+                //             child: InkWell(
+                //               splashColor: Color(0xFFECF89C), // splash color
+                //               onTap: () {
+                //                 selectedWidget == 5
+                //                     ? Navigator.pushReplacementNamed(
+                //                         context, homePage)
+                //                     : setState(() {
+                //                         selectedWidget++;
+                //                       });
+                //               }, // button pressed
+                //               child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 children: <Widget>[
+                //                   RotatedBox(
+                //                     quarterTurns: 2,
+                //                     child: Image(
+                //                       image: AssetImage(
+                //                         'assets/images/planeArrow.png',
+                //                       ),
+                //                       height: 32.0,
+                //                       width: 22.0,
+                //                     ),
+                //                   ),
+                //                 ],
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         horizontal: 32, vertical: 16),
+                //     child: Container(
+                //       height: 20,
+                //     )),
+                Container(
+                  height: 30,
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: accentBlueLight),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
