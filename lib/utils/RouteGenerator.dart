@@ -12,6 +12,7 @@ import 'package:alo_doctor_doctor/ui/Screens/ProfileDetails.dart';
 import 'package:alo_doctor_doctor/ui/Screens/RecordScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
+import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/calendarScreen.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,10 @@ class RouteGenerator {
       case signIn:
         return FadeRoute(
           page: SignInPage(),
+        );
+      case videoCallingScreen:
+        return FadeRoute(
+          page: VideoCallingScreen(),
         );
       default:
         return _errorRoute();

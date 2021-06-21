@@ -29,3 +29,4 @@ const String appointmentDetails = './appointmentDetails';
 const String profileDetails = './profileDetails';
 const String addPhoto = './addPhoto';
 const String signIn = './signIn';
+const String videoCallingScreen = './videoCalling';

@@ -77,7 +77,9 @@ class _DashboardTabState extends State<DashboardTab> {
               Name: 'Akash Bose',
               time: '4:30',
               isSelected: false,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, videoCallingScreen);
+              },
             ),
             AppointmentMini(
               Name: 'Priya Shetty',

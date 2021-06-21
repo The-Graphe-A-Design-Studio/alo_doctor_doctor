@@ -1,0 +1,59 @@
+PODS:
+  - agora_rtc_engine (3.3.3):
+    - AgoraRtcEngine_iOS (= 3.3.2)
+    - Flutter
+  - AgoraRtcEngine_iOS (3.3.2)
+  - Flutter (1.0.0)
+  - flutter_keyboard_visibility (0.7.0):
+    - Flutter
+  - image_picker (0.0.1):
+    - Flutter
+  - "permission_handler (5.1.0+2)":
+    - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
+  - sms_otp_auto_verify (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sms_otp_auto_verify (from `.symlinks/plugins/sms_otp_auto_verify/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AgoraRtcEngine_iOS
+
+EXTERNAL SOURCES:
+  agora_rtc_engine:
+    :path: ".symlinks/plugins/agora_rtc_engine/ios"
+  Flutter:
+    :path: Flutter
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  sms_otp_auto_verify:
+    :path: ".symlinks/plugins/sms_otp_auto_verify/ios"
+
+SPEC CHECKSUMS:
+  agora_rtc_engine: 23c0066f14070ca989ddce82d4b28d7151e6ade1
+  AgoraRtcEngine_iOS: 851e11fa7cbc0cba04f407eac1a9e32b872765a1
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
+  image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  sms_otp_auto_verify: 201803ac25e13feedaae96eda8b70b10c55b3338
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.10.1
