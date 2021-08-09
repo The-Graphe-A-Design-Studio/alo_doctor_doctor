@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1076933880529",
+    "project_id": "alo-doctor-ac093",
+    "storage_bucket": "alo-doctor-ac093.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076933880529:android:d386a58b188e389ffc73f0",
+        "android_client_info": {
+          "package_name": "com.thegraphe.alo_doctor_doctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076933880529-5f22lb1cif3tac76scmr1o539bt9f03c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByBAHIFuOSejg8TrQEeLbpzZBBkWZoJZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076933880529-5f22lb1cif3tac76scmr1o539bt9f03c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
