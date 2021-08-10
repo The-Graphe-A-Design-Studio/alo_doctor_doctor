@@ -55,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
         _showSnackBar(
             e.message == "Unauthorised"
                 ? 'Invalid email or password'
-                : 'Something went wrong',
+                : 'User found already',
             context);
         setState(() {
           _isLoading = false;

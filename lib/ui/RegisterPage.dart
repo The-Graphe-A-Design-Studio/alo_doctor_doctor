@@ -112,7 +112,6 @@ class _RegisterPageState extends State<RegisterPage> {
           child: TextFormField(
             controller: NameController,
             onChanged: (value) {
-              userDetails.name = value;
               name = value;
             },
             decoration: InputDecoration(
@@ -147,7 +146,6 @@ class _RegisterPageState extends State<RegisterPage> {
             controller: PhoneController,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              userDetails.phone = int.parse(value);
               phone = value;
             },
             validator: (text) {
@@ -663,8 +661,8 @@ class _RegisterPageState extends State<RegisterPage> {
     print(birthday);
     print(name);
     print(phone);
-    await LoginCheck().Register(selectedGender, birthday, NameController.text,
-        PhoneController.text, chosenCategory);
+    await LoginCheck()
+        .Register(selectedGender, birthday, name, phone, chosenCategory);
     await LoginCheck().setsub(selectedscat);
     Navigator.pushReplacementNamed(context, homePage);
   }
@@ -740,6 +738,7 @@ class _RegisterPageState extends State<RegisterPage> {
     Details dummy = new Details();
     final profileData = Provider.of<ProfileProvider>(context);
     userDetails = profileData.currentUser;
+    print(userDetails);
     NameController = TextEditingController(
         text: userDetails == null ? name : userDetails.name);
     PhoneController = TextEditingController(
