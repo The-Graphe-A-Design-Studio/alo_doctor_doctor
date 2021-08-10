@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/profile.dart';
-import '../utils/MyConstants.dart';
-
 import '../models/doctor.dart';
+import '../utils/MyConstants.dart';
 
 class ProfileProvider with ChangeNotifier {
   ProfileServer serverHandler = ProfileServer();
@@ -44,8 +41,8 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Details get currentUser {
-    print(
-        'current user profile pic path ----- ${_userProfileDetails.profilePicPath}');
+    // print(
+    //     'current user profile pic path ----- ${_userProfileDetails.profilePicPath}');
 
     return _userProfileDetails;
   }

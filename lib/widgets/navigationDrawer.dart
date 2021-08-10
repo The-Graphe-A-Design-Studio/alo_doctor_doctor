@@ -1,11 +1,10 @@
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
+import 'package:alo_doctor_doctor/providers/profileProvider.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:provider/provider.dart';
-import 'package:alo_doctor_doctor/providers/profileProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/styles.dart';
 
@@ -305,6 +304,8 @@ class NavigationDrawer extends StatelessWidget {
             // ),
             GestureDetector(
               onTap: () async {
+                Provider.of<ProfileProvider>(context, listen: false)
+                    .logOut(context);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('token');
                 prefs.clear();
