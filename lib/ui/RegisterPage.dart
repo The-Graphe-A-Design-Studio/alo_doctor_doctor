@@ -112,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: TextFormField(
             controller: NameController,
             onChanged: (value) {
+              userDetails.name = value;
               name = value;
             },
             decoration: InputDecoration(
@@ -146,6 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
             controller: PhoneController,
             keyboardType: TextInputType.number,
             onChanged: (value) {
+              userDetails.phone = int.parse(value);
               phone = value;
             },
             validator: (text) {
@@ -735,12 +737,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    Details dummy = new Details();
     final profileData = Provider.of<ProfileProvider>(context);
     userDetails = profileData.currentUser;
-    NameController = TextEditingController(text: userDetails.name ?? '');
-    PhoneController =
-        TextEditingController(text: userDetails.phone.toString() ?? '');
-    selectedGender = userDetails.gender;
+    NameController = TextEditingController(
+        text: userDetails == null ? name : userDetails.name);
+    PhoneController = TextEditingController(
+        text: userDetails == null ? phone : userDetails.phone.toString());
+    selectedGender = userDetails == null ? selectedGender : userDetails.gender;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
