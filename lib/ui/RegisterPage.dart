@@ -800,6 +800,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                   } else {
                                     selectedWidget++;
                                   }
+                                } else if (selectedWidget == 3) {
+                                  if (birthday == "") {
+                                    Fluttertoast.showToast(
+                                      msg: "please choose your birthday",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                  } else {
+                                    selectedWidget++;
+                                  }
                                 } else if (selectedWidget == 4) {
                                   loadSubCat().then((doctor) {
                                     setState(() {
