@@ -73,7 +73,7 @@ class AgoraApis {
     return localStorage.getString('token');
   }
 
-  Future<String> createSlots(var slots) async {
+  Future createSlots(var slots) async {
     String token = await getToken();
     print("Slots from API " + slots);
     try {
@@ -86,6 +86,28 @@ class AgoraApis {
           });
       if (jsonDecode(response.body)["success"] == 1) {
         var decodedBody = json.decode(response.body).toString();
+        print(decodedBody);
+        return decodedBody;
+      } else {
+        throw HttpException('Something Went Wrong');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future deleteSlot(String id) async {
+    String token = await getToken();
+    // print("Slots from API " + slots);
+    try {
+      var response = await http.delete(
+          Uri.https(authority, commonUnencodedPath + "/doctor/slot/"+id),
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-type": "application/json"
+          });
+      if (jsonDecode(response.body)["success"] == 1) {
+        var decodedBody = json.decode(response.body);
         print(decodedBody);
         return decodedBody;
       } else {
@@ -127,4 +149,7 @@ class AgoraApis {
       throw e;
     }
   }
+
+
+
 }
