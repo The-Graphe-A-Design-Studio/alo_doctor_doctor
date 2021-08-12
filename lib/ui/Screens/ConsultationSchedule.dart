@@ -193,17 +193,10 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     child: SlotItem(
-                                        slots.slots[selectedDateInt]
-                                                .slotTime[index].status !=
-                                            0,
-                                        slots.slots[selectedDateInt]
-                                            .slotTime[index].time),
+                                        slots.slots[selectedDateInt].slotTime[index].status != 0,
+                                        slots.slots[selectedDateInt].slotTime[index].time),
                                     onTap: () {
-                                      showAlertDialog(
-                                          context,
-                                          slots.slots[selectedDateInt]
-                                              .slotTime[index],
-                                          index);
+                                      showAlertDialog(context, slots.slots[selectedDateInt].slotTime[index], index);
                                     },
                                   );
                                 }),
@@ -272,12 +265,13 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
   }
 
   showAlertDialog(BuildContext context, SlotTime slot, int index) {
+
     // set up the button
     Widget yesButton = TextButton(
       child: Text("Yes"),
       onPressed: () async {
         var body = await _agoraApis.deleteSlot(slot.id.toString());
-        if (body["success"] == 1) {
+        if(body["success"] == 1) {
           setState(() {
             slots.slots[selectedDateInt].slotTime.removeAt(index);
           });
@@ -300,8 +294,7 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Delete Slot"),
-      content:
-          Text("Are you sure you want to delete this (${slot.time}) slot?"),
+      content: Text("Are you sure you want to delete this (${slot.time}) slot?"),
       actions: [
         noButton,
         yesButton,
@@ -325,33 +318,32 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay picked_s = await showTimePicker(
         context: context,
-        initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-            child: child,
-          );
-        });
+        initialTime: selectedTime, builder: (BuildContext context, Widget child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+        child: child,
+      );});
 
-    if (picked_s != null && picked_s != selectedTime)
+    if (picked_s != null && picked_s != selectedTime )
       setState(() {
         selectedTime = picked_s;
       });
-    print('Time: ' + selectedTime.format(context));
-    print('Date: ' + selectedDate);
+    print('Time: '+selectedTime.format(context));
+    print('Date: '+selectedDate);
 
     List<slotsModel.Slot> slots = [];
-    slots.add(slotsModel.Slot(
-        date: selectedDate, time: selectedTime.format(context)));
+    slots.add(slotsModel.Slot(date: selectedDate, time: selectedTime.format(context)));
     String jsonTags = jsonEncode({'slots': slots});
     print(jsonTags);
     var slotBody = await _agoraApis.createSlots(jsonTags);
     print('SLOT BODY: ' + slotBody.toString());
-    if (slotBody["success"] == 1) {
+    if(slotBody["success"] == 1) {
       showInSnackBar('Slot Created');
       setState(() {});
     } else {
       showInSnackBar(slotBody['message']);
     }
+
   }
+
 }

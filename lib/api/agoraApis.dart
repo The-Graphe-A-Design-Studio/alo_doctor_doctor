@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:alo_doctor_doctor/models/ServerSlots.dart';
+import 'package:alo_doctor_doctor/models/Slots.dart';
+import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AgoraApis {
@@ -98,7 +101,7 @@ class AgoraApis {
     // print("Slots from API " + slots);
     try {
       var response = await http.delete(
-          Uri.https(authority, commonUnencodedPath + "/doctor/slot/" + id),
+          Uri.https(authority, commonUnencodedPath + "/doctor/slot/"+id),
           headers: {
             "Authorization": "Bearer " + token,
             "Content-type": "application/json"
@@ -146,4 +149,7 @@ class AgoraApis {
       throw e;
     }
   }
+
+
+
 }
