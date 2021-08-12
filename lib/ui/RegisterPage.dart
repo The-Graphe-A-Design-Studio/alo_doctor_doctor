@@ -8,6 +8,7 @@ import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:alo_doctor_doctor/widgets/customDropDown.dart';
 import 'package:alo_doctor_doctor/widgets/documentUpload.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/date_picker.dart';
@@ -29,10 +30,11 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController NameController;
   TextEditingController PhoneController;
 
-  List<int> uploaded = [0, 0, 0, 0];
+  List<int> uploaded = [0, 0, 0, 0, 0];
   int selectedWidget;
   String name;
   String phone;
+  String concode = '';
   String selectedGender = '';
   String selectedBloodGroup = '';
   File _imageFile;
@@ -69,10 +71,11 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     loadCat();
     selectedWidget = 0;
-    uploadList.add(Modal(name: 'Adhar card.jpg', isSelected: false));
-    uploadList.add(Modal(name: 'Doctor\'s degree.jpg', isSelected: false));
-    uploadList.add(Modal(name: 'Registration Proof', isSelected: false));
-    uploadList.add(Modal(name: 'Clinic proof', isSelected: false));
+    uploadList.add(Modal(name: 'National Id (FRONT)', isSelected: false));
+    uploadList.add(Modal(name: 'National Id (BACK)', isSelected: false));
+    uploadList.add(Modal(name: 'Passport (Front)', isSelected: false));
+    uploadList.add(Modal(name: 'Passport (Back)', isSelected: false));
+    uploadList.add(Modal(name: 'Degree', isSelected: false));
     locationchoice.add(Modal(name: 'Use my Location', isSelected: false));
     locationchoice.add(Modal(name: 'Pick a city', isSelected: false));
   }
@@ -141,25 +144,52 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(64, 40, 64, 0),
-          child: TextFormField(
-            controller: PhoneController,
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              phone = value;
-            },
-            validator: (text) {
-              if (text == null || text.isEmpty) {
-                return 'Text is empty';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-                hintText: 'Phone',
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0)),
-            style: Styles.buttonTextBlack,
-            textAlign: TextAlign.center,
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 45, 0, 0),
+                child: CountryCodePicker(
+                  hideMainText: true,
+                  onChanged: (e) {
+                    setState(() {
+                      String code = e.toString();
+                      concode = e.toString().substring(1, code.length);
+                    });
+                  },
+                  initialSelection: 'IN',
+                  showCountryOnly: false,
+                  favorite: ['+91', 'IN'],
+                ),
+              ),
+              Container(
+                width: 200,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                  child: TextFormField(
+                    controller: PhoneController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      phone = value;
+                    },
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return 'Text is empty';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Phone',
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 16.0)),
+                    style: Styles.buttonTextBlack,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -340,41 +370,51 @@ class _RegisterPageState extends State<RegisterPage> {
     print('sub');
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        direction: Axis.horizontal,
+      child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('SubCategories'),
+          ),
           Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            direction: Axis.horizontal,
             children: [
-              for (var i in scategories)
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    setState(() {
-                      selected[scategories.indexOf(i)] =
-                          !selected[scategories.indexOf(i)];
-                    });
-                    print('yes');
-                    print(selectedscat);
-                    if (selectedscat
-                        .contains(scatid[scategories.indexOf(i)].toString())) {
-                      print('remove');
-                      print(scategories.indexOf(i).toString());
-                      selectedscat.removeWhere((item) =>
-                          item == scatid[scategories.indexOf(i)].toString());
-                    } else {
-                      print('insert');
-                      selectedscat
-                          .add(scatid[scategories.indexOf(i)].toString());
-                    }
-                  },
-                  child: SubCategory(
-                    text: i,
-                    selected: selected[scategories.indexOf(i)],
-                  ),
-                )
+              Wrap(
+                children: [
+                  for (var i in scategories)
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        setState(() {
+                          selected[scategories.indexOf(i)] =
+                              !selected[scategories.indexOf(i)];
+                        });
+                        print('yes');
+                        print(selectedscat);
+                        if (selectedscat.contains(
+                            scatid[scategories.indexOf(i)].toString())) {
+                          print('remove');
+                          print(scategories.indexOf(i).toString());
+                          selectedscat.removeWhere((item) =>
+                              item ==
+                              scatid[scategories.indexOf(i)].toString());
+                        } else {
+                          print('insert');
+                          selectedscat
+                              .add(scatid[scategories.indexOf(i)].toString());
+                        }
+                      },
+                      child: SubCategory(
+                        text: i,
+                        selected: selected[scategories.indexOf(i)],
+                      ),
+                    )
+                ],
+              ),
             ],
           ),
+          scategories.length == 0 ? Text('No subcategories found') : Text('')
         ],
       ),
     );
@@ -417,7 +457,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: DatePickerWidget(
               looping: false,
               // default is not looping
-              firstDate: DateTime(1990, 01, 01),
+              firstDate: DateTime(1901, 01, 01),
               lastDate: DateTime(2030, 1, 1),
               initialDate: DateTime(1991, 10, 12),
               dateFormat: "dd-MMM-yyyy",
@@ -468,7 +508,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Padding(
             padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
             child: Container(
-              height: 250,
+              height: 300,
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: uploadList.length,
@@ -661,8 +701,8 @@ class _RegisterPageState extends State<RegisterPage> {
     print(birthday);
     print(name);
     print(phone);
-    await LoginCheck()
-        .Register(selectedGender, birthday, name, phone, chosenCategory);
+    await LoginCheck().Register(
+        selectedGender, birthday, name, phone, chosenCategory, concode);
     await LoginCheck().setsub(selectedscat);
     Navigator.pushReplacementNamed(context, homePage);
   }
@@ -735,6 +775,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (name == null && userDetails != null) {
+      name = userDetails.name;
+    }
+    if (phone == null && userDetails != null) {
+      phone = userDetails.phone.toString();
+    }
     Details dummy = new Details();
     final profileData = Provider.of<ProfileProvider>(context);
     userDetails = profileData.currentUser;
@@ -790,10 +836,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     selectedWidget++;
                                   }
                                 } else if (selectedWidget == 1) {
-                                  if (PhoneController.text.length != 10) {
+                                  if (PhoneController.text.length == 0) {
                                     Fluttertoast.showToast(
-                                      msg:
-                                          "Phone cannot be less than 10 digits",
+                                      msg: "Phone cannot be empty",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );
@@ -823,7 +868,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                     });
                                   });
                                   selectedWidget++;
-                                } else {
+                                }
+                                // } else if (selectedWidget == 6) {
+                                //   bool check =
+                                //       uploaded.every((element) => element == 1);
+                                //   if (check == true) {
+                                //     selectedWidget++;
+                                //   } else {
+                                //     Fluttertoast.showToast(
+                                //       msg: "please upload all documents",
+                                //       toastLength: Toast.LENGTH_SHORT,
+                                //       gravity: ToastGravity.CENTER,
+                                //     );
+                                //   }
+                                // }
+                                else {
                                   selectedWidget++;
                                 }
                               });

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alo_doctor_doctor/api/agoraApis.dart';
 import 'package:alo_doctor_doctor/models/ServerSlots.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
@@ -5,6 +7,8 @@ import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/ServerSlots.dart';
+import '../../models/Slots.dart' as slotsModel;
 import '../../models/slotModel.dart';
 import '../../utils/Colors.dart';
 import '../../utils/MyConstants.dart';
@@ -27,6 +31,10 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
   AgoraApis _agoraApis = new AgoraApis();
   ServerSlots slots = new ServerSlots();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  TimeOfDay selectedTime = TimeOfDay.now();
+
   @override
   void initState() {
     super.initState();
@@ -41,11 +49,6 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
       });
       print(slots.slots[0].slotDate.toString());
 
-      // for(int i = 0; i < slots.slots.length; i++){
-      //   if(slots.slots[i].slotTime.isEmpty){
-      //     slots.slots.removeAt(i);
-      //   }
-      // }
       print(slots.slots
           .indexWhere((element) => element.slotDate == '2021-08-08'));
       setState(() {
@@ -71,6 +74,7 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'Consultations',
@@ -194,7 +198,13 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                                             0,
                                         slots.slots[selectedDateInt]
                                             .slotTime[index].time),
-                                    onTap: () {},
+                                    onTap: () {
+                                      showAlertDialog(
+                                          context,
+                                          slots.slots[selectedDateInt]
+                                              .slotTime[index],
+                                          index);
+                                    },
                                   );
                                 }),
                           ),
@@ -202,33 +212,33 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                     ],
                   ),
                 ),
-                // Container(
-                //   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       Navigator.pushNamed(context, paymentScreen);
-                //     },
-                //     style: ButtonStyle(
-                //         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(12))),
-                //         elevation: MaterialStateProperty.all(0),
-                //         backgroundColor: MaterialStateProperty.resolveWith(
-                //             (Set<MaterialState> states) {
-                //           if (forward) return accentYellow;
-                //           return accentBlueLight;
-                //         })),
-                //     child: Container(
-                //         margin:
-                //             EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                //         width: double.infinity,
-                //         child: Text(
-                //           'Add More slot',
-                //           textAlign: TextAlign.center,
-                //           style: TextStyle(
-                //               color: Colors.black, fontWeight: FontWeight.bold),
-                //         )),
-                //   ),
-                // ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _selectTime(context);
+                    },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12))),
+                        elevation: MaterialStateProperty.all(0),
+                        backgroundColor: MaterialStateProperty.resolveWith(
+                            (Set<MaterialState> states) {
+                          if (forward) return accentYellow;
+                          return accentBlueLight;
+                        })),
+                    child: Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        width: double.infinity,
+                        child: Text(
+                          'Add More Slot',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                ),
               ],
             )
           : Center(
@@ -259,5 +269,89 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                     ),
             ),
     );
+  }
+
+  showAlertDialog(BuildContext context, SlotTime slot, int index) {
+    // set up the button
+    Widget yesButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () async {
+        var body = await _agoraApis.deleteSlot(slot.id.toString());
+        if (body["success"] == 1) {
+          setState(() {
+            slots.slots[selectedDateInt].slotTime.removeAt(index);
+          });
+          Navigator.pop(context);
+          showInSnackBar('Slot Deleted');
+        } else {
+          showInSnackBar(body['message']);
+        }
+      },
+    );
+
+    // set up the button
+    Widget noButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Slot"),
+      content:
+          Text("Are you sure you want to delete this (${slot.time}) slot?"),
+      actions: [
+        noButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked_s = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        });
+
+    if (picked_s != null && picked_s != selectedTime)
+      setState(() {
+        selectedTime = picked_s;
+      });
+    print('Time: ' + selectedTime.format(context));
+    print('Date: ' + selectedDate);
+
+    List<slotsModel.Slot> slots = [];
+    slots.add(slotsModel.Slot(
+        date: selectedDate, time: selectedTime.format(context)));
+    String jsonTags = jsonEncode({'slots': slots});
+    print(jsonTags);
+    var slotBody = await _agoraApis.createSlots(jsonTags);
+    print('SLOT BODY: ' + slotBody.toString());
+    if (slotBody["success"] == 1) {
+      showInSnackBar('Slot Created');
+      setState(() {});
+    } else {
+      showInSnackBar(slotBody['message']);
+    }
   }
 }

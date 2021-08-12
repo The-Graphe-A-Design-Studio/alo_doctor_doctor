@@ -23,8 +23,8 @@ class NavigationDrawer extends StatelessWidget {
           children: <Widget>[
             Consumer<ProfileProvider>(
               builder: (ctx, data, child) {
-                print(
-                    'consumer runs in navigator--- ${data.currentUser.profilePicPath}');
+                // print(
+                //     'consumer runs in navigator--- ${data.currentUser.profilePicPath}');
                 return ListTile(
                   leading: data.currentUser.profilePicPath == null
                       ? Image(
@@ -94,72 +94,87 @@ class NavigationDrawer extends StatelessWidget {
             //   ),
             // ),
             // Divider(color: Colors.black87),
-            ListTile(
-              leading: Image(
-                image: AssetImage(
-                  'assets/images/appointment.png',
-                ),
-                height: 30.0,
-                width: 50.0,
-              ),
-              title: Text(
-                "Appoinments",
-                style: Styles.buttonTextBlack,
-              ),
-              trailing: RotatedBox(
-                quarterTurns: 2,
-                child: Image(
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, appointmentScreen);
+              },
+              child: ListTile(
+                leading: Image(
                   image: AssetImage(
-                    'assets/images/planeArrow.png',
+                    'assets/images/appointment.png',
                   ),
-                  height: 14.0,
-                  width: 14.0,
+                  height: 30.0,
+                  width: 50.0,
+                ),
+                title: Text(
+                  "Appoinments",
+                  style: Styles.buttonTextBlack,
+                ),
+                trailing: RotatedBox(
+                  quarterTurns: 2,
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/planeArrow.png',
+                    ),
+                    height: 14.0,
+                    width: 14.0,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              leading: Image(
-                image: AssetImage(
-                  'assets/images/consultations.png',
-                ),
-                height: 35.0,
-                width: 50.0,
-              ),
-              title: Text(
-                "Consultations",
-                style: Styles.buttonTextBlack,
-              ),
-              trailing: RotatedBox(
-                quarterTurns: 2,
-                child: Image(
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, consultFee);
+              },
+              child: ListTile(
+                leading: Image(
                   image: AssetImage(
-                    'assets/images/planeArrow.png',
+                    'assets/images/consultations.png',
                   ),
-                  height: 14.0,
-                  width: 14.0,
+                  height: 35.0,
+                  width: 50.0,
+                ),
+                title: Text(
+                  "Consultations",
+                  style: Styles.buttonTextBlack,
+                ),
+                trailing: RotatedBox(
+                  quarterTurns: 2,
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/planeArrow.png',
+                    ),
+                    height: 14.0,
+                    width: 14.0,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              leading: Image(
-                image: AssetImage(
-                  'assets/images/myDoctor.png',
-                ),
-                height: 30.0,
-                width: 50.0,
-              ),
-              title: Text(
-                "Slots",
-                style: Styles.buttonTextBlack,
-              ),
-              trailing: RotatedBox(
-                quarterTurns: 2,
-                child: Image(
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, consultSched);
+              },
+              child: ListTile(
+                leading: Image(
                   image: AssetImage(
-                    'assets/images/planeArrow.png',
+                    'assets/images/myDoctor.png',
                   ),
-                  height: 14.0,
-                  width: 14.0,
+                  height: 30.0,
+                  width: 50.0,
+                ),
+                title: Text(
+                  "Slots",
+                  style: Styles.buttonTextBlack,
+                ),
+                trailing: RotatedBox(
+                  quarterTurns: 2,
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/planeArrow.png',
+                    ),
+                    height: 14.0,
+                    width: 14.0,
+                  ),
                 ),
               ),
             ),

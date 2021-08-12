@@ -115,7 +115,7 @@ class LoginCheck {
   }
 
   Future Register(String gender, String dob, String name, String phone,
-      String category) async {
+      String category, String concode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     String token = prefs.getString('token');
@@ -128,7 +128,7 @@ class LoginCheck {
     map['dob'] = dob;
     map['blood_group'] = "";
     map['marital_status'] = "";
-    map['con_code'] = "91";
+    map['con_code'] = concode == '' ? "91" : concode;
     map['phone'] = phone;
     map['height'] = "";
     map['weight'] = "1";
@@ -145,6 +145,32 @@ class LoginCheck {
     var gettokenuri = new Uri(
         scheme: 'https',
         path: '/alodoctor/public/api/update_profile',
+        host: targethost);
+    print(gettokenuri);
+    final response = await http.post(gettokenuri,
+        body: map, headers: {HttpHeaders.authorizationHeader: authorization});
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return json["success"];
+    }
+    return 0;
+  }
+
+  Future SetFee(String fee) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    var map = new Map<String, dynamic>();
+    map['fee'] = fee;
+
+    print('inside');
+    print(map);
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/consultation_fee',
         host: targethost);
     print(gettokenuri);
     final response = await http.post(gettokenuri,
@@ -214,25 +240,31 @@ class LoginCheck {
     if (index == 0) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/alodoctor/public/api/doctor/govt_id_proof/1',
+          path: '/alodoctor/public/api/doctor/national_id_front/1',
           host: targethost);
       print(gettokenuri);
     } else if (index == 1) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/alodoctor/public/api/doctor/degree_proof/2',
+          path: '/alodoctor/public/api/doctor/national_id_back/2',
           host: targethost);
       print(gettokenuri);
     } else if (index == 2) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/alodoctor/public/api/doctor/registration_proof/3',
+          path: '/alodoctor/public/api/doctor/passport_front/3',
+          host: targethost);
+      print(gettokenuri);
+    } else if (index == 3) {
+      gettokenuri = new Uri(
+          scheme: 'https',
+          path: '/alodoctor/public/api/doctor/passport_back/4',
           host: targethost);
       print(gettokenuri);
     } else {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/alodoctor/public/api/doctor/clinic_proof/4',
+          path: '/alodoctor/public/api/doctor/degree/5',
           host: targethost);
       print(gettokenuri);
     }
