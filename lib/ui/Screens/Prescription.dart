@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddPhoto extends StatefulWidget {
+class Prescription extends StatefulWidget {
   @override
-  _AddPhotoState createState() => _AddPhotoState();
+  _PrescriptionState createState() => _PrescriptionState();
 }
 
-class _AddPhotoState extends State<AddPhoto> {
+class _PrescriptionState extends State<Prescription> {
   File _imageFile;
   Doctor doctor;
   int uploaded = 0;
@@ -82,12 +82,12 @@ class _AddPhotoState extends State<AddPhoto> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      // Text(
-                                      //   'Add',
-                                      //   style: TextStyle(
-                                      //       fontSize: 31,
-                                      //       fontWeight: FontWeight.w400),
-                                      // ),
+                                      Text(
+                                        'Please Upload Your Prescription',
+                                        style: TextStyle(
+                                            fontSize: 31,
+                                            fontWeight: FontWeight.w400),
+                                      ),
                                       // Text(
                                       //   'photo',
                                       //   style: TextStyle(
@@ -99,19 +99,13 @@ class _AddPhotoState extends State<AddPhoto> {
                                 ),
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                        image: doctor.details.profilePicPath ==
-                                                null
-                                            ? AssetImage(
-                                                './assets/images/user.png',
-                                              )
-                                            : NetworkImage(
-                                                'https://developers.thegraphe.com/alodoctor/public/' +
-                                                    doctor.details
-                                                        .profilePicPath),
+                                        image: AssetImage(
+                                          './assets/images/upload.jpg',
+                                        ),
                                         fit: BoxFit.fill),
                                     border: Border.all(width: 0),
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(200),
+                                      Radius.circular(10),
                                     ),
                                     color: Color(0xffC4C4C4)),
                               ),

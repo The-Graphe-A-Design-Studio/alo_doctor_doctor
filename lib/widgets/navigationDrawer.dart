@@ -323,6 +323,7 @@ class NavigationDrawer extends StatelessWidget {
                     .logOut(context);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('token');
+                prefs.remove('name');
                 prefs.clear();
                 Navigator.pushNamed(context, signIn);
               },

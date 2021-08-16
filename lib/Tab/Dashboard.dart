@@ -1,5 +1,4 @@
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
-import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -158,29 +157,40 @@ class _DashboardTabState extends State<DashboardTab> {
                 )
               ],
             ),
-            AppointmentMini(
-              Name: 'Akash Bose',
-              time: '4:30',
-              date: '03 Aug, 2021',
-              isSelected: false,
-              onTap: () {
-                Navigator.pushNamed(context, videoCallingScreen);
-              },
-            ),
-            AppointmentMini(
-              Name: 'Priya Shetty',
-              time: '5:30',
-              date: '03 Aug, 2021',
-              isSelected: false,
-              onTap: () {},
-            ),
-            AppointmentMini(
-              Name: 'Pooja Bhel',
-              time: '6:30',
-              date: '03 Aug, 2021',
-              isSelected: false,
-              onTap: () {},
-            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 130),
+              child: Text(
+                "NO UPCOMING APPOINTMENTS",
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                ),
+              ),
+            )
+            // AppointmentMini(
+            //   Name: 'Akash Bose',
+            //   time: '4:30',
+            //   date: '03 Aug, 2021',
+            //   isSelected: false,
+            //   onTap: () {
+            //     Navigator.pushNamed(context, videoCallingScreen);
+            //   },
+            // ),
+            // AppointmentMini(
+            //   Name: 'Priya Shetty',
+            //   time: '5:30',
+            //   date: '03 Aug, 2021',
+            //   isSelected: false,
+            //   onTap: () {},
+            // ),
+            // AppointmentMini(
+            //   Name: 'Pooja Bhel',
+            //   time: '6:30',
+            //   date: '03 Aug, 2021',
+            //   isSelected: false,
+            //   onTap: () {},
+            // ),
           ],
         ),
       ),

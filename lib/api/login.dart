@@ -152,6 +152,7 @@ class LoginCheck {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
+      prefs.setString('name', name);
       final json = jsonDecode(response.body);
       return json["success"];
     }
