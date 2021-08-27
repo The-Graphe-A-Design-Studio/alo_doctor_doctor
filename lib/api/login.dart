@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -349,6 +350,61 @@ class LoginCheck {
     return 0;
   }
 
+  Future PrescriptionUpload(List<File> imageFile) async {
+    int succ;
+    print('yo');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String targethost = 'developers.thegraphe.com';
+    // var map = new Map<String, dynamic>();
+    //
+    // map['file'] = img != null
+    //     ? 'data:image/png;base64,' + base64Encode(img.readAsBytesSync())
+    //     : '';
+    print(prefs.getString('token'));
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    print(authorization);
+    print('inside');
+    var gettokenuri;
+    gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/prescription/2',
+        host: targethost);
+    print(gettokenuri);
+
+    var request = new http.MultipartRequest("POST", gettokenuri);
+    List<MultipartFile> newList = [];
+    for (int i = 0; i < imageFile.length; i++) {
+      var stream = new http.ByteStream(imageFile[i].openRead());
+      stream.cast();
+      var length = await imageFile[i].length();
+      var multipartFile = new http.MultipartFile("file", stream, length,
+          filename: basename(imageFile[i].path));
+      newList.add(multipartFile);
+    }
+    request.files.addAll(newList);
+    request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
+    request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
+    var responses = await request.send();
+    var response = await http.Response.fromStream(responses);
+    // final response = await http.post(gettokenuri,
+    //     body: map, headers: {HttpHeaders.authorizationHeader: authorization});
+    // print(response.statusCode);
+    final json = jsonDecode(response.body);
+    print(json);
+    print(response.statusCode);
+    succ = json['success'];
+    print(json['message']);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      succ = json['success'];
+      print(json['message']);
+      return succ;
+    }
+    return 0;
+  }
+
   Future<Doctor> UserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
@@ -512,5 +568,61 @@ class LoginCheck {
       print(subCat);
     }
     return subCat;
+  }
+
+  Future<dynamic> getMyBookings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/mybookings',
+        host: targethost);
+
+    try {
+      final response = await http.get(gettokenuri,
+          headers: {HttpHeaders.authorizationHeader: authorization});
+      var decodedData = jsonDecode(response.body);
+      // print(response.body);
+
+      if (decodedData['success'] == 1) {
+        return decodedData['bookings'];
+      } else {
+        throw HttpException(decodedData["message"]);
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<dynamic> getBookingsById(int bookingId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/bookingbyid/$bookingId',
+        host: targethost);
+
+    try {
+      final response = await http.get(gettokenuri,
+          headers: {HttpHeaders.authorizationHeader: authorization});
+      var decodedData = jsonDecode(response.body);
+      // print(response.body);
+
+      if (decodedData['success'] == 1) {
+        return decodedData['bookings'];
+      } else {
+        throw HttpException(decodedData["message"]);
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:alo_doctor_doctor/api/login.dart';
+import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
@@ -11,33 +13,49 @@ class Appointments extends StatefulWidget {
 class _AppointmentsState extends State<Appointments> {
   List<Modal> appointList = [];
   bool select = false;
+  String number;
+  String email;
   @override
   void initState() {
-    appointList.add(Modal(
-        name: 'Akash Bose',
-        time: '4:30',
-        date: '03 Aug, 2021',
-        isSelected: false));
-    appointList.add(Modal(
-        name: 'Priya shetty',
-        time: '5:30',
-        date: '03 Aug, 2021',
-        isSelected: false));
-    appointList.add(Modal(
-        name: 'Pooja Bhel',
-        time: '6:30',
-        date: '03 Aug, 2021',
-        isSelected: false));
-    appointList.add(Modal(
-        name: 'Akash Bose',
-        time: '4:30',
-        date: '03 Aug, 2021',
-        isSelected: false));
-    appointList.add(Modal(
-        name: 'Priya shetty',
-        time: '5:30',
-        date: '03 Aug, 2021',
-        isSelected: false));
+    LoginCheck().getMyBookings().then((value) {
+      setState(() {
+        value.forEach((appointment) {
+          appointList.add(Modal(
+            name: appointment["patient"]["name"],
+            time: appointment["slot_time"],
+            date: appointment["slot_date"],
+            id: appointment["id"],
+            isSelected: false,
+          ));
+        });
+        appointList = value;
+      });
+    });
+    // appointList.add(Modal(
+    //     name: 'Akash Bose',
+    //     time: '4:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Priya shetty',
+    //     time: '5:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Pooja Bhel',
+    //     time: '6:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Akash Bose',
+    //     time: '4:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Priya shetty',
+    //     time: '5:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
 
     super.initState();
   }
@@ -113,20 +131,41 @@ class _AppointmentsState extends State<Appointments> {
                         Name: appointList[index].name,
                         date: appointList[index].date,
                         isSelected: appointList[index].isSelected,
-                        onTap: () {
-                          setState(() {
-                            appointList.forEach((element) {
-                              element.isSelected = false;
+                        onTap: () async {
+                          await LoginCheck()
+                              .getBookingsById(appointList[index].id)
+                              .then((value) {
+                            value.forEach((appointment) {
+                              setState(() {
+                                number =
+                                    appointment["patient"]["phone"].toString();
+                                email = appointment["patient"]["email"];
+                              });
                             });
-
-                            appointList[index].isSelected = true;
                           });
-                          appointList.forEach((element) {
-                            if (element.isSelected) {
-                              select = true;
-                            }
-                            print(element.isSelected);
-                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentDetails(
+                                    appointList[index].time,
+                                    appointList[index].date,
+                                    appointList[index].name,
+                                    number,
+                                    email)),
+                          );
+                          // setState(() {
+                          //   appointList.forEach((element) {
+                          //     element.isSelected = false;
+                          //   });
+                          //
+                          //   appointList[index].isSelected = true;
+                          // });
+                          // appointList.forEach((element) {
+                          //   if (element.isSelected) {
+                          //     select = true;
+                          //   }
+                          //   print(element.isSelected);
+                          // });
                         });
                   }),
             ],
@@ -169,6 +208,7 @@ class Modal {
   String time;
   String date;
   bool isSelected;
+  int id;
 
-  Modal({this.name, this.isSelected = false, this.time, this.date});
+  Modal({this.name, this.isSelected = false, this.time, this.date, this.id});
 }

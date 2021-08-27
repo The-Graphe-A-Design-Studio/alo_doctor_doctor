@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import '../../utils/Colors.dart';
 
 class AppointmentDetails extends StatelessWidget {
+  final String Name;
+  final String time;
+  final String date;
+  final String email;
+  final String number;
+
+  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +66,7 @@ class AppointmentDetails extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Akash Bose',
+                            Name,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
@@ -67,7 +74,7 @@ class AppointmentDetails extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-                            'Pediatric Physiotherapist',
+                            ' ',
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -198,7 +205,7 @@ class AppointmentDetails extends StatelessWidget {
                       height: 2,
                     ),
                     Text(
-                      'Today-09 May, 2021',
+                      date,
                       style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 15,
@@ -208,7 +215,7 @@ class AppointmentDetails extends StatelessWidget {
                       height: 2,
                     ),
                     Text(
-                      '04:30pm to 5:30pm',
+                      time,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -226,76 +233,76 @@ class AppointmentDetails extends StatelessWidget {
             thickness: 1,
             color: Color(0xff8C8FA5),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-            child: Text(
-              'History',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 25,
-                  width: 25,
-                  child: Image(
-                    image: AssetImage('./assets/images/clock.png'),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Video call',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      'Morning',
-                      style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      'Today-09 May, 2021',
-                      style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      '04:30pm to 5:30pm',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+          //   child: Text(
+          //     'History',
+          //     style: TextStyle(
+          //         color: Colors.black,
+          //         fontSize: 15,
+          //         fontWeight: FontWeight.w700),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Container(
+          //         height: 25,
+          //         width: 25,
+          //         child: Image(
+          //           image: AssetImage('./assets/images/clock.png'),
+          //         ),
+          //       ),
+          //       SizedBox(
+          //         width: 10,
+          //       ),
+          //       Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Text(
+          //             'Video call',
+          //             style: TextStyle(
+          //                 color: Colors.black,
+          //                 fontSize: 15,
+          //                 fontWeight: FontWeight.w700),
+          //           ),
+          //           SizedBox(
+          //             height: 3,
+          //           ),
+          //           Text(
+          //             'Morning',
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade600,
+          //                 fontSize: 15,
+          //                 fontWeight: FontWeight.w400),
+          //           ),
+          //           SizedBox(
+          //             height: 2,
+          //           ),
+          //           Text(
+          //             'Today-09 May, 2021',
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade600,
+          //                 fontSize: 15,
+          //                 fontWeight: FontWeight.w400),
+          //           ),
+          //           SizedBox(
+          //             height: 2,
+          //           ),
+          //           Text(
+          //             '04:30pm to 5:30pm',
+          //             style: TextStyle(
+          //                 color: Colors.black,
+          //                 fontSize: 15,
+          //                 fontWeight: FontWeight.w700),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

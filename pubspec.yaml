@@ -38,7 +38,7 @@ dependencies:
   flutter_picker: ^2.0.1
   search_widget: ^1.0.2
   calendar_timeline: ^0.7.1
-  image_picker: ^0.7.5+3
+  image_picker: ^0.8.3+3
   intl: ^0.17.0
   table_calendar: ^3.0.0
   http: ^0.13.3

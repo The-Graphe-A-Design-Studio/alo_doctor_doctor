@@ -3,7 +3,6 @@ import 'package:alo_doctor_doctor/ui/LoginPage.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddPhoto.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddSlots.dart';
-import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Appointments.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Consultation.dart';
 import 'package:alo_doctor_doctor/ui/Screens/ConsultationFee.dart';
@@ -49,10 +48,10 @@ class RouteGenerator {
         return FadeRoute(
           page: Appointments(),
         );
-      case appointmentDetails:
-        return FadeRoute(
-          page: AppointmentDetails(),
-        );
+      // case appointmentDetails:
+      //   return FadeRoute(
+      //     page: AppointmentDetails(),
+      //   );
       case consultPage:
         return FadeRoute(
           page: Consultation(),

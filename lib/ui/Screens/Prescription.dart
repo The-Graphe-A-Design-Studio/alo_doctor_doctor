@@ -13,7 +13,7 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
-  File _imageFile;
+  List<File> _imageFile;
   Doctor doctor;
   int uploaded = 0;
   final ImagePicker _picker = ImagePicker();
@@ -148,13 +148,17 @@ class _PrescriptionState extends State<Prescription> {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: source, imageQuality: 20);
-    File selected = File(pickedFile.path);
+    List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
+    List<File> selected = [];
+    for (int i = 0; i < pickedFile.length; i++) {
+      selected[i] = File(pickedFile[i].path);
+    }
+
     print('yoo');
     setState(() {
       _imageFile = selected;
     });
-    int success = await LoginCheck().ProfilePicUpload(_imageFile);
+    int success = await LoginCheck().PrescriptionUpload(_imageFile);
     if (success == 1) {
       Fluttertoast.showToast(
         msg: "Uploaded successfully",
