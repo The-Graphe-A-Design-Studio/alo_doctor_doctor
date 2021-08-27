@@ -613,7 +613,7 @@ class LoginCheck {
       final response = await http.get(gettokenuri,
           headers: {HttpHeaders.authorizationHeader: authorization});
       var decodedData = jsonDecode(response.body);
-      // print(response.body);
+      print(response.body);
 
       if (decodedData['success'] == 1) {
         return decodedData['bookings'];
