@@ -11,7 +11,7 @@ class Appointments extends StatefulWidget {
 }
 
 class _AppointmentsState extends State<Appointments> {
-  List<dynamic> appointList = [];
+  List<Modal> appointList = List<Modal>.empty(growable: true);
   bool select = false;
   String number;
   String email;
@@ -28,7 +28,6 @@ class _AppointmentsState extends State<Appointments> {
             isSelected: false,
           ));
         });
-        appointList = value;
       });
     });
     // appointList.add(Modal(
@@ -132,10 +131,17 @@ class _AppointmentsState extends State<Appointments> {
                         date: appointList[index].date,
                         isSelected: appointList[index].isSelected,
                         onTap: () async {
-                          var data=await LoginCheck()
-                              .getBookingsById(appointList[index].id);
-                          print(data);
-
+                          await LoginCheck()
+                              .getBookingsById(appointList[index].id)
+                              .then((value) {
+                            value.forEach((appointment) {
+                              setState(() {
+                                number =
+                                    appointment["patient"]["phone"].toString();
+                                email = appointment["patient"]["email"];
+                              });
+                            });
+                          });
                           Navigator.push(
                             context,
                             MaterialPageRoute(

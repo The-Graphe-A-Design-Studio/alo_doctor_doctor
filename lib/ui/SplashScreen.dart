@@ -11,13 +11,14 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Doctor doctor;
   String userType;
-  bool registered = false;
+  bool registered;
 
   Future<bool> doSomeAction() async {
     await Future.delayed(Duration(seconds: 1), () {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("token");
     String name = prefs.getString("name");
+    print(name);
     if (name != null) {
       registered = true;
     } else {

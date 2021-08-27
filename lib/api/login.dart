@@ -426,6 +426,10 @@ class LoginCheck {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       print(response.body);
+      print(json['details']['name']);
+      var name = json['details']['name'];
+      print('name');
+      prefs.setString('name', name);
       return Doctor.fromJson(json);
     } else {
       throw Exception('Failed to get Doctor Info');
@@ -616,7 +620,7 @@ class LoginCheck {
       print(response.body);
 
       if (decodedData['success'] == 1) {
-        return decodedData['bookings'];
+        return decodedData['booking'];
       } else {
         throw HttpException(decodedData["message"]);
       }

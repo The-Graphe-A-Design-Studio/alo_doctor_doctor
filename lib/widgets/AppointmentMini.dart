@@ -67,7 +67,7 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                               color: Colors.black),
                         ),
                         Text(
-                          widget.time == null ? '' + ' PM' : widget.time + ' PM',
+                          widget.time == null ? '' : widget.time,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

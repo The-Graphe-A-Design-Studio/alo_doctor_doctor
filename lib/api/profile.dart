@@ -1,11 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/doctor.dart';
 
@@ -103,7 +101,11 @@ class ProfileServer {
     });
     print('response in get userProfile--------------------${response.body}');
     var decodedData = jsonDecode(response.body);
+
     currentUserProfileDetails = Details.fromJson(decodedData['details']);
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    print(currentUserProfileDetails.name);
+    localStorage.setString('name', currentUserProfileDetails.name);
     // localStorage.setString(
     //     'userProfile', jsonEncode(currentUserProfileDetails.toJson()));
 
@@ -113,6 +115,8 @@ class ProfileServer {
 // ************************************** get current user ************
   Future<Details> getCurrentUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
+    print(currentUserProfileDetails.name);
+    localStorage.setString('name', currentUserProfileDetails.name);
     Details userProfile =
         Details.fromJson(jsonDecode(localStorage.getString('userProfile')));
     print(userProfile);

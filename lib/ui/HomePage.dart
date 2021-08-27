@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         title: Consumer<ProfileProvider>(builder: (context, profileData, _) {
+
           print('profileData ${profileData}');
 
           print('profileData.getUserName ${profileData.getUserName}');
