@@ -22,6 +22,7 @@ class _AppointmentsState extends State<Appointments> {
         value.forEach((appointment) {
           appointList.add(Modal(
             name: appointment["patient"]["name"],
+            pId: appointment["patient"]["id"].toString(),
             time: appointment["slot_time"],
             date: appointment["slot_date"],
             id: appointment["id"],
@@ -150,7 +151,10 @@ class _AppointmentsState extends State<Appointments> {
                                     appointList[index].date,
                                     appointList[index].name,
                                     number,
-                                    email)),
+                                    email,
+                                    appointList[index].pId
+                                )
+                            ),
                           );
                           // setState(() {
                           //   appointList.forEach((element) {
@@ -204,10 +208,11 @@ class _AppointmentsState extends State<Appointments> {
 
 class Modal {
   String name;
+  String pId;
   String time;
   String date;
   bool isSelected;
   int id;
 
-  Modal({this.name, this.isSelected = false, this.time, this.date, this.id});
+  Modal({this.name, this.pId, this.isSelected = false, this.time, this.date, this.id});
 }

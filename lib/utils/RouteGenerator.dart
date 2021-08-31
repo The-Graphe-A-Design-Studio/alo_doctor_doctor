@@ -96,10 +96,10 @@ class RouteGenerator {
         return FadeRoute(
           page: SignUpPage(),
         );
-      case videoCallingScreen:
-        return FadeRoute(
-          page: VideoCallingScreen(),
-        );
+      // case videoCallingScreen:
+      //   return FadeRoute(
+      //     page: VideoCallingScreen(),
+      //   );
       case addSlotes:
         return FadeRoute(
           page: AddSlots(),

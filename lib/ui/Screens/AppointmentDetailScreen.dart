@@ -1,15 +1,18 @@
+import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/Colors.dart';
 
 class AppointmentDetails extends StatelessWidget {
   final String Name;
+  final String pId;
   final String time;
   final String date;
   final String email;
   final String number;
 
-  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email);
+  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email, this.pId);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +108,14 @@ class AppointmentDetails extends StatelessWidget {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VideoCallingScreen(pId)
+                      ),
+                    );
+                  },
                   child: Container(
                     height: 65,
                     width: 65,
