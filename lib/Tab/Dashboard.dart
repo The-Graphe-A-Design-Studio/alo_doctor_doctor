@@ -1,4 +1,7 @@
+import 'package:alo_doctor_doctor/api/login.dart';
+import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -57,6 +60,53 @@ final List<Widget> imageSliders = imgList
     .toList();
 
 class _DashboardTabState extends State<DashboardTab> {
+  List<Modal> appointList = List<Modal>.empty(growable: true);
+  String number;
+  String email;
+  @override
+  void initState() {
+    LoginCheck().getMyBookings().then((value) {
+      setState(() {
+        value.forEach((appointment) {
+          appointList.add(Modal(
+            name: appointment["patient"]["name"],
+            time: appointment["slot_time"],
+            date: appointment["slot_date"],
+            id: appointment["id"],
+            isSelected: false,
+          ));
+        });
+      });
+    });
+    // appointList.add(Modal(
+    //     name: 'Akash Bose',
+    //     time: '4:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Priya shetty',
+    //     time: '5:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Pooja Bhel',
+    //     time: '6:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Akash Bose',
+    //     time: '4:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+    // appointList.add(Modal(
+    //     name: 'Priya shetty',
+    //     time: '5:30',
+    //     date: '03 Aug, 2021',
+    //     isSelected: false));
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
@@ -157,17 +207,76 @@ class _DashboardTabState extends State<DashboardTab> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 130),
-              child: Text(
-                "NO UPCOMING APPOINTMENTS",
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
+            if (appointList.length == 0)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/images/notavailable.jpg'),
+                      Text(
+                        "NO UPCOMING APPOINTMENTS",
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
+            if (appointList.length != 0)
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: appointList.length < 3 ? appointList.length : 3,
+                  itemBuilder: (context, index) {
+                    return AppointmentMini(
+                        time: appointList[index].time,
+                        Name: appointList[index].name,
+                        date: appointList[index].date,
+                        isSelected: appointList[index].isSelected,
+                        onTap: () async {
+                          await LoginCheck()
+                              .getBookingsById(appointList[index].id)
+                              .then((value) {
+                            value.forEach((appointment) {
+                              setState(() {
+                                number =
+                                    appointment["patient"]["phone"].toString();
+                                email = appointment["patient"]["email"];
+                              });
+                            });
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentDetails(
+                                    appointList[index].time,
+                                    appointList[index].date,
+                                    appointList[index].name,
+                                    number,
+                                    email)),
+                          );
+                          // setState(() {
+                          //   appointList.forEach((element) {
+                          //     element.isSelected = false;
+                          //   });
+                          //
+                          //   appointList[index].isSelected = true;
+                          // });
+                          // appointList.forEach((element) {
+                          //   if (element.isSelected) {
+                          //     select = true;
+                          //   }
+                          //   print(element.isSelected);
+                          // });
+                        });
+                  }),
             // AppointmentMini(
             //   Name: 'Akash Bose',
             //   time: '4:30',
@@ -302,4 +411,14 @@ Widget Categories(String catName, ontap, String catIcon) {
       ),
     ),
   );
+}
+
+class Modal {
+  String name;
+  String time;
+  String date;
+  bool isSelected;
+  int id;
+
+  Modal({this.name, this.isSelected = false, this.time, this.date, this.id});
 }

@@ -222,12 +222,11 @@ class _ConsultationFeeState extends State<ConsultationFee> {
                               fee = value.toString();
                               print(fee);
                             },
-                            initialValue:
-                                data.currentUser.docFees.toString() == null
-                                    ? ''
-                                    : double.parse(data.currentUser.docFees)
-                                        .round()
-                                        .toString(),
+                            initialValue: data.currentUser.docFees == null
+                                ? ''
+                                : double.parse(data.currentUser.docFees)
+                                    .round()
+                                    .toString(),
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
