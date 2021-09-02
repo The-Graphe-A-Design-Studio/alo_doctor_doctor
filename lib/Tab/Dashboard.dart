@@ -70,6 +70,7 @@ class _DashboardTabState extends State<DashboardTab> {
         value.forEach((appointment) {
           appointList.add(Modal(
             name: appointment["patient"]["name"],
+            pId: appointment["patient"]["id"].toString(),
             time: appointment["slot_time"],
             date: appointment["slot_date"],
             id: appointment["id"],
@@ -260,7 +261,8 @@ class _DashboardTabState extends State<DashboardTab> {
                                     appointList[index].date,
                                     appointList[index].name,
                                     number,
-                                    email)),
+                                    email,
+                                    appointList[index].pId)),
                           );
                           // setState(() {
                           //   appointList.forEach((element) {
@@ -415,10 +417,17 @@ Widget Categories(String catName, ontap, String catIcon) {
 
 class Modal {
   String name;
+  String pId;
   String time;
   String date;
   bool isSelected;
   int id;
 
-  Modal({this.name, this.isSelected = false, this.time, this.date, this.id});
+  Modal(
+      {this.name,
+      this.pId,
+      this.isSelected = false,
+      this.time,
+      this.date,
+      this.id});
 }
