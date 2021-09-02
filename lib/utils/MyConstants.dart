@@ -30,5 +30,5 @@ const String profileDetails = './profileDetails';
 const String addPhoto = './addPhoto';
 const String signIn = './signIn';
 const String signUp = './signUp';
-const String videoCallingScreen = './videoCalling';
+// const String videoCallingScreen = './videoCalling';
 const String addSlotes = './addslotes';

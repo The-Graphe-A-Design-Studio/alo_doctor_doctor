@@ -14,6 +14,10 @@ const appId = "4795c84bf0ac47299f693efe2b8553db";
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
 class VideoCallingScreen extends StatefulWidget {
+  final String pId;
+
+  VideoCallingScreen(this.pId);
+
   @override
   _VideoCallingScreenState createState() => _VideoCallingScreenState();
 }
@@ -44,7 +48,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   Future<void> getAgoraToken() async {
 
-    var tokenBody = await _agoraApis.getAgoraToken(getRandomString(20), '32');
+    var tokenBody = await _agoraApis.getAgoraToken(getRandomString(20), widget.pId);
     print('token Body from videoPage'+tokenBody.toString());
 
     if (tokenBody['success'] == 1 || tokenBody['success'] == 2) {
