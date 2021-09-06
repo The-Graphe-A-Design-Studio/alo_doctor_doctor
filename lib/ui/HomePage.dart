@@ -51,40 +51,41 @@ class _HomePageState extends State<HomePage> {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
-        actions: <Widget>[
-          new IconButton(
-            icon: Image(
-              image: AssetImage(
-                'assets/images/notification_icon.png',
-              ),
-              height: 20.0,
-              width: 20.0,
-            ),
-            onPressed: () {},
-          ),
-        ],
+        // actions: <Widget>[
+        //   new IconButton(
+        //     icon: Image(
+        //       image: AssetImage(
+        //         'assets/images/notification_icon.png',
+        //       ),
+        //       height: 20.0,
+        //       width: 20.0,
+        //     ),
+        //     onPressed: () {},
+        //   ),
+        // ],
         title: Consumer<ProfileProvider>(builder: (context, profileData, _) {
-
           print('profileData ${profileData}');
 
-          print('profileData.getUserName ${profileData.getUserName}');
+          // print(
+          //     'profileData.getUserName ${profileData.currentUser.name}');
 
-          return Column(
-            children: [
-              Text(
-                'Hello',
-                style: TextStyle(fontSize: 12, color: Colors.black87),
-              ),
-              if (profileData != null)
-                Text(
-                  profileData.getUserName ?? 'Doctor',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold),
-                )
-            ],
-          );
+          return profileData.currentUser == null
+              ? Text('')
+              : Column(
+                  children: [
+                    Text(
+                      'Hello',
+                      style: TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
+                    Text(
+                      profileData.getUserName,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                );
         }),
         centerTitle: true,
         backgroundColor: accentBlueLight,
