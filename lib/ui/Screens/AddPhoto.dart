@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:alo_doctor_doctor/api/login.dart';
-import 'package:alo_doctor_doctor/models/doctor.dart';
+import 'package:alo_doctor_doctor/api/profile.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/profileProvider.dart';
 
 class AddPhoto extends StatefulWidget {
   @override
@@ -13,24 +14,68 @@ class AddPhoto extends StatefulWidget {
 }
 
 class _AddPhotoState extends State<AddPhoto> {
-  File _imageFile;
-  Doctor doctor;
-  int uploaded = 0;
+  ProfileServer serverHandler = ProfileServer();
+  PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
-  @override
-  void initState() {
-    super.initState();
+  bool _isLoading = false;
 
-    loadData().then((doctor) {
+  void takePhoto(ImageSource source) async {
+    final userHandler = Provider.of<ProfileProvider>(context, listen: false);
+
+    final pickedFile = await _picker.getImage(source: source, imageQuality: 20);
+
+    try {
+      // print('picked file path ------------ ${pickedFile?.path}');
+      if (pickedFile != null) {
+        setState(() {
+          _isLoading = true;
+        });
+        await userHandler.postProfilePic(File(pickedFile.path));
+
+        setState(() {
+          _imageFile = pickedFile;
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile picture updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
       setState(() {
-        this.doctor = doctor;
+        _isLoading = false;
       });
-    });
+      // print('eroor in takephoto ------------- ${e.toString()}');
+      return showDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: Text('An Error Occured!'),
+              content: Text(
+                e.toString(),
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ],
+            );
+          });
+    }
   }
 
-  Future loadData() async {
-    doctor = await LoginCheck().UserInfo();
-    return doctor;
+  @override
+  void dispose() {
+    super.dispose();
+    _imageFile = null;
   }
 
   @override
@@ -38,6 +83,7 @@ class _AddPhotoState extends State<AddPhoto> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -50,7 +96,7 @@ class _AddPhotoState extends State<AddPhoto> {
         title: Column(
           children: [
             Text(
-              "Dr." + doctor.details.name,
+              'Add Profile Picture',
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.black87,
@@ -60,60 +106,84 @@ class _AddPhotoState extends State<AddPhoto> {
         ),
         backgroundColor: accentBlueLight,
       ),
-      body: doctor == null
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 40.0, top: 60),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 30, horizontal: 30.0),
-                      child: Center(
-                        child: Container(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 40.0, top: 60),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30.0),
+                child: Center(
+                  child: _isLoading
+                      ? Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Uploading..",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            )
+                          ],
+                        )
+                      : Container(
                           child: Stack(
                             children: [
-                              Container(
-                                width: 177,
-                                height: 177,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Text(
-                                      //   'Add',
-                                      //   style: TextStyle(
-                                      //       fontSize: 31,
-                                      //       fontWeight: FontWeight.w400),
-                                      // ),
-                                      // Text(
-                                      //   'photo',
-                                      //   style: TextStyle(
-                                      //       fontSize: 31,
-                                      //       fontWeight: FontWeight.w400),
-                                      // ),
-                                    ],
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: doctor.details.profilePicPath ==
-                                                null
-                                            ? AssetImage(
-                                                './assets/images/user.png',
-                                              )
-                                            : NetworkImage(
-                                                'https://developers.thegraphe.com/alodoctor/public/' +
-                                                    doctor.details
-                                                        .profilePicPath),
-                                        fit: BoxFit.fill),
-                                    border: Border.all(width: 0),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(200),
-                                    ),
-                                    color: Color(0xffC4C4C4)),
+                              Consumer<ProfileProvider>(
+                                builder: (context, userData, _) {
+                                  print((userData.userProfileDetails
+                                                  .profilePicPath !=
+                                              "" ||
+                                          userData.userProfileDetails
+                                                  .profilePicPath !=
+                                              null) &&
+                                      _imageFile == null);
+                                  return Container(
+                                    width: 177,
+                                    height: 177,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: ((userData.userProfileDetails
+                                                                .profilePicPath !=
+                                                            "" &&
+                                                        userData.userProfileDetails
+                                                                .profilePicPath !=
+                                                            null) &&
+                                                    _imageFile == null)
+                                                ? NetworkImage(
+                                                    'https://developers.thegraphe.com/alodoctor/public${userData.userProfileDetails.profilePicPath}')
+                                                : (_imageFile != null)
+                                                    ? Image.file(File(
+                                                            _imageFile.path))
+                                                        .image
+                                                    : AssetImage(
+                                                        './assets/images/user.png'),
+
+                                            // (_imageFile == null &&
+                                            //         userData.currentUser
+                                            //                 .profilePicPath ==
+                                            //             null)
+                                            //     ?(AssetImage('./assets/images/user.png')):
+                                            //      (userData.currentUser
+                                            //                 .profilePicPath !=
+                                            //             null)
+                                            //         ?(NetworkImage('https://developers.thegraphe.com/alodoctor/public${userData.currentUser.profilePicPath}') ):
+
+                                            //         FileImage(
+                                            //             File(_imageFile.path),
+                                            //           ) ,
+                                            fit: BoxFit.fill),
+                                        border: Border.all(width: 0),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(200),
+                                        ),
+                                        color: Color(0xffC4C4C4)),
+                                  );
+                                },
                               ),
                               Positioned(
                                 bottom: 10,
@@ -144,40 +214,13 @@ class _AddPhotoState extends State<AddPhoto> {
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
     );
-  }
-
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: source, imageQuality: 20);
-    File selected = File(pickedFile.path);
-    print('yoo');
-    setState(() {
-      _imageFile = selected;
-    });
-    int success = await LoginCheck().ProfilePicUpload(_imageFile);
-    if (success == 1) {
-      Fluttertoast.showToast(
-        msg: "Uploaded successfully",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-      setState(() {
-        uploaded = 1;
-      });
-    } else {
-      Fluttertoast.showToast(
-        msg: "File Size must be less than 200kb",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-    }
-    print(success);
   }
 
   Widget bottomSheet() {
@@ -203,7 +246,10 @@ class _AddPhotoState extends State<AddPhoto> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      takePhoto(ImageSource.camera);
+                      Navigator.of(context).pop();
+                      takePhoto(
+                        ImageSource.camera,
+                      );
                     },
                     child: Container(
                       height: 111,
@@ -240,7 +286,11 @@ class _AddPhotoState extends State<AddPhoto> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      takePhoto(ImageSource.gallery);
+                      Navigator.of(context).pop();
+
+                      takePhoto(
+                        ImageSource.gallery,
+                      );
                     },
                     child: Container(
                       height: 111,
@@ -262,41 +312,41 @@ class _AddPhotoState extends State<AddPhoto> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Column(
-              children: [
-                Text(
-                  'Delete',
-                  style: TextStyle(
-                      color: Color(0xff8C8FA5),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 111,
-                      width: 147,
-                      child: Icon(
-                        Icons.restore_from_trash_outlined,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffC4C4C4)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 4.0),
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         'Delete',
+          //         style: TextStyle(
+          //             color: Color(0xff8C8FA5),
+          //             fontWeight: FontWeight.w400,
+          //             fontSize: 13),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {},
+          //           child: Container(
+          //             height: 111,
+          //             width: 147,
+          //             child: Icon(
+          //               Icons.restore_from_trash_outlined,
+          //               color: Colors.grey,
+          //               size: 50,
+          //             ),
+          //             decoration: BoxDecoration(
+          //                 border: Border.all(width: 0),
+          //                 borderRadius: BorderRadius.all(
+          //                   Radius.circular(20),
+          //                 ),
+          //                 color: Color(0xffC4C4C4)),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

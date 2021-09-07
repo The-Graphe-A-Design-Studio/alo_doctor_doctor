@@ -134,7 +134,7 @@ class AppointmentDetails extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Prescription(Id: pId)),
+                          builder: (context) => Prescription(pId)),
                     );
                   },
                   child: Container(

@@ -8,9 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Prescription extends StatefulWidget {
-  final String Id;
+  final String id;
   // In the constructor, require a RecordObject.
-  Prescription({Key key, @required this.Id}) : super(key: key);
+  Prescription(this.id);
   @override
   _PrescriptionState createState() => _PrescriptionState();
 }
@@ -86,7 +86,7 @@ class _PrescriptionState extends State<Prescription> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Please Upload Your Prescription',
+                                        '',
                                         style: TextStyle(
                                             fontSize: 31,
                                             fontWeight: FontWeight.w400),
@@ -152,16 +152,15 @@ class _PrescriptionState extends State<Prescription> {
 
   void takePhoto(ImageSource source) async {
     List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
-    List<File> selected = [];
+    List<File> selected = List<File>.empty(growable: true);
     for (int i = 0; i < pickedFile.length; i++) {
-      selected[i] = File(pickedFile[i].path);
+      selected.insert(i, File(pickedFile[i].path));
     }
-
     print('yoo');
     setState(() {
       _imageFile = selected;
     });
-    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.Id);
+    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.id);
     if (success == 1) {
       Fluttertoast.showToast(
         msg: "Uploaded successfully",

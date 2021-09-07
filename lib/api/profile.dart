@@ -17,7 +17,7 @@ class ProfileServer {
   }
 
 // ****************************** post user Profile ********************
-  Future<void> postUserPofileData(Details profileDetails) async {
+  Future<dynamic> postUserPofileData(Details profileDetails) async {
     String token = await getToken();
     try {
       var response = await http
@@ -53,7 +53,7 @@ class ProfileServer {
   }
 
 // ***************************** Post Profile Pic ************************
-  Future<void> postProfilepic(File profilePic) async {
+  Future<String> postProfilepic(File profilePic) async {
     String token = await getToken();
     String targethost = 'developers.thegraphe.com';
     String authorization = 'Bearer ' + token;
@@ -80,6 +80,8 @@ class ProfileServer {
       if (json["success"] == 0) {
         print('error in profile pic---------------${json["error"]["file"][0]}');
         throw HttpException(json["error"]["file"][0]);
+      } else {
+        return json["profile_pic_path"];
       }
     } catch (e) {
       print('throwed error in profile pic-------------------${e.toString()}');

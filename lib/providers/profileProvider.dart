@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/profile.dart';
@@ -10,25 +11,37 @@ import '../utils/MyConstants.dart';
 class ProfileProvider with ChangeNotifier {
   ProfileServer serverHandler = ProfileServer();
 
-  Details _userProfileDetails;
+  Details userProfileDetails = Details();
 
   void setProfile() async {
-    _userProfileDetails = await serverHandler.getUserProfile();
+    userProfileDetails = await serverHandler.getUserProfile();
     notifyListeners();
-    print('in Provider---------$_userProfileDetails');
+    print('in Provider---------$userProfileDetails');
   }
 
-  void postProfileData(user) async {
-    await serverHandler.postUserPofileData(user);
-    _userProfileDetails = user;
-    notifyListeners();
-  }
-
-  void postProfilePic(File pic) async {
+  Future<void> postProfileData(user) async {
     try {
-      await serverHandler.postProfilepic(pic);
-      var user = await serverHandler.getUserProfile();
-      _userProfileDetails = user;
+      var response = await serverHandler.postUserPofileData(user);
+      if (response["success"] == 1) {
+        userProfileDetails = user;
+        notifyListeners();
+      } else {
+        throw HttpException(
+            'Something went wrong, Please make sure all the fields are filled.');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> postProfilePic(File pic) async {
+    try {
+      imageCache.clear();
+      String picPath = await serverHandler.postProfilepic(pic);
+
+      var nowParam = DateFormat('yyyyddMMHHmmss').format(DateTime.now());
+      userProfileDetails.profilePicPath = picPath + "#" + nowParam;
+
       notifyListeners();
     } catch (e) {
       print('in profile provider ${e.toString()}');
@@ -37,20 +50,20 @@ class ProfileProvider with ChangeNotifier {
   }
 
   String get getUserName {
-    return _userProfileDetails.name;
+    return userProfileDetails.name;
   }
 
   Details get currentUser {
     // print(
     //     'current user profile pic path ----- ${_userProfileDetails.profilePicPath}');
 
-    return _userProfileDetails;
+    return userProfileDetails;
   }
 
   void logOut(context) async {
     SharedPreferences localstorage = await SharedPreferences.getInstance();
     localstorage.clear();
-    _userProfileDetails = null;
+    userProfileDetails = null;
     Navigator.pushNamed(context, signIn);
   }
 }
