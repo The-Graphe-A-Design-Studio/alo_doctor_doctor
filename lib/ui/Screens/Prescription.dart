@@ -8,6 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Prescription extends StatefulWidget {
+  final String Id;
+  // In the constructor, require a RecordObject.
+  Prescription({Key key, @required this.Id}) : super(key: key);
   @override
   _PrescriptionState createState() => _PrescriptionState();
 }
@@ -158,7 +161,7 @@ class _PrescriptionState extends State<Prescription> {
     setState(() {
       _imageFile = selected;
     });
-    int success = await LoginCheck().PrescriptionUpload(_imageFile);
+    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.Id);
     if (success == 1) {
       Fluttertoast.showToast(
         msg: "Uploaded successfully",

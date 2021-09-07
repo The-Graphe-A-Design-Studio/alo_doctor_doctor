@@ -1,5 +1,5 @@
+import 'package:alo_doctor_doctor/ui/Screens/Prescription.dart';
 import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
-import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/Colors.dart';
@@ -12,7 +12,8 @@ class AppointmentDetails extends StatelessWidget {
   final String email;
   final String number;
 
-  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email, this.pId);
+  AppointmentDetails(
+      this.time, this.date, this.Name, this.number, this.email, this.pId);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,8 +113,7 @@ class AppointmentDetails extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => VideoCallingScreen(pId)
-                      ),
+                          builder: (context) => VideoCallingScreen(pId)),
                     );
                   },
                   child: Container(
@@ -130,6 +130,13 @@ class AppointmentDetails extends StatelessWidget {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Prescription(Id: pId)),
+                    );
+                  },
                   child: Container(
                     height: 65,
                     width: 65,
@@ -139,7 +146,7 @@ class AppointmentDetails extends StatelessWidget {
                             color: Colors.grey, style: BorderStyle.solid),
                         borderRadius: BorderRadius.circular(12)),
                     child: Image(
-                      image: AssetImage('./assets/images/convo.png'),
+                      image: AssetImage('./assets/images/upload.jpg'),
                     ),
                   ),
                 ),

@@ -350,7 +350,7 @@ class LoginCheck {
     return 0;
   }
 
-  Future PrescriptionUpload(List<File> imageFile) async {
+  Future PrescriptionUpload(List<File> imageFile, String Id) async {
     int succ;
     print('yo');
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -369,7 +369,7 @@ class LoginCheck {
     var gettokenuri;
     gettokenuri = new Uri(
         scheme: 'https',
-        path: '/alodoctor/public/api/doctor/prescription/2',
+        path: '/alodoctor/public/api/doctor/prescription/' + Id,
         host: targethost);
     print(gettokenuri);
 
