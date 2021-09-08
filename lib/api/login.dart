@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:alo_doctor_doctor/models/doctor.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:path/path.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginCheck {
   Future UserLogin(String email, String password) async {
+    String dtoken = await FirebaseMessaging.instance.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     print(email);
@@ -17,7 +19,7 @@ class LoginCheck {
     map['email'] = email;
     map['password'] = password;
     map['user_type'] = '2';
-    map['device_token'] = '';
+    map['device_token'] = dtoken ?? "";
 
     var queryParameters = {
       'username': email,
@@ -44,6 +46,7 @@ class LoginCheck {
   }
 
   Future UserSignUp(String email, String password) async {
+    String dtoken = await FirebaseMessaging.instance.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     print(email);
@@ -52,7 +55,7 @@ class LoginCheck {
     map['password'] = password;
     map['user_type'] = '2';
     map['c_password'] = password;
-    map['device_token'] = '';
+    map['device_token'] = dtoken ?? "";
 
     var queryParameters = {
       'username': email,
@@ -117,6 +120,8 @@ class LoginCheck {
 
   Future Register(String gender, String dob, String name, String phone,
       String category, String concode) async {
+    String dtoken = await FirebaseMessaging.instance.getToken();
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     String token = prefs.getString('token');
@@ -139,7 +144,7 @@ class LoginCheck {
     map['lat'] = "22.2";
     map["lng"] = "22.2";
     map["cat_id"] = catid;
-    map['device_token'] = '';
+    map['device_token'] = dtoken ?? "";
 
     print('inside');
     print(map);

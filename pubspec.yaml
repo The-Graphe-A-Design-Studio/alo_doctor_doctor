@@ -47,9 +47,9 @@ dependencies:
   firebase_core:
 #  firebase_auth:
 #  cloud_firestore:
-  firebase_messaging:
   carousel_slider: ^4.0.0
   syncfusion_flutter_datepicker: ^19.2.51
+  firebase_messaging: ^10.0.6
   provider: ^5.0.0
 
 dev_dependencies:

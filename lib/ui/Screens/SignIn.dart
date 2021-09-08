@@ -5,6 +5,7 @@ import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/form_validator.dart';
 import 'package:alo_doctor_doctor/widgets/customButton.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatefulWidget {
@@ -13,11 +14,20 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  FirebaseMessaging fcm = FirebaseMessaging.instance;
+  String dtoken;
   bool _isLoading = false;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
+  @override
+  void initState() {
+    // TODO: implement initState
+    fcm.getToken().then((value) => print(value));
+    super.initState();
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   _showSnackBar(msg, context) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
