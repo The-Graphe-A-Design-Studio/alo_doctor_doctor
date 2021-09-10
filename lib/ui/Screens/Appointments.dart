@@ -24,6 +24,7 @@ class _AppointmentsState extends State<Appointments> {
             name: appointment["patient"]["name"],
             pId: appointment["patient"]["id"].toString(),
             time: appointment["slot_time"],
+            profile: appointment["patient"]["profile_pic_path"],
             date: appointment["slot_date"],
             id: appointment["id"],
             isSelected: false,
@@ -127,6 +128,7 @@ class _AppointmentsState extends State<Appointments> {
                   itemCount: appointList.length,
                   itemBuilder: (context, index) {
                     return AppointmentMini(
+                        path: appointList[index].profile,
                         time: appointList[index].time,
                         Name: appointList[index].name,
                         date: appointList[index].date,
@@ -147,14 +149,14 @@ class _AppointmentsState extends State<Appointments> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AppointmentDetails(
-                                    appointList[index].time,
-                                    appointList[index].date,
-                                    appointList[index].name,
-                                    number,
-                                    email,
-                                    appointList[index].pId
-                                )
-                            ),
+                                      appointList[index].time,
+                                      appointList[index].date,
+                                      appointList[index].name,
+                                      number,
+                                      email,
+                                      appointList[index].pId,
+                                      appointList[index].profile,
+                                    )),
                           );
                           // setState(() {
                           //   appointList.forEach((element) {
@@ -212,7 +214,15 @@ class Modal {
   String time;
   String date;
   bool isSelected;
+  String profile;
   int id;
 
-  Modal({this.name, this.pId, this.isSelected = false, this.time, this.date, this.id});
+  Modal(
+      {this.name,
+      this.pId,
+      this.isSelected = false,
+      this.time,
+      this.profile,
+      this.date,
+      this.id});
 }

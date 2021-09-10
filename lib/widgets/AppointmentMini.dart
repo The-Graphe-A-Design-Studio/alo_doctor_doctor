@@ -4,6 +4,7 @@ class AppointmentMini extends StatefulWidget {
   String Name;
   String time;
   String date;
+  String path;
   Function onTap;
   bool isSelected;
 
@@ -12,6 +13,7 @@ class AppointmentMini extends StatefulWidget {
     this.time,
     this.date,
     this.onTap,
+    this.path,
     this.isSelected,
     Key key,
   }) : super(key: key);
@@ -38,7 +40,10 @@ class _AppointmentMiniState extends State<AppointmentMini> {
             child: Row(
               children: [
                 Image(
-                  image: AssetImage('assets/images/userdash.png'),
+                  image: widget.path == null
+                      ? AssetImage('assets/images/userdash.png')
+                      : NetworkImage(
+                          'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
                   height: 43,
                   width: 43,
                   fit: BoxFit.fill,

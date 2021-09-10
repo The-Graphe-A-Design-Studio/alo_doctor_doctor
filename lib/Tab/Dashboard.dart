@@ -72,6 +72,7 @@ class _DashboardTabState extends State<DashboardTab> {
             name: appointment["patient"]["name"],
             pId: appointment["patient"]["id"].toString(),
             time: appointment["slot_time"],
+            profile: appointment["patient"]["profile_pic_path"],
             date: appointment["slot_date"],
             id: appointment["id"],
             isSelected: false,
@@ -241,6 +242,7 @@ class _DashboardTabState extends State<DashboardTab> {
                         Name: appointList[index].name,
                         date: appointList[index].date,
                         isSelected: appointList[index].isSelected,
+                        path: appointList[index].profile,
                         onTap: () async {
                           await LoginCheck()
                               .getBookingsById(appointList[index].id)
@@ -257,12 +259,14 @@ class _DashboardTabState extends State<DashboardTab> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AppointmentDetails(
-                                    appointList[index].time,
-                                    appointList[index].date,
-                                    appointList[index].name,
-                                    number,
-                                    email,
-                                    appointList[index].pId)),
+                                      appointList[index].time,
+                                      appointList[index].date,
+                                      appointList[index].name,
+                                      number,
+                                      email,
+                                      appointList[index].pId,
+                                      appointList[index].profile,
+                                    )),
                           );
                           // setState(() {
                           //   appointList.forEach((element) {
@@ -421,6 +425,7 @@ class Modal {
   String time;
   String date;
   bool isSelected;
+  String profile;
   int id;
 
   Modal(
@@ -428,6 +433,7 @@ class Modal {
       this.pId,
       this.isSelected = false,
       this.time,
+      this.profile,
       this.date,
       this.id});
 }

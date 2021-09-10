@@ -11,9 +11,10 @@ class AppointmentDetails extends StatelessWidget {
   final String date;
   final String email;
   final String number;
+  final String path;
 
-  AppointmentDetails(
-      this.time, this.date, this.Name, this.number, this.email, this.pId);
+  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email,
+      this.pId, this.path);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +60,10 @@ class AppointmentDetails extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       backgroundColor: Colors.transparent,
-                      backgroundImage: AssetImage('assets/images/userdash.png'),
+                      backgroundImage: path == null
+                          ? AssetImage('assets/images/userdash.png')
+                          : NetworkImage(
+                              'https://developers.thegraphe.com/alodoctor/public${path}'),
                       radius: 35,
                     ),
                     SizedBox(
