@@ -32,8 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   List<int> uploaded = [0, 0, 0, 0, 0];
   int selectedWidget;
-  String name;
-  String phone;
+  String name = "";
+  String phone = "";
   String concode = '';
   String selectedGender = '';
   String selectedBloodGroup = '';
@@ -156,6 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   onChanged: (e) {
                     setState(() {
                       String code = e.toString();
+                      concode = e.toString().substring(1, code.length);
                       concode = e.toString().substring(1, code.length);
                     });
                   },
@@ -788,8 +789,14 @@ class _RegisterPageState extends State<RegisterPage> {
     NameController = TextEditingController(
         text: userDetails == null ? name : userDetails.name);
     PhoneController = TextEditingController(
-        text: userDetails == null ? phone : userDetails.phone.toString());
-    selectedGender = userDetails == null ? selectedGender : userDetails.gender;
+        text: userDetails == null
+            ? phone
+            : (userDetails.phone == null
+                ? phone
+                : userDetails.phone.toString()));
+    selectedGender = userDetails == null
+        ? selectedGender
+        : (userDetails.gender == null ? selectedGender : userDetails.gender);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -836,9 +843,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     selectedWidget++;
                                   }
                                 } else if (selectedWidget == 1) {
-                                  if (PhoneController.text.length == 0) {
+                                  if (PhoneController.text.length < 10) {
                                     Fluttertoast.showToast(
-                                      msg: "Phone cannot be empty",
+                                      msg: "Phone cannot be less than 10",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );

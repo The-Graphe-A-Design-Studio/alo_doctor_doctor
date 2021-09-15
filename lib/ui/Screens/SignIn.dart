@@ -7,6 +7,7 @@ import 'package:alo_doctor_doctor/utils/form_validator.dart';
 import 'package:alo_doctor_doctor/widgets/customButton.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -58,8 +59,20 @@ class _SignInPageState extends State<SignInPage> {
             .UserLogin(_authData['email'], _authData['password']);
         if (doc == 1) {
           print('logged');
-
-          Navigator.pushReplacementNamed(context, homePage, arguments: doc);
+          bool registered;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String name = prefs.getString("name");
+          print(name);
+          if (name != null) {
+            registered = true;
+          } else {
+            registered = false;
+          }
+          if (registered) {
+            Navigator.pushReplacementNamed(context, homePage, arguments: doc);
+          } else {
+            Navigator.pushReplacementNamed(context, registerPage);
+          }
         } else {
           throw HttpException('Invalid email or password!');
         }
@@ -128,7 +141,7 @@ class _SignInPageState extends State<SignInPage> {
                       'Signup instead',
                       style: TextStyle(color: Colors.black),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pushNamed(context, signUp);
                     },
                     style: ButtonStyle(

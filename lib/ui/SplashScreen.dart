@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (registered) {
           Navigator.pushReplacementNamed(context, homePage);
         } else {
-          Navigator.pushReplacementNamed(context, registerPage);
+          Navigator.pushReplacementNamed(context, signIn);
         }
       } else {
         Navigator.pushReplacementNamed(context, signIn);
