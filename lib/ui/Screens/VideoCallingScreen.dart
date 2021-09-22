@@ -25,12 +25,13 @@ class VideoCallingScreen extends StatefulWidget {
 class _VideoCallingScreenState extends State<VideoCallingScreen> {
   int _remoteUid;
   RtcEngine _engine;
-  bool isJoined = false, switchCamera = true, switchRender = true;
+  bool isJoined = false, switchCamera = true, switchRender = true, muteAudio = false,
+      muteVideo = false;
   AgoraApis _agoraApis = AgoraApis();
   String token;
   String channelName;
   String channelId;
-  Doctor doctor;
+  var doctor;
 
   Random _rnd = Random();
 
@@ -108,7 +109,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
     );
 
     await getAgoraToken();
-    await _engine.joinChannel(token, channelName, null, doctor.details.id);
+    await _engine.joinChannel(token, channelName, null, doctor['id']);
     // await getAgoraToken().then((value) async {
     //   await _engine.joinChannel(token, channelName, null, 70);
     // });
@@ -141,47 +142,26 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
             ),
             Positioned(
               bottom: 32,
-              right: 32,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: this._switchCamera,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white),
-                      child: Icon(
-                        Icons.flip_camera_android_rounded,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 32,
-              left: 32,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              right: 8,
+              left: 8,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   InkWell(
                     onTap: () async {
-                      // _engine.leaveChannel();
-                      // Navigator.pop(context);
-
                       await _agoraApis.leaveChannel(channelId);
-                      await _engine.leaveChannel();
+                      await _engine?.leaveChannel();
                       Navigator.pop(context);
-                      // print('Leave Channel Body '+tokenBody.toString());
 
-                      // if (tokenBody) {
+                      // var tokenBody = await _serverHandler.leaveChannel(channelId);
+                      // print('Leave Channel Body '+tokenBody.toString());
+                      //
+                      // if (tokenBody['success'] == 1) {
                       //   setState(() {
                       //     token = '';
                       //   });
-                      //   await _engine.leaveChannel();
+                      //   _engine.leaveChannel();
                       //   Navigator.pop(context);
                       // } else {
                       //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -200,9 +180,52 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                       ),
                     ),
                   ),
+                  InkWell(
+                    onTap: this._switchCamera,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white),
+                      child: Icon(
+                        Icons.flip_camera_android_rounded,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: this._onToggleMuteVideo,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white),
+                      child: Icon(
+                        muteVideo
+                            ? Icons.videocam_off_outlined
+                            : Icons.videocam_outlined,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: this._onToggleMute,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white),
+                      child: Icon(
+                        muteAudio
+                            ? Icons.mic_off_outlined
+                            : Icons.mic_none_outlined,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -243,4 +266,19 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       print('switchCamera $err');
     });
   }
+
+  void _onToggleMute() {
+    setState(() {
+      muteAudio = !muteAudio;
+    });
+    _engine.muteLocalAudioStream(muteAudio);
+  }
+
+  void _onToggleMuteVideo() {
+    setState(() {
+      muteVideo = !muteVideo;
+    });
+    _engine.muteLocalVideoStream(muteVideo);
+  }
+
 }
