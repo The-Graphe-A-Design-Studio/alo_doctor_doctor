@@ -118,115 +118,118 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   // Create UI with local view and remote view
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Agora Video Call'),
-      // ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text('Agora Video Call'),
+        // ),
 
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: _renderRemoteVideo(),
-            ),
-            Positioned(
-              top: 8,
-              left: 8,
-              child: Container(
-                width: 100,
-                height: 120,
-                child: Center(
-                  child: _renderLocalPreview(),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: _renderRemoteVideo(),
+              ),
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(
+                  width: 100,
+                  height: 120,
+                  child: Center(
+                    child: _renderLocalPreview(),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 32,
-              right: 8,
-              left: 8,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      await _agoraApis.leaveChannel(channelId);
-                      await _engine?.leaveChannel();
-                      Navigator.pop(context);
+              Positioned(
+                bottom: 32,
+                right: 8,
+                left: 8,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        await _agoraApis.leaveChannel(channelId);
+                        await _engine?.leaveChannel();
+                        Navigator.pop(context);
 
-                      // var tokenBody = await _serverHandler.leaveChannel(channelId);
-                      // print('Leave Channel Body '+tokenBody.toString());
-                      //
-                      // if (tokenBody['success'] == 1) {
-                      //   setState(() {
-                      //     token = '';
-                      //   });
-                      //   _engine.leaveChannel();
-                      //   Navigator.pop(context);
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      //     content: Text("Some error occurred."),
-                      //   ));
-                      // }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.red),
-                      child: Icon(
-                        Icons.call_end,
-                        color: Colors.white,
+                        // var tokenBody = await _serverHandler.leaveChannel(channelId);
+                        // print('Leave Channel Body '+tokenBody.toString());
+                        //
+                        // if (tokenBody['success'] == 1) {
+                        //   setState(() {
+                        //     token = '';
+                        //   });
+                        //   _engine.leaveChannel();
+                        //   Navigator.pop(context);
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        //     content: Text("Some error occurred."),
+                        //   ));
+                        // }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.red),
+                        child: Icon(
+                          Icons.call_end,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: this._switchCamera,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white),
-                      child: Icon(
-                        Icons.flip_camera_android_rounded,
-                        color: Colors.black87,
+                    InkWell(
+                      onTap: this._switchCamera,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.white),
+                        child: Icon(
+                          Icons.flip_camera_android_rounded,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: this._onToggleMuteVideo,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white),
-                      child: Icon(
-                        muteVideo
-                            ? Icons.videocam_off_outlined
-                            : Icons.videocam_outlined,
-                        color: Colors.black87,
+                    InkWell(
+                      onTap: this._onToggleMuteVideo,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.white),
+                        child: Icon(
+                          muteVideo
+                              ? Icons.videocam_off_outlined
+                              : Icons.videocam_outlined,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: this._onToggleMute,
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white),
-                      child: Icon(
-                        muteAudio
-                            ? Icons.mic_off_outlined
-                            : Icons.mic_none_outlined,
-                        color: Colors.black87,
+                    InkWell(
+                      onTap: this._onToggleMute,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.white),
+                        child: Icon(
+                          muteAudio
+                              ? Icons.mic_off_outlined
+                              : Icons.mic_none_outlined,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -279,6 +282,30 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       muteVideo = !muteVideo;
     });
     _engine.muteLocalVideoStream(muteVideo);
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit exit Video Call?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await _agoraApis.leaveChannel(channelId);
+              await _engine?.leaveChannel();
+              Navigator.of(context).pop(true);
+            },
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
   }
 
 }
