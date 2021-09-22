@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -63,6 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
   List<Modal> uploadList = [];
   List<Modal> locationchoice = [];
   int locChoice;
+  int isUpdate;
   String chosenCategory = null;
 
   @override
@@ -82,6 +84,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void loadCat() async {
     categories = await LoginCheck().getCategories();
+
+    // check  if this screen is used for registration or profile edit
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isUpdate = prefs.getInt('update');
+    });
   }
 
   Future loadSubCat() async {
@@ -809,22 +817,35 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        print('hey');
-                        setState(() {
-                          if (selectedWidget != 0)
-                            setState(() {
-                              selectedWidget--;
-                            });
-                        });
-                      },
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                        size: 25,
+                    if (selectedWidget > 0)
+                      GestureDetector(
+                        onTap: () {
+                          print('hey');
+                          setState(() {
+                            if (selectedWidget != 0)
+                              setState(() {
+                                selectedWidget--;
+                              });
+                          });
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                          size: 25,
+                        ),
                       ),
-                    ),
+                    if (isUpdate != null && selectedWidget == 0)
+                      GestureDetector(
+                        onTap: () {
+                          print('hey');
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                          size: 25,
+                        ),
+                      ),
                     Expanded(child: Container()),
                     GestureDetector(
                       onTap: () async {

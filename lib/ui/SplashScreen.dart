@@ -17,14 +17,16 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 1), () {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString("token");
-    String name = prefs.getString("name");
-    print(name);
-    if (name != null) {
-      registered = true;
-    } else {
-      registered = false;
-    }
-    if (token != null) {
+    // String name = prefs.getString("name");
+    int update = prefs.getInt('update');
+
+    // print(name);
+    // if (name != null) {
+    //   registered = true;
+    // } else {
+    //   registered = false;
+    // }
+    if (token != null && update != null) {
       // user = User.fromJson(json.decode(prefs.getString("UserData")));
       return true;
     }
@@ -35,18 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     doSomeAction().then((value) {
-      if (value == true) {
+      if (value) {
         // if (user.success == "1") {
         //   Navigator.pushReplacementNamed(context, homePage, arguments: user);
         // } else {
         //   Navigator.pushReplacementNamed(context, registerPage,
         //       arguments: user);
         // }
-        if (registered) {
-          Navigator.pushReplacementNamed(context, homePage);
-        } else {
-          Navigator.pushReplacementNamed(context, signIn);
-        }
+
+        Navigator.pushReplacementNamed(context, homePage);
       } else {
         Navigator.pushReplacementNamed(context, signIn);
       }

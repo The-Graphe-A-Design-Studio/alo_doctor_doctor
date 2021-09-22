@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/DateFormatter.dart';
+
 class AppointmentMini extends StatefulWidget {
   String Name;
   String time;
@@ -39,14 +41,17 @@ class _AppointmentMiniState extends State<AppointmentMini> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
             child: Row(
               children: [
-                Image(
-                  image: widget.path == null
-                      ? AssetImage('assets/images/userdash.png')
-                      : NetworkImage(
-                          'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
-                  height: 43,
-                  width: 43,
-                  fit: BoxFit.fill,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image(
+                    image: widget.path == null
+                        ? AssetImage('assets/images/userdash.png')
+                        : NetworkImage(
+                            'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
+                    height: 43,
+                    width: 43,
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 SizedBox(
                   width: 16,
@@ -65,19 +70,22 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                     Row(
                       children: [
                         Text(
-                          widget.date == null ? 'No Date' : widget.date + ' | ',
+                          DateFormatter().getVerboseDateTimeRepresentation(
+                              DateTime.parse(widget.date +
+                                  " " +
+                                  widget.time.split(' ')[0])),
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.black),
                         ),
-                        Text(
-                          widget.time == null ? '' : widget.time,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black),
-                        ),
+                        // Text(
+                        //   widget.time == null ? '' : widget.time,
+                        //   style: TextStyle(
+                        //       fontSize: 12,
+                        //       fontWeight: FontWeight.w400,
+                        //       color: Colors.black),
+                        // ),
                       ],
                     )
                   ],

@@ -35,14 +35,37 @@ class LoginCheck {
 
     final response = await http.post(gettokenuri, body: map);
     print(response.statusCode);
-    if (response.statusCode == 200) {
+
+    // ---------
+    Map<String, dynamic> result = {
+      'success': 0,
+      "update": prefs.getInt('update'),
+      'error': "",
+    };
+    final json = jsonDecode(response.body);
+
+    if (json["success"] == 1) {
       final json = jsonDecode(response.body);
-      log(response.body);
       prefs.setString('token', json['details']['token']);
-      log('User token from Login ' + json['details']['token']);
-      return json["success"];
+
+      // -----------
+      result['success'] = 1;
+
+      var currentUserProfileDetails = await UserInfo();
+      // print('name---${currentUserProfileDetails.details.name}');
+
+      if (currentUserProfileDetails["name"] != null) {
+        result['update'] = 1;
+        print("user name null");
+        prefs.setInt('update', 1);
+      }
+      print('update details-------${prefs.getInt('update')}');
+
+      return result;
+      // return json["success"];
     }
-    return 0;
+    result["error"] = "Something went wrong";
+    return result;
   }
 
   Future UserSignUp(String email, String password) async {
@@ -158,7 +181,9 @@ class LoginCheck {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
-      prefs.setString('name', name);
+      // prefs.setString('name', name);
+      prefs.setInt('update', 1);
+
       final json = jsonDecode(response.body);
       return json["success"];
     }
@@ -410,7 +435,7 @@ class LoginCheck {
     return 0;
   }
 
-  Future<Doctor> UserInfo() async {
+  Future<dynamic> UserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     var map = new Map<String, dynamic>();
@@ -428,14 +453,15 @@ class LoginCheck {
 
     final response = await http.get(gettokenuri,
         headers: {HttpHeaders.authorizationHeader: authorization});
+    print(response.body + "userinfo");
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      print(response.body);
-      print(json['details']['name']);
-      var name = json['details']['name'];
-      print('name');
-      prefs.setString('name', name);
-      return Doctor.fromJson(json);
+      // print("inside userinfo");
+      // if (json["details"]["name"] == null) {
+      //   return json["details"];
+      // }
+      return json["details"];
+      // return Doctor.fromJson(json).details;
     } else {
       throw Exception('Failed to get Doctor Info');
     }

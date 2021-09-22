@@ -53,6 +53,11 @@ class ProfileProvider with ChangeNotifier {
     return userProfileDetails.name;
   }
 
+  void upadateFee(String fee) {
+    userProfileDetails.docFees = fee;
+    notifyListeners();
+  }
+
   Details get currentUser {
     // print(
     //     'current user profile pic path ----- ${_userProfileDetails.profilePicPath}');
@@ -64,6 +69,6 @@ class ProfileProvider with ChangeNotifier {
     SharedPreferences localstorage = await SharedPreferences.getInstance();
     localstorage.clear();
     userProfileDetails = null;
-    Navigator.pushNamed(context, signIn);
+    Navigator.pushReplacementNamed(context, signIn);
   }
 }

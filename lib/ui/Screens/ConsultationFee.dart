@@ -15,12 +15,14 @@ class _ConsultationFeeState extends State<ConsultationFee> {
   int select = 0;
   String fee;
   bool _isLoading = false;
+
   submitFee() async {
     setState(() {
       _isLoading = true;
     });
 
     int doc = await LoginCheck().SetFee(fee);
+    Provider.of<ProfileProvider>(context, listen: false).upadateFee(fee);
     if (doc == 1) {
       Fluttertoast.showToast(
         msg: "Fee is Set",

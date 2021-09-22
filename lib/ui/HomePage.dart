@@ -64,12 +64,7 @@ class _HomePageState extends State<HomePage> {
         //   ),
         // ],
         title: Consumer<ProfileProvider>(builder: (context, profileData, _) {
-          print('profileData ${profileData}');
-
-          // print(
-          //     'profileData.getUserName ${profileData.currentUser.name}');
-
-          return profileData.currentUser == null
+          return profileData.userProfileDetails == null
               ? Text('')
               : Column(
                   children: [
@@ -78,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                     Text(
-                      profileData.getUserName,
+                      profileData.getUserName ?? "",
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,

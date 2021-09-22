@@ -96,6 +96,8 @@ class NavigationDrawer extends StatelessWidget {
             // Divider(color: Colors.black87),
             GestureDetector(
               onTap: () {
+                Navigator.pop(context);
+
                 Navigator.pushNamed(context, appointmentScreen);
               },
               child: ListTile(
@@ -152,6 +154,8 @@ class NavigationDrawer extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                Navigator.pop(context);
+
                 Navigator.pushNamed(context, consultSched);
               },
               child: ListTile(

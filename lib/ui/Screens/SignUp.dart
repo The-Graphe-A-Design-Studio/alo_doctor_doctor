@@ -47,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
         if (doc == 1) {
           print('logged');
           await LoginCheck().getSub("Physiotherapy");
-          Navigator.pushNamed(context, registerPage);
+          Navigator.pushReplacementNamed(context, registerPage);
         } else {
           throw HttpException('User with this email already exist.');
         }
@@ -168,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextStyle(color: Colors.black),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, signIn);
+                    Navigator.pushReplacementNamed(context, signIn);
                   },
                   style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(accentBlueLight),

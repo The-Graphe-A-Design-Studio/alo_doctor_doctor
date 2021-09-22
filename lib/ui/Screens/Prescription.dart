@@ -17,7 +17,7 @@ class Prescription extends StatefulWidget {
 
 class _PrescriptionState extends State<Prescription> {
   List<File> _imageFile;
-  Doctor doctor;
+  var doctor;
   int uploaded = 0;
   final ImagePicker _picker = ImagePicker();
   @override
@@ -25,6 +25,7 @@ class _PrescriptionState extends State<Prescription> {
     super.initState();
 
     loadData().then((doctor) {
+      print(doctor);
       setState(() {
         this.doctor = doctor;
       });
@@ -53,7 +54,7 @@ class _PrescriptionState extends State<Prescription> {
         title: Column(
           children: [
             Text(
-              "Dr." + doctor.details.name,
+              'Upload Prescription',
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.black87,
@@ -152,6 +153,8 @@ class _PrescriptionState extends State<Prescription> {
 
   void takePhoto(ImageSource source) async {
     List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
+    // final pickedFile = await _picker.getImage(source: source);
+
     List<File> selected = List<File>.empty(growable: true);
     for (int i = 0; i < pickedFile.length; i++) {
       selected.insert(i, File(pickedFile[i].path));
@@ -188,43 +191,43 @@ class _PrescriptionState extends State<Prescription> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Column(
-              children: [
-                Text(
-                  'Camera',
-                  style: TextStyle(
-                      color: Color(0xff8C8FA5),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      takePhoto(ImageSource.camera);
-                    },
-                    child: Container(
-                      height: 111,
-                      width: 147,
-                      child: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffC4C4C4)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 4.0),
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         'Camera',
+          //         style: TextStyle(
+          //             color: Color(0xff8C8FA5),
+          //             fontWeight: FontWeight.w400,
+          //             fontSize: 13),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {
+          //             takePhoto(ImageSource.camera);
+          //           },
+          //           child: Container(
+          //             height: 111,
+          //             width: 147,
+          //             child: Icon(
+          //               Icons.camera_alt_outlined,
+          //               color: Colors.grey,
+          //               size: 50,
+          //             ),
+          //             decoration: BoxDecoration(
+          //                 border: Border.all(width: 0),
+          //                 borderRadius: BorderRadius.all(
+          //                   Radius.circular(20),
+          //                 ),
+          //                 color: Color(0xffC4C4C4)),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Column(
@@ -262,41 +265,41 @@ class _PrescriptionState extends State<Prescription> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Column(
-              children: [
-                Text(
-                  'Delete',
-                  style: TextStyle(
-                      color: Color(0xff8C8FA5),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 111,
-                      width: 147,
-                      child: Icon(
-                        Icons.restore_from_trash_outlined,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffC4C4C4)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 4.0),
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         'Delete',
+          //         style: TextStyle(
+          //             color: Color(0xff8C8FA5),
+          //             fontWeight: FontWeight.w400,
+          //             fontSize: 13),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {},
+          //           child: Container(
+          //             height: 111,
+          //             width: 147,
+          //             child: Icon(
+          //               Icons.restore_from_trash_outlined,
+          //               color: Colors.grey,
+          //               size: 50,
+          //             ),
+          //             decoration: BoxDecoration(
+          //                 border: Border.all(width: 0),
+          //                 borderRadius: BorderRadius.all(
+          //                   Radius.circular(20),
+          //                 ),
+          //                 color: Color(0xffC4C4C4)),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

@@ -55,26 +55,38 @@ class _SignInPageState extends State<SignInPage> {
         _isLoading = true;
       });
       try {
-        int doc = await LoginCheck()
+        var response = await LoginCheck()
             .UserLogin(_authData['email'], _authData['password']);
-        if (doc == 1) {
+        print(response["success"]);
+        if (response["success"] != 0) {
           print('logged');
-          bool registered;
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          String name = prefs.getString("name");
-          print(name);
-          if (name != null) {
-            registered = true;
+          // bool registered;
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // String name = prefs.getString("name");
+          // print(name);
+          // if (name != null) {
+          //   registered = true;
+          // } else {
+          //   registered = false;
+          // }
+          if (response['update'] != null) {
+            Navigator.pushReplacementNamed(
+              context,
+              homePage,
+            );
           } else {
-            registered = false;
+            Navigator.pushReplacementNamed(
+              context,
+              registerPage,
+            );
           }
-          if (registered) {
-            Navigator.pushReplacementNamed(context, homePage, arguments: doc);
-          } else {
-            Navigator.pushReplacementNamed(context, registerPage);
-          }
+          // if (registered) {
+          //   Navigator.pushReplacementNamed(context, homePage, arguments: doc);
+          // } else {
+          //   Navigator.pushReplacementNamed(context, registerPage);
+          // }
         } else {
-          throw HttpException('Invalid email or password!');
+          throw HttpException(response['error']);
         }
       } catch (e) {
         _showSnackBar('Invalid email or password!', context);
@@ -142,7 +154,7 @@ class _SignInPageState extends State<SignInPage> {
                       style: TextStyle(color: Colors.black),
                     ),
                     onPressed: () async {
-                      Navigator.pushNamed(context, signUp);
+                      Navigator.pushReplacementNamed(context, signUp);
                     },
                     style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(accentBlueLight),
