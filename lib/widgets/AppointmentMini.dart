@@ -27,6 +27,11 @@ class AppointmentMini extends StatefulWidget {
 class _AppointmentMiniState extends State<AppointmentMini> {
   @override
   Widget build(BuildContext context) {
+    // print(DateFormatter().getVerboseDateTimeRepresentation(
+    //         DateTime.parse(widget.date + " " + widget.time.split(' ')[0])
+    //             .subtract(Duration(days: 5))) +
+    //     widget.time.split(' ')[1]);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
       child: GestureDetector(
@@ -71,9 +76,11 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                       children: [
                         Text(
                           DateFormatter().getVerboseDateTimeRepresentation(
-                              DateTime.parse(widget.date +
-                                  " " +
-                                  widget.time.split(' ')[0])),
+                                  DateTime.parse(widget.date +
+                                      " " +
+                                      widget.time.split(' ')[0])) +
+                              " " +
+                              widget.time.split(' ')[1],
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

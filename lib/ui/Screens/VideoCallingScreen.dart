@@ -23,7 +23,6 @@ class VideoCallingScreen extends StatefulWidget {
 }
 
 class _VideoCallingScreenState extends State<VideoCallingScreen> {
-
   int _remoteUid;
   RtcEngine _engine;
   bool isJoined = false, switchCamera = true, switchRender = true;
@@ -34,7 +33,6 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   Doctor doctor;
 
   Random _rnd = Random();
-
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
@@ -47,9 +45,9 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   }
 
   Future<void> getAgoraToken() async {
-
-    var tokenBody = await _agoraApis.getAgoraToken(getRandomString(20), widget.pId);
-    print('token Body from videoPage'+tokenBody.toString());
+    var tokenBody =
+        await _agoraApis.getAgoraToken(getRandomString(20), widget.pId);
+    print('token Body from videoPage' + tokenBody.toString());
 
     if (tokenBody['success'] == 1 || tokenBody['success'] == 2) {
       setState(() {
@@ -59,7 +57,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Unable to get Video Call Token, Please check your internet Connection and try again."),
+        content: Text(
+            "Unable to get Video Call Token, Please check your internet Connection and try again."),
       ));
     }
   }
@@ -151,9 +150,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.white
-                      ),
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white),
                       child: Icon(
                         Icons.flip_camera_android_rounded,
                         color: Colors.black87,
@@ -195,8 +193,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: Colors.red
-                      ),
+                          color: Colors.red),
                       child: Icon(
                         Icons.call_end,
                         color: Colors.white,
@@ -226,10 +223,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       return Text(
         'Please wait, patient is joining shortly',
         style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold
-        ),
+            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       );
     }
@@ -249,5 +243,4 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       print('switchCamera $err');
     });
   }
-
 }
