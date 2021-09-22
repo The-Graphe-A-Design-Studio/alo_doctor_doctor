@@ -259,13 +259,15 @@ class _DashboardTabState extends State<DashboardTab> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AppointmentDetails(
-                                      appointList[index].time,
-                                      appointList[index].date,
-                                      appointList[index].name,
-                                      number,
-                                      email,
-                                      appointList[index].pId,
-                                      appointList[index].profile,
+                                      time: appointList[index].time,
+                                      date: appointList[index].date,
+                                      Name: appointList[index].name,
+                                      number: number,
+                                      email: email,
+                                      bookingId:
+                                          appointList[index].id.toString(),
+                                      pId: appointList[index].pId,
+                                      path: appointList[index].profile,
                                     )),
                           );
                           // setState(() {

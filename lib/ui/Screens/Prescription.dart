@@ -39,6 +39,7 @@ class _PrescriptionState extends State<Prescription> {
 
   @override
   Widget build(BuildContext context) {
+    print("prescription screen-------" + widget.id);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

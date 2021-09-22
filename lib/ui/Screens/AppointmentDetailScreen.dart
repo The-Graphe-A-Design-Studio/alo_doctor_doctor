@@ -12,9 +12,17 @@ class AppointmentDetails extends StatelessWidget {
   final String email;
   final String number;
   final String path;
+  final String bookingId;
 
-  AppointmentDetails(this.time, this.date, this.Name, this.number, this.email,
-      this.pId, this.path);
+  AppointmentDetails(
+      {this.time,
+      this.date,
+      this.Name,
+      this.number,
+      this.email,
+      this.pId,
+      this.path,
+      this.bookingId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +146,7 @@ class AppointmentDetails extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Prescription(pId)),
+                          builder: (context) => Prescription(bookingId)),
                     );
                   },
                   child: Container(

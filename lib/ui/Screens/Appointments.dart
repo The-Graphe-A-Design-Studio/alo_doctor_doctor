@@ -170,15 +170,19 @@ class _AppointmentsState extends State<Appointments> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               AppointmentDetails(
-                                                appointList[index].time,
-                                                appointList[index].date,
-                                                appointList[index].name,
-                                                number,
-                                                email,
-                                                appointList[index]
+                                                bookingId: appointList[index]
                                                     .id
                                                     .toString(),
-                                                appointList[index].profile,
+                                                time: appointList[index].time,
+                                                date: appointList[index].date,
+                                                Name: appointList[index].name,
+                                                number: number,
+                                                email: email,
+                                                pId: appointList[index]
+                                                    .pId
+                                                    .toString(),
+                                                path:
+                                                    appointList[index].profile,
                                               )),
                                     );
                                     // setState(() {
