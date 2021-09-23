@@ -104,6 +104,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           setState(() {
             _remoteUid = null;
           });
+          _userLeftTheCall();
         },
       ),
     );
@@ -302,6 +303,27 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
               Navigator.of(context).pop(true);
             },
             child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
+  _userLeftTheCall() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Patient Left'),
+        content: new Text('Patient left this call please join Again'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              await _agoraApis.leaveChannel(channelId);
+              await _engine?.leaveChannel();
+              Navigator.of(context).pop(true);
+              Navigator.of(context).pop(true);
+            },
+            child: new Text('Okay'),
           ),
         ],
       ),
