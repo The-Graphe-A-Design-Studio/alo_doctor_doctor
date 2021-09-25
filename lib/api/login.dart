@@ -382,7 +382,7 @@ class LoginCheck {
 
   Future PrescriptionUpload(List<File> imageFile, String Id) async {
     int succ;
-    print('yo');
+    // print('yo');
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String targethost = 'developers.thegraphe.com';
@@ -391,10 +391,10 @@ class LoginCheck {
     // map['file'] = img != null
     //     ? 'data:image/png;base64,' + base64Encode(img.readAsBytesSync())
     //     : '';
-    print(prefs.getString('token'));
+    // print(prefs.getString('token'));
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
-    print(authorization);
+    // print(authorization);
     print('inside');
     var gettokenuri;
     gettokenuri = new Uri(
@@ -409,7 +409,7 @@ class LoginCheck {
       var stream = new http.ByteStream(imageFile[i].openRead());
       stream.cast();
       var length = await imageFile[i].length();
-      var multipartFile = new http.MultipartFile("file", stream, length,
+      var multipartFile = new http.MultipartFile("file[]", stream, length,
           filename: basename(imageFile[i].path));
       newList.add(multipartFile);
     }
@@ -434,6 +434,45 @@ class LoginCheck {
     }
     return 0;
   }
+
+  // Future<String> PrescriptionUpload(File profilePic, String Id) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   String token = prefs.getString('token');
+  //   String targethost = 'developers.thegraphe.com';
+  //   String authorization = 'Bearer ' + token;
+  //   var gettokenuri = new Uri(
+  //       scheme: 'https',
+  //       path: '/alodoctor/public/api/doctor/prescription/' + Id,
+  //       host: targethost);
+  //   var request = new http.MultipartRequest("POST", gettokenuri);
+
+  //   var stream = new http.ByteStream(profilePic.openRead());
+  //   stream.cast();
+  //   var length = await profilePic.length();
+  //   var multipartFile = new http.MultipartFile('file[]', stream, length,
+  //       filename: basename(profilePic.path));
+  //   List<http.MultipartFile> fileList = [];
+  //   fileList.add(multipartFile);
+  //   request.files.addAll(fileList);
+  //   request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
+  //   request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
+  //   try {
+  //     var responses = await request.send();
+  //     var response = await http.Response.fromStream(responses);
+  //     final json = jsonDecode(response.body);
+  //     print(json);
+  //     if (json["success"] == 0) {
+  //       print('error in profile pic---------------${json["error"]["file"][0]}');
+  //       throw HttpException(json["error"]["file"][0]);
+  //     } else {
+  //       return json["profile_pic_path"];
+  //     }
+  //   } catch (e) {
+  //     print('throwed error in profile pic-------------------${e.toString()}');
+  //     throw e;
+  //   }
+  // }
 
   Future<dynamic> UserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

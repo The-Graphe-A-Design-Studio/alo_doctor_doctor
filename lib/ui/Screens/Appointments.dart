@@ -16,7 +16,10 @@ class _AppointmentsState extends State<Appointments> {
   bool select = false;
   String number;
   String email;
+  List pList;
   bool _isLoading = false;
+
+  void setData() {}
   @override
   void initState() {
     setState(() {
@@ -33,9 +36,13 @@ class _AppointmentsState extends State<Appointments> {
             date: appointment["slot_date"],
             id: appointment["id"],
             isSelected: false,
+            bookingStatus: appointment["status"],
           ));
         });
-
+        appointList.sort((a, b) =>
+            DateTime.parse(a.date + " " + a.time.split(" ")[0]).compareTo(
+                DateTime.parse(b.date + " " + b.time.split(" ")[0])));
+        appointList = appointList.reversed.toList();
         _isLoading = false;
       });
     });
@@ -117,30 +124,58 @@ class _AppointmentsState extends State<Appointments> {
                     style: Styles.regularHeading,
                   ),
                 )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(33.0, 20.0, 33.0, 60),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(
-                        //   '09 January,Saturday',
-                        //   style: TextStyle(
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w700,
-                        //       color: Color(0xff8c8fa5)),
-                        // ),
-                        // SizedBox(
-                        //   height: 14,
-                        // ),
-                        // Text(
-                        //   'Today',
-                        //   style: TextStyle(
-                        //       fontSize: 14,
-                        //       fontWeight: FontWeight.w400,
-                        //       color: Colors.black),
-                        // ),
-                        ListView.builder(
+              : RefreshIndicator(
+                  backgroundColor: Colors.grey.shade800,
+                  color: Colors.white,
+                  onRefresh: () async {
+                    appointList.clear();
+                    LoginCheck().getMyBookings().then((value) {
+                      setState(() {
+                        value.forEach((appointment) {
+                          appointList.add(Modal(
+                            name: appointment["patient"]["name"],
+                            pId: appointment["patient"]["id"].toString(),
+                            time: appointment["slot_time"],
+                            profile: appointment["patient"]["profile_pic_path"],
+                            date: appointment["slot_date"],
+                            id: appointment["id"],
+                            isSelected: false,
+                            bookingStatus: appointment["status"],
+                          ));
+                        });
+                        appointList.sort((a, b) =>
+                            DateTime.parse(a.date + " " + a.time.split(" ")[0])
+                                .compareTo(DateTime.parse(
+                                    b.date + " " + b.time.split(" ")[0])));
+                        appointList = appointList.reversed.toList();
+                        print('hey');
+                      });
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Text(
+                      //   '09 January,Saturday',
+                      //   style: TextStyle(
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.w700,
+                      //       color: Color(0xff8c8fa5)),
+                      // ),
+                      // SizedBox(
+                      //   height: 14,
+                      // ),
+                      // Text(
+                      //   'Today',
+                      //   style: TextStyle(
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w400,
+                      //       color: Colors.black),
+                      // ),
+                      Expanded(
+                        child: ListView.builder(
+                            padding:
+                                const EdgeInsets.fromLTRB(33.0, 20.0, 33.0, 60),
                             shrinkWrap: true,
                             // physics: NeverScrollableScrollPhysics(),
                             itemCount: appointList.length,
@@ -162,6 +197,7 @@ class _AppointmentsState extends State<Appointments> {
                                               .toString();
                                           email =
                                               appointment["patient"]["email"];
+                                          pList = appointment["prescription"];
                                         });
                                       });
                                     });
@@ -173,6 +209,9 @@ class _AppointmentsState extends State<Appointments> {
                                                 bookingId: appointList[index]
                                                     .id
                                                     .toString(),
+                                                bookingStatus:
+                                                    appointList[index]
+                                                        .bookingStatus,
                                                 time: appointList[index].time,
                                                 date: appointList[index].date,
                                                 Name: appointList[index].name,
@@ -183,6 +222,7 @@ class _AppointmentsState extends State<Appointments> {
                                                     .toString(),
                                                 path:
                                                     appointList[index].profile,
+                                                prescriptionList: pList,
                                               )),
                                     );
                                     // setState(() {
@@ -200,8 +240,8 @@ class _AppointmentsState extends State<Appointments> {
                                     // });
                                   });
                             }),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
       // floatingActionButtonLocation:
@@ -246,13 +286,15 @@ class Modal {
   bool isSelected;
   String profile;
   int id;
-
-  Modal(
-      {this.name,
-      this.pId,
-      this.isSelected = false,
-      this.time,
-      this.profile,
-      this.date,
-      this.id});
+  int bookingStatus;
+  Modal({
+    this.name,
+    this.pId,
+    this.isSelected = false,
+    this.time,
+    this.profile,
+    this.date,
+    this.id,
+    this.bookingStatus,
+  });
 }

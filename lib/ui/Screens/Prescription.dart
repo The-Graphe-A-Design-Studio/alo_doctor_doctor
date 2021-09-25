@@ -6,6 +6,7 @@ import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:alo_doctor_doctor/widgets/prescriptionViewer.dart';
 
 class Prescription extends StatefulWidget {
   final String id;
@@ -16,30 +17,80 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
-  List<File> _imageFile;
-  var doctor;
+  List<File> _imageFile = [];
+  // PickedFile _imageFile;
+  List prescriptionList;
+  bool _isLoading = false;
   int uploaded = 0;
   final ImagePicker _picker = ImagePicker();
-  @override
-  void initState() {
-    super.initState();
 
-    loadData().then((doctor) {
-      print(doctor);
+  void setData() async {
+    await LoginCheck().getBookingsById(int.parse(widget.id)).then((value) {
       setState(() {
-        this.doctor = doctor;
+        prescriptionList = value[0]["prescription"];
+        _isLoading = false;
       });
     });
   }
 
-  Future loadData() async {
-    doctor = await LoginCheck().UserInfo();
-    return doctor;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoading = true;
+    });
+    setData();
+    // loadData().then((doctor) {
+    //   print(doctor);
+    //   setState(() {
+    //     this.doctor = doctor;
+    //   });
+    // });
+  }
+
+  // Future loadData() async {
+  //   doctor = await LoginCheck().UserInfo();
+  //   return doctor;
+  // }
+
+  void takePhoto(ImageSource source) async {
+    List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
+    // final pickedFile = await _picker.getImage(source: source);
+
+    List<File> selected = List<File>.empty(growable: true);
+    for (int i = 0; i < pickedFile.length; i++) {
+      selected.insert(i, File(pickedFile[i].path));
+    }
+    print(widget.id);
+    print('yoo');
+    setState(() {
+      _imageFile = selected;
+      _isLoading = true;
+    });
+    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.id);
+    if (success == 1) {
+      Fluttertoast.showToast(
+        msg: "Uploaded successfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+      setState(() {
+        uploaded = 1;
+        _isLoading = false;
+      });
+    } else {
+      Fluttertoast.showToast(
+        msg: "File Size must be less than 200kb",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    }
+    print(success);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("prescription screen-------" + widget.id);
+    // print("prescription screen-------" + widget.id);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,6 +103,22 @@ class _PrescriptionState extends State<Prescription> {
             color: Colors.black,
           ),
         ),
+        actions: [
+          if (prescriptionList != null)
+            IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  // print(bookingId);
+                  prescriptionList.clear();
+                  showModalBottomSheet(
+                    context: context,
+                    builder: ((builder) => bottomSheet()),
+                  );
+                })
+        ],
         title: Column(
           children: [
             Text(
@@ -65,124 +132,227 @@ class _PrescriptionState extends State<Prescription> {
         ),
         backgroundColor: accentBlueLight,
       ),
-      body: doctor == null
+      body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 40.0, top: 60),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 30, horizontal: 30.0),
-                      child: Center(
-                        child: Container(
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 177,
-                                height: 177,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+          : (prescriptionList == null || prescriptionList.isEmpty)
+              ? _imageFile.isEmpty
+                  ? SingleChildScrollView(
+                      child: Padding(
+                      padding: const EdgeInsets.only(bottom: 40.0, top: 60),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 30, horizontal: 30.0),
+                              child: Center(
+                                child: Container(
+                                  child: Stack(
                                     children: [
-                                      Text(
-                                        '',
-                                        style: TextStyle(
-                                            fontSize: 31,
-                                            fontWeight: FontWeight.w400),
+                                      Container(
+                                        width: 177,
+                                        height: 177,
+                                        child: _isLoading
+                                            ? Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              )
+                                            : Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '',
+                                                      style: TextStyle(
+                                                          fontSize: 31,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                    // Text(
+                                                    //   'photo',
+                                                    //   style: TextStyle(
+                                                    //       fontSize: 31,
+                                                    //       fontWeight: FontWeight.w400),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image:
+                                                    // _imageFile == null
+                                                    //     ?
+                                                    AssetImage(
+                                                  './assets/images/upload.jpg',
+                                                ),
+                                                // : Image.file(File(_imageFile))
+                                                //     .image,
+                                                fit: BoxFit.fill),
+                                            border: Border.all(width: 0),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: Color(0xffC4C4C4)),
                                       ),
-                                      // Text(
-                                      //   'photo',
-                                      //   style: TextStyle(
-                                      //       fontSize: 31,
-                                      //       fontWeight: FontWeight.w400),
-                                      // ),
+                                      Positioned(
+                                        bottom: 10,
+                                        right: 10,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: ((builder) =>
+                                                  bottomSheet()),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            child: Icon(
+                                              Icons.camera_alt_outlined,
+                                              color: Colors.grey,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(width: 0),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(200),
+                                                ),
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                          './assets/images/upload.jpg',
-                                        ),
-                                        fit: BoxFit.fill),
-                                    border: Border.all(width: 0),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    color: Color(0xffC4C4C4)),
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: ((builder) => bottomSheet()),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 35,
-                                    width: 35,
-                                    child: Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.grey,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(width: 0),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(200),
-                                        ),
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                              ))
+                        ],
                       ),
-                    ),
+                    ))
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: GridView.builder(
+                              physics: BouncingScrollPhysics(),
+                              padding: const EdgeInsets.all(10.0),
+                              itemCount: _imageFile.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 3 / 4.3,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 5,
+                              ),
+                              itemBuilder: (ctx, index) {
+                                return Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 2,
+                                  width: MediaQuery.of(context).size.width * 2,
+                                  padding: EdgeInsets.all(10),
+                                  child: Image.file(
+                                    File(_imageFile[index].path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }),
+                        )
+                      ],
+                    )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                          physics: BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(15.0),
+                          itemCount: prescriptionList.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 2 / 2.5,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 15,
+                          ),
+                          itemBuilder: (ctx, index) {
+                            // var nowParam =
+                            //     DateFormat('yyyyddMMHHmmss').format(DateTime.now());
+
+                            print(prescriptionList.length.toString() +
+                                prescriptionList[index]["file_path"]);
+                            return InkWell(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => PrescriptionViewer(
+                                        docPath: prescriptionList[index]
+                                            ["file_path"]));
+                              },
+                              child: Container(
+                                child: Image.network(
+                                  'https://developers.thegraphe.com/alodoctor/public${prescriptionList[index]["file_path"]}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          }),
+                    )
                   ],
                 ),
-              ),
-            ),
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
-    // final pickedFile = await _picker.getImage(source: source);
+  // void takePhoto(ImageSource source) async {
+  //   // final userHandler = Provider.of<ProfileProvider>(context, listen: false);
 
-    List<File> selected = List<File>.empty(growable: true);
-    for (int i = 0; i < pickedFile.length; i++) {
-      selected.insert(i, File(pickedFile[i].path));
-    }
-    print('yoo');
-    setState(() {
-      _imageFile = selected;
-    });
-    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.id);
-    if (success == 1) {
-      Fluttertoast.showToast(
-        msg: "Uploaded successfully",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-      setState(() {
-        uploaded = 1;
-      });
-    } else {
-      Fluttertoast.showToast(
-        msg: "File Size must be less than 200kb",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-    }
-    print(success);
-  }
+  //   final pickedFile = await _picker.getImage(source: source);
+
+  //   try {
+  //     // print('picked file path ------------ ${pickedFile?.path}');
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _isLoading = true;
+  //       });
+  //       await LoginCheck().PrescriptionUpload(File(pickedFile.path), widget.id);
+
+  //       setState(() {
+  //         _imageFile = pickedFile;
+  //         _isLoading = false;
+  //       });
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           duration: Duration(seconds: 3),
+  //           content: Text('Prescription Uploaded successfully!'),
+  //           backgroundColor: Colors.green,
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     // print('eroor in takephoto ------------- ${e.toString()}');
+  //     return showDialog(
+  //         context: context,
+  //         builder: (ctx) {
+  //           return AlertDialog(
+  //             title: Text('An Error Occured!'),
+  //             content: Text(
+  //               e.toString(),
+  //               style: TextStyle(
+  //                 fontSize: 20,
+  //               ),
+  //             ),
+  //             actions: <Widget>[
+  //               TextButton(
+  //                 child: Text('Ok'),
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop(false);
+  //                 },
+  //               ),
+  //             ],
+  //           );
+  //         });
+  //   }
+  // }
 
   Widget bottomSheet() {
     return Container(
@@ -244,6 +414,7 @@ class _PrescriptionState extends State<Prescription> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      Navigator.of(context).pop();
                       takePhoto(ImageSource.gallery);
                     },
                     child: Container(
