@@ -33,6 +33,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       muteVideo = false;
   bool remoteUserMicMute = false,
       remoteUserVideoMute = false;
+  bool resizeVideo = false;
   AgoraApis _agoraApis = AgoraApis();
   String token;
   String channelName;
@@ -150,7 +151,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           child: Stack(
             children: [
               Center(
-                child: _renderRemoteVideo(),
+                child: resizeVideo ? _renderLocalPreview() : _renderRemoteVideo(),
               ),
               if (remoteUserVideoMute)
                 BackdropFilter(
@@ -185,11 +186,18 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
               Positioned(
                 top: 8,
                 left: 8,
-                child: Container(
-                  width: 100,
-                  height: 120,
-                  child: Center(
-                    child: _renderLocalPreview(),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      resizeVideo = !resizeVideo;
+                    });
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 120,
+                    child: Center(
+                      child: resizeVideo ? _renderRemoteVideo() : _renderLocalPreview(),
+                    ),
                   ),
                 ),
               ),
