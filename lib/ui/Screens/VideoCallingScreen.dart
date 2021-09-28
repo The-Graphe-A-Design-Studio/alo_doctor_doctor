@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
@@ -25,8 +26,13 @@ class VideoCallingScreen extends StatefulWidget {
 class _VideoCallingScreenState extends State<VideoCallingScreen> {
   int _remoteUid;
   RtcEngine _engine;
-  bool isJoined = false, switchCamera = true, switchRender = true, muteAudio = false,
+  bool isJoined = false,
+      switchCamera = true,
+      switchRender = true,
+      muteAudio = false,
       muteVideo = false;
+  bool remoteUserMicMute = false,
+      remoteUserVideoMute = false;
   AgoraApis _agoraApis = AgoraApis();
   String token;
   String channelName;
@@ -35,8 +41,9 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  String getRandomString(int length) =>
+      String.fromCharCodes(Iterable.generate(
+          length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   @override
   void initState() {
@@ -47,7 +54,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   Future<void> getAgoraToken() async {
     var tokenBody =
-        await _agoraApis.getAgoraToken(getRandomString(20), widget.pId);
+    await _agoraApis.getAgoraToken(getRandomString(20), widget.pId);
     print('token Body from videoPage' + tokenBody.toString());
 
     if (tokenBody['success'] == 1 || tokenBody['success'] == 2) {
@@ -94,6 +101,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
         userJoined: (int uid, int elapsed) {
           print('***************** Agore Init 5 ****************');
           print("remote user $uid joined");
+          _engine.enableVideo();
           setState(() {
             _remoteUid = uid;
           });
@@ -105,6 +113,18 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
             _remoteUid = null;
           });
           _userLeftTheCall();
+        },
+        userMuteVideo: (int uid, bool isMute) {
+          print('Audio Mutted');
+          setState(() {
+            remoteUserVideoMute = isMute;
+          });
+        },
+        userMuteAudio: (int uid, bool isMute) {
+          print('Audio Mutted');
+          setState(() {
+            remoteUserMicMute = isMute;
+          });
         },
       ),
     );
@@ -132,6 +152,36 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
               Center(
                 child: _renderRemoteVideo(),
               ),
+              if (remoteUserVideoMute)
+                BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 10,
+                    sigmaY: 10,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Center(
+                      child: Text(
+                          'Patient video Paused',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              if (remoteUserMicMute)
+                Padding(
+                  padding: const EdgeInsets.only(top: 32),
+                  child: Center(
+                    child: Text(
+                      'Patient Mic Muted',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
               Positioned(
                 top: 8,
                 left: 8,
@@ -288,7 +338,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   Future<bool> _onWillPop() async {
     return (await showDialog(
       context: context,
-      builder: (context) => new AlertDialog(
+      builder: (context) =>
+      new AlertDialog(
         title: new Text('Are you sure?'),
         content: new Text('Do you want to exit exit Video Call?'),
         actions: <Widget>[
@@ -312,7 +363,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   _userLeftTheCall() async {
     return (await showDialog(
       context: context,
-      builder: (context) => new AlertDialog(
+      builder: (context) =>
+      new AlertDialog(
         title: new Text('Patient Left'),
         content: new Text('Patient left this call please join Again'),
         actions: <Widget>[
@@ -320,6 +372,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
             onPressed: () async {
               await _agoraApis.leaveChannel(channelId);
               await _engine?.leaveChannel();
+              Navigator.of(context).pop(true);
               Navigator.of(context).pop(true);
               Navigator.of(context).pop(true);
             },
