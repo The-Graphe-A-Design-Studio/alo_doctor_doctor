@@ -38,6 +38,32 @@ class AppointmentDetails extends StatefulWidget {
 }
 
 class _AppointmentDetailsState extends State<AppointmentDetails> {
+  var bookingDetails;
+  bool _isLoading = false;
+
+  void setData(String bookingId) async {
+    print('hey');
+    await LoginCheck()
+        .getBookingsById(int.parse(widget.bookingId))
+        .then((value) {
+      setState(() {
+        bookingDetails = value[0];
+        widget.prescriptionList = value[0]["prescription"];
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
+    setData(widget.bookingId);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,326 +94,349 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
         //   ),
         // ],
       ),
-      body: RefreshIndicator(
-        backgroundColor: Colors.grey.shade800,
-        color: Colors.white,
-        onRefresh: () async {
-          print('hey');
-          await LoginCheck()
-              .getBookingsById(int.parse(widget.bookingId))
-              .then((value) {
-            setState(() {
-              widget.prescriptionList = value[0]["prescription"];
-            });
-          });
-        },
-        child: ListView(
-          physics:
-              const PageScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 40, 30, 15),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(196, 196, 196, 0.1),
-                    borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: widget.path == null
-                            ? AssetImage('assets/images/userdash.png')
-                            : NetworkImage(
-                                'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
-                        radius: 35,
-                      ),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Container(
-                        width: 190,
-                        child: Column(
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+              backgroundColor: Colors.grey.shade800,
+              color: Colors.white,
+              onRefresh: () async {
+                // print('hey');
+                // await LoginCheck()
+                //     .getBookingsById(int.parse(widget.bookingId))
+                //     .then((value) {
+                //   setState(() {
+                //     widget.prescriptionList = value[0]["prescription"];
+                //   });
+                // });
+                setData(widget.bookingId);
+              },
+              child: ListView(
+                physics: const PageScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 40, 30, 15),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(196, 196, 196, 0.1),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
                           children: [
-                            Text(
-                              widget.Name,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: widget.path == null
+                                  ? AssetImage('assets/images/userdash.png')
+                                  : NetworkImage(
+                                      'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
+                              radius: 35,
                             ),
                             SizedBox(
-                              height: 10,
+                              width: 30,
                             ),
-                            Text(
-                              ' ',
-                              style: TextStyle(fontSize: 15),
-                            ),
+                            Container(
+                              width: 190,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    widget.Name,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    ' ',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // InkWell(
-                  //   child: Container(
-                  //     height: 65,
-                  //     width: 65,
-                  //     padding: const EdgeInsets.all(8),
-                  //     decoration: BoxDecoration(
-                  //         border: Border.all(
-                  //             color: Colors.grey, style: BorderStyle.solid),
-                  //         borderRadius: BorderRadius.circular(12)),
-                  //     child: Image(
-                  //       image: AssetImage('./assets/images/phone.png'),
-                  //     ),
-                  //   ),
-                  // ),
-                  InkWell(
-                    onTap: () {
-                      if (widget.bookingStatus == 2) {
-                        Fluttertoast.cancel();
-                        Fluttertoast.showToast(msg: 'Session is over');
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  VideoCallingScreen(widget.pId)),
-                        );
-                      }
-                    },
-                    child: Container(
-                      height: 65,
-                      width: 65,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.grey, style: BorderStyle.solid),
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Image(
-                        image: AssetImage('./assets/images/video-camera.png'),
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Prescription(widget.bookingId)),
-                      );
-                      // if (widget.prescriptionList == null) {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             Prescription(widget.bookingId)),
-                      //   );
-                      // } else {
-                      //   Navigator.of(context).pushNamed(viewPrescription,
-                      //       arguments: ViewPrescription(
-                      //         prescriptionList: widget.prescriptionList,
-                      //         bookingId: widget.bookingId,
-                      //       ));
-                      // }
-                    },
-                    child: Container(
-                      height: 65,
-                      width: 65,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.grey, style: BorderStyle.solid),
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Image(
-                        image: AssetImage('./assets/images/upload.jpg'),
-                      ),
-                    ),
-                  ),
-                  // InkWell(
-                  //   child: Container(
-                  //     height: 65,
-                  //     width: 65,
-                  //     padding: const EdgeInsets.all(8),
-                  //     decoration: BoxDecoration(
-                  //         border: Border.all(
-                  //             color: Colors.grey, style: BorderStyle.solid),
-                  //         borderRadius: BorderRadius.circular(12)),
-                  //     child: Image(
-                  //       image: AssetImage('./assets/images/clock1.png'),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Divider(
-              thickness: 1,
-              color: Color(0xff8C8FA5),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-              child: Text(
-                'Upcoming',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 25,
-                    width: 25,
-                    child: Image(
-                      image: AssetImage('./assets/images/clock.png'),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // InkWell(
+                        //   child: Container(
+                        //     height: 65,
+                        //     width: 65,
+                        //     padding: const EdgeInsets.all(8),
+                        //     decoration: BoxDecoration(
+                        //         border: Border.all(
+                        //             color: Colors.grey, style: BorderStyle.solid),
+                        //         borderRadius: BorderRadius.circular(12)),
+                        //     child: Image(
+                        //       image: AssetImage('./assets/images/phone.png'),
+                        //     ),
+                        //   ),
+                        // ),
+                        InkWell(
+                          onTap: () {
+                            if (widget.bookingStatus == 2) {
+                              Fluttertoast.cancel();
+                              Fluttertoast.showToast(msg: 'Session is over');
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        VideoCallingScreen(widget.pId)),
+                              );
+                            }
+                          },
+                          child: Container(
+                            height: 65,
+                            width: 65,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Image(
+                              image: AssetImage(
+                                  './assets/images/video-camera.png'),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Prescription(widget.bookingId)),
+                            );
+                            // if (widget.prescriptionList == null) {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             Prescription(widget.bookingId)),
+                            //   );
+                            // } else {
+                            //   Navigator.of(context).pushNamed(viewPrescription,
+                            //       arguments: ViewPrescription(
+                            //         prescriptionList: widget.prescriptionList,
+                            //         bookingId: widget.bookingId,
+                            //       ));
+                            // }
+                          },
+                          child: Container(
+                            height: 65,
+                            width: 65,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Image(
+                              image: AssetImage('./assets/images/pupload.png'),
+                              color: Color.fromRGBO(140, 143, 165, 1),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (bookingDetails["reports"] == null) {
+                              Fluttertoast.cancel();
+                              Fluttertoast.showToast(msg: 'Report Unavailable');
+                            } else {
+                              print("Report present");
+                            }
+                          },
+                          child: Container(
+                            height: 65,
+                            width: 65,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Image(
+                              height: 10,
+                              color: Color.fromRGBO(140, 143, 165, 1),
+                              image: AssetImage('./assets/images/report.png'),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
-                    width: 10,
+                    height: 15,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Video call',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Text(
-                        'Morning',
-                        style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        widget.date,
-                        style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        widget.time,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ],
+                  Divider(
+                    thickness: 1,
+                    color: Color(0xff8C8FA5),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10),
+                    child: Text(
+                      'Upcoming',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 25,
+                          width: 25,
+                          child: Image(
+                            image: AssetImage('./assets/images/clock.png'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Video call',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              'Morning',
+                              style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              widget.date,
+                              style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              widget.time,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Divider(
+                    thickness: 1,
+                    color: Color(0xff8C8FA5),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+                  //   child: Text(
+                  //     'History',
+                  //     style: TextStyle(
+                  //         color: Colors.black,
+                  //         fontSize: 15,
+                  //         fontWeight: FontWeight.w700),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Container(
+                  //         height: 25,
+                  //         width: 25,
+                  //         child: Image(
+                  //           image: AssetImage('./assets/images/clock.png'),
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: 10,
+                  //       ),
+                  //       Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             'Video call',
+                  //             style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 15,
+                  //                 fontWeight: FontWeight.w700),
+                  //           ),
+                  //           SizedBox(
+                  //             height: 3,
+                  //           ),
+                  //           Text(
+                  //             'Morning',
+                  //             style: TextStyle(
+                  //                 color: Colors.grey.shade600,
+                  //                 fontSize: 15,
+                  //                 fontWeight: FontWeight.w400),
+                  //           ),
+                  //           SizedBox(
+                  //             height: 2,
+                  //           ),
+                  //           Text(
+                  //             'Today-09 May, 2021',
+                  //             style: TextStyle(
+                  //                 color: Colors.grey.shade600,
+                  //                 fontSize: 15,
+                  //                 fontWeight: FontWeight.w400),
+                  //           ),
+                  //           SizedBox(
+                  //             height: 2,
+                  //           ),
+                  //           Text(
+                  //             '04:30pm to 5:30pm',
+                  //             style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 15,
+                  //                 fontWeight: FontWeight.w700),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 15,
-            ),
-            Divider(
-              thickness: 1,
-              color: Color(0xff8C8FA5),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-            //   child: Text(
-            //     'History',
-            //     style: TextStyle(
-            //         color: Colors.black,
-            //         fontSize: 15,
-            //         fontWeight: FontWeight.w700),
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            //   child: Row(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Container(
-            //         height: 25,
-            //         width: 25,
-            //         child: Image(
-            //           image: AssetImage('./assets/images/clock.png'),
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         width: 10,
-            //       ),
-            //       Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Text(
-            //             'Video call',
-            //             style: TextStyle(
-            //                 color: Colors.black,
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.w700),
-            //           ),
-            //           SizedBox(
-            //             height: 3,
-            //           ),
-            //           Text(
-            //             'Morning',
-            //             style: TextStyle(
-            //                 color: Colors.grey.shade600,
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.w400),
-            //           ),
-            //           SizedBox(
-            //             height: 2,
-            //           ),
-            //           Text(
-            //             'Today-09 May, 2021',
-            //             style: TextStyle(
-            //                 color: Colors.grey.shade600,
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.w400),
-            //           ),
-            //           SizedBox(
-            //             height: 2,
-            //           ),
-            //           Text(
-            //             '04:30pm to 5:30pm',
-            //             style: TextStyle(
-            //                 color: Colors.black,
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.w700),
-            //           ),
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
-          ],
-        ),
-      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: Padding(
       //   padding: const EdgeInsets.symmetric(horizontal: 0.0),

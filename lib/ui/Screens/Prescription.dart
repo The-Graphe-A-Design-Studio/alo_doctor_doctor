@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,22 +104,30 @@ class _PrescriptionState extends State<Prescription> {
             color: Colors.black,
           ),
         ),
-        actions: [
-          if (prescriptionList != null)
-            IconButton(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  // print(bookingId);
-                  prescriptionList.clear();
-                  showModalBottomSheet(
-                    context: context,
-                    builder: ((builder) => bottomSheet()),
-                  );
-                })
-        ],
+        // actions: [
+        //   if (prescriptionList != null)
+        //     IconButton(
+        //         // child: Padding(
+        //         //   padding: const EdgeInsets.only(right: 3),
+        //         //   child: const Text(
+        //         //     "Replace",
+        //         //     style: TextStyle(
+        //         //         color: Colors.black, fontWeight: FontWeight.bold),
+        //         //   ),
+        //         // ),
+        //         icon: Icon(
+        //           Icons.find_replace_rounded,
+        //           color: Colors.black,
+        //         ),
+        //         onPressed: () {
+        //           // print(bookingId);
+        //           prescriptionList.clear();
+        //           showModalBottomSheet(
+        //             context: context,
+        //             builder: ((builder) => bottomSheet()),
+        //           );
+        //         })
+        // ],
         title: Column(
           children: [
             Text(
@@ -239,9 +248,9 @@ class _PrescriptionState extends State<Prescription> {
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                childAspectRatio: 3 / 4.3,
-                                crossAxisSpacing: 5,
-                                mainAxisSpacing: 5,
+                                childAspectRatio: 2 / 2.5,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
                               ),
                               itemBuilder: (ctx, index) {
                                 return Container(
@@ -297,6 +306,59 @@ class _PrescriptionState extends State<Prescription> {
                     )
                   ],
                 ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: prescriptionList != null
+          ? Container(
+              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text(
+                              "Alert",
+                              style: Styles.regularHeading,
+                            ),
+                            content: Text("Previous uploads will get deleted."),
+                            actions: [
+                              TextButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  prescriptionList.clear();
+                                  //  Navigator.of(context).pop();
+                                  takePhoto(ImageSource.gallery);
+                                  // showModalBottomSheet(
+                                  //   context: context,
+                                  //   builder: ((builder) => bottomSheet()),
+                                  // );
+                                },
+                              )
+                            ],
+                          ));
+                },
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12))),
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed))
+                        return accentYellow;
+                      return accentBlueLight;
+                    })),
+                child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    width: double.infinity,
+                    child: Text(
+                      'Upload Again',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    )),
+              ),
+            )
+          : Container(),
     );
   }
 
