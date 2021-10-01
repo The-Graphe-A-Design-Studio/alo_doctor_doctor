@@ -250,31 +250,31 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            if (bookingDetails["reports"] == null) {
-                              Fluttertoast.cancel();
-                              Fluttertoast.showToast(msg: 'Report Unavailable');
-                            } else {
-                              print("Report present");
-                            }
-                          },
-                          child: Container(
-                            height: 65,
-                            width: 65,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.grey,
-                                    style: BorderStyle.solid),
-                                borderRadius: BorderRadius.circular(12)),
-                            child: Image(
-                              height: 10,
-                              color: Color.fromRGBO(140, 143, 165, 1),
-                              image: AssetImage('./assets/images/report.png'),
-                            ),
-                          ),
-                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     if (bookingDetails["reports"] == null) {
+                        //       Fluttertoast.cancel();
+                        //       Fluttertoast.showToast(msg: 'Report Unavailable');
+                        //     } else {
+                        //       print("Report present");
+                        //     }
+                        //   },
+                        //   child: Container(
+                        //     height: 65,
+                        //     width: 65,
+                        //     padding: const EdgeInsets.all(10),
+                        //     decoration: BoxDecoration(
+                        //         border: Border.all(
+                        //             color: Colors.grey,
+                        //             style: BorderStyle.solid),
+                        //         borderRadius: BorderRadius.circular(12)),
+                        //     child: Image(
+                        //       height: 10,
+                        //       color: Color.fromRGBO(140, 143, 165, 1),
+                        //       image: AssetImage('./assets/images/report.png'),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
