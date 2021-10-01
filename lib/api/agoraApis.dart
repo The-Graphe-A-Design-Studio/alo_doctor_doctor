@@ -13,13 +13,14 @@ class AgoraApis {
   String authority = 'developers.thegraphe.com';
   String commonUnencodedPath = '/alodoctor/public/api';
 
-  Future getAgoraToken(String channelName, String pUid) async {
+  Future getAgoraToken(String channelName, String pUid, String bookingId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
       Map tokenData = {
         'channel_name': channelName,
         'p_uid': pUid,
+        'booking_id': bookingId
       };
       log(prefs.getString('token'));
       String token = prefs.getString('token');

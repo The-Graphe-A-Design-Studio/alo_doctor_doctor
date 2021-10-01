@@ -193,7 +193,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        VideoCallingScreen(widget.pId)),
+                                        VideoCallingScreen(widget.pId, widget.bookingId)),
                               );
                             }
                           },
