@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-
   static const regularHeading = TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.w600,
-    color: Colors.black
-  );
+      fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.black);
 
   static const boldHeading = TextStyle(
-      fontSize: 22.0,
-      fontWeight: FontWeight.w600,
-      color: Colors.black
-  );
+      fontSize: 22.0, fontWeight: FontWeight.w600, color: Colors.black);
 
-  static const buttonTextBlack = TextStyle(
-      fontSize: 16.0,
-      color: Colors.black
-  );
-
+  static const buttonTextBlack = TextStyle(fontSize: 16.0, color: Colors.black);
+  static var regularGreyText =
+      TextStyle(fontSize: 15.0, color: Colors.grey.shade600);
   static const buttonTextWhite = TextStyle(
-      fontSize: 16.0,
-      fontWeight: FontWeight.w600,
-      color: Colors.white
-  );
+      fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.white);
 
   static const regularErrorHeading = TextStyle(
-      fontSize: 18.0,
-      fontWeight: FontWeight.w600,
-      color: Colors.redAccent
-  );
-
+      fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.redAccent);
 }

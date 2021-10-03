@@ -32,4 +32,5 @@ const String signIn = './signIn';
 const String signUp = './signUp';
 // const String videoCallingScreen = './videoCalling';
 const String addSlotes = './addslotes';
-const String viewPrescription = './viewPrescription';
+const String viewReport = './viewReport';
+const String photoViewer = './photoViewer';

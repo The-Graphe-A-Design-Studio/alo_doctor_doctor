@@ -4,8 +4,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../utils/Colors.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Prescription.dart';
 import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
-import 'package:alo_doctor_doctor/ui/Screens/ViewPrescriptionScreen.dart';
+// import 'package:alo_doctor_doctor/ui/Screens/ViewPrescriptionScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
+import 'package:alo_doctor_doctor/utils/DateFormatter.dart';
+
 import 'package:alo_doctor_doctor/api/login.dart';
 
 class AppointmentDetails extends StatefulWidget {
@@ -192,8 +196,8 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        VideoCallingScreen(widget.pId, widget.bookingId)),
+                                    builder: (context) => VideoCallingScreen(
+                                        widget.pId, widget.bookingId)),
                               );
                             }
                           },
@@ -250,31 +254,33 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             ),
                           ),
                         ),
-                        // InkWell(
-                        //   onTap: () {
-                        //     if (bookingDetails["reports"] == null) {
-                        //       Fluttertoast.cancel();
-                        //       Fluttertoast.showToast(msg: 'Report Unavailable');
-                        //     } else {
-                        //       print("Report present");
-                        //     }
-                        //   },
-                        //   child: Container(
-                        //     height: 65,
-                        //     width: 65,
-                        //     padding: const EdgeInsets.all(10),
-                        //     decoration: BoxDecoration(
-                        //         border: Border.all(
-                        //             color: Colors.grey,
-                        //             style: BorderStyle.solid),
-                        //         borderRadius: BorderRadius.circular(12)),
-                        //     child: Image(
-                        //       height: 10,
-                        //       color: Color.fromRGBO(140, 143, 165, 1),
-                        //       image: AssetImage('./assets/images/report.png'),
-                        //     ),
-                        //   ),
-                        // ),
+                        InkWell(
+                          onTap: () {
+                            if (bookingDetails["reports"] == null) {
+                              Fluttertoast.cancel();
+                              Fluttertoast.showToast(msg: 'Report Unavailable');
+                            } else {
+                              Navigator.of(context).pushNamed(viewReport,
+                                  arguments: ViewReport(
+                                      reportList: bookingDetails["reports"]));
+                            }
+                          },
+                          child: Container(
+                            height: 65,
+                            width: 65,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Image(
+                              height: 10,
+                              color: Color.fromRGBO(140, 143, 165, 1),
+                              image: AssetImage('./assets/images/report.png'),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -285,17 +291,17 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                     thickness: 1,
                     color: Color(0xff8C8FA5),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 10),
-                    child: Text(
-                      'Upcoming',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: 30.0, vertical: 10),
+                  //   child: Text(
+                  //     'Upcoming',
+                  //     style: TextStyle(
+                  //         color: Colors.black,
+                  //         fontSize: 15,
+                  //         fontWeight: FontWeight.w700),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 30),
@@ -357,13 +363,98 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
+
                   Divider(
                     thickness: 1,
                     color: Color(0xff8C8FA5),
                   ),
+                  if (bookingDetails["call_history"].isNotEmpty)
+                    Container(
+                      // color: Colors.blue,
+                      padding: const EdgeInsets.only(left: 30, top: 2),
+                      height: 30,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            Container(
+                              // color: Colors.red,
+                              height: 20,
+                              width: 20,
+                              child: Image(
+                                image: AssetImage('./assets/images/clock.png'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Call History",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (bookingDetails["call_history"].isNotEmpty)
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: ListView.builder(
+                          itemCount: bookingDetails["call_history"].length,
+                          itemBuilder: (context, index) {
+                            print(
+                                bookingDetails["call_history"][index]["start"]);
+                            return Container(
+                              // color: Colors.bluse,
+                              padding: const EdgeInsets.only(left: 30, top: 5),
+                              height: 100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    // color: Colors.red,
+                                    height: 20,
+                                    width: 20,
+                                    child: Icon(Icons.circle,
+                                        color: lightGrey, size: 18),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        DateFormatter()
+                                            .getVerboseDateTimeRepresentation(
+                                                DateTime.parse(bookingDetails[
+                                                        "call_history"][index]
+                                                    ["start"])),
+                                        style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      Text(
+                                        bookingDetails["call_history"][index]
+                                            ["duration"],
+                                        style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                    )
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                   //   child: Text(

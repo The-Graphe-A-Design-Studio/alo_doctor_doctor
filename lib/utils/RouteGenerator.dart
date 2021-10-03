@@ -17,7 +17,8 @@ import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/calendarScreen.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:alo_doctor_doctor/ui/Screens/ViewPrescriptionScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
+import 'package:alo_doctor_doctor/ui/Screens/PhotoViewer.dart';
 
 import 'FadeTransition.dart';
 import 'MyConstants.dart';
@@ -98,15 +99,24 @@ class RouteGenerator {
           page: SignUpPage(),
         );
 
-      case viewPrescription:
-        ViewPrescription argument = args as ViewPrescription;
+      case viewReport:
+        ViewReport argument = args as ViewReport;
 
         return FadeRoute(
-          page: ViewPrescription(
-            prescriptionList: argument.prescriptionList,
-            bookingId: argument.bookingId,
+          page: ViewReport(
+            reportList: argument.reportList,
+            // bookingId: argument.bookingId,
           ),
         );
+
+      case photoViewer:
+        return MaterialPageRoute(builder: (BuildContext context) {
+          PhotoViewer argument = args as PhotoViewer;
+          return PhotoViewer(
+            argument.imgPath,
+          );
+        });
+
       // case videoCallingScreen:
       //   return FadeRoute(
       //     page: VideoCallingScreen(),
