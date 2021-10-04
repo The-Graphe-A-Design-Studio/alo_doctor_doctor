@@ -105,7 +105,7 @@ class RouteGenerator {
         return FadeRoute(
           page: ViewReport(
             reportList: argument.reportList,
-            // bookingId: argument.bookingId,
+            rDescription: argument.rDescription,
           ),
         );
 

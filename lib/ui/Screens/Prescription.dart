@@ -247,17 +247,17 @@ class _PrescriptionState extends State<Prescription> {
                               itemCount: _imageFile.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2 / 2.5,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
+                                crossAxisCount: 3,
+                                childAspectRatio: 1 / 1,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 5,
                               ),
                               itemBuilder: (ctx, index) {
                                 return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 2,
-                                  width: MediaQuery.of(context).size.width * 2,
-                                  padding: EdgeInsets.all(10),
+                                  // height:
+                                  //     MediaQuery.of(context).size.height * 2,
+                                  // width: MediaQuery.of(context).size.width * 2,
+                                  // padding: EdgeInsets.all(10),
                                   child: Image.file(
                                     File(_imageFile[index].path),
                                     fit: BoxFit.cover,
@@ -276,10 +276,10 @@ class _PrescriptionState extends State<Prescription> {
                           itemCount: prescriptionList.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 2 / 2.5,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 15,
+                            crossAxisCount: 3,
+                            childAspectRatio: 1 / 1,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
                           ),
                           itemBuilder: (ctx, index) {
                             // var nowParam =

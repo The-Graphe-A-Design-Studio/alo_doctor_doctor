@@ -699,4 +699,32 @@ class LoginCheck {
       throw e;
     }
   }
+
+  // ****************************** LogOut
+  Future<dynamic> logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    print('inside');
+
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/logout',
+        host: targethost);
+    print(gettokenuri);
+
+    final response = await http.get(gettokenuri,
+        headers: {HttpHeaders.authorizationHeader: authorization});
+    print(response.body);
+    print(response.statusCode);
+    var decodedData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return decodedData["success"];
+    } else {
+      throw HttpException("Error Logging out.");
+    }
+  }
 }

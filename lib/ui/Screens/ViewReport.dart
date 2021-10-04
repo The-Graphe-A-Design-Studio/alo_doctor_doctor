@@ -10,8 +10,8 @@ import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 
 class ViewReport extends StatelessWidget {
   List reportList;
-
-  ViewReport({Key key, this.reportList}) : super(key: key);
+  String rDescription;
+  ViewReport({Key key, this.reportList, this.rDescription}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,32 @@ class ViewReport extends StatelessWidget {
       ),
       body: Column(
         children: [
+          rDescription == null
+              ? Container()
+              : Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Report Description : ',
+                        style: Styles.buttonTextBlackBold,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        rDescription,
+                        style: Styles.buttonTextBlack,
+                        maxLines: 10,
+                      ),
+                      Divider(
+                        color: Color.fromRGBO(140, 143, 165, 1),
+                      ),
+                    ],
+                  ),
+                ),
           Expanded(
             child: GridView.builder(
                 physics: BouncingScrollPhysics(),

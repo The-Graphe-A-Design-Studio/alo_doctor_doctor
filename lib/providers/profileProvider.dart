@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api/profile.dart';
 import '../models/doctor.dart';
 import '../utils/MyConstants.dart';
+import '../api/login.dart';
 
 class ProfileProvider with ChangeNotifier {
   ProfileServer serverHandler = ProfileServer();
@@ -66,6 +67,15 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void logOut(context) async {
+    try {
+      var success = await LoginCheck().logOut();
+      if (success == 1) {
+        print('Successfully logged out');
+      }
+    } catch (e) {
+      print(e);
+    }
+
     SharedPreferences localstorage = await SharedPreferences.getInstance();
     localstorage.clear();
     userProfileDetails = null;

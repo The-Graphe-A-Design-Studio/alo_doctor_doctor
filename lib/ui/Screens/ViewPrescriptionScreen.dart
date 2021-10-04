@@ -64,10 +64,10 @@ class ViewPrescription extends StatelessWidget {
                 padding: const EdgeInsets.all(15.0),
                 itemCount: prescriptionList.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2 / 2.5,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
+                  crossAxisCount: 3,
+                  childAspectRatio: 1 / 1,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
                 ),
                 itemBuilder: (ctx, index) {
                   // var nowParam =

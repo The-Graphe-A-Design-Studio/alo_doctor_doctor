@@ -262,7 +262,10 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             } else {
                               Navigator.of(context).pushNamed(viewReport,
                                   arguments: ViewReport(
-                                      reportList: bookingDetails["reports"]));
+                                    reportList: bookingDetails["reports"],
+                                    rDescription:
+                                        bookingDetails["report_description"],
+                                  ));
                             }
                           },
                           child: Container(
@@ -386,7 +389,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               ),
                             ),
                             SizedBox(
-                              width: 20,
+                              width: 10,
                             ),
                             Text(
                               "Call History",
@@ -402,16 +405,16 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                     ),
                   if (bookingDetails["call_history"].isNotEmpty)
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.3,
                       child: ListView.builder(
                           itemCount: bookingDetails["call_history"].length,
                           itemBuilder: (context, index) {
                             print(
                                 bookingDetails["call_history"][index]["start"]);
                             return Container(
-                              // color: Colors.bluse,
+                              // color: Colors.blue,
                               padding: const EdgeInsets.only(left: 30, top: 5),
-                              height: 100,
+                              height: 47,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -419,11 +422,11 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                     // color: Colors.red,
                                     height: 20,
                                     width: 20,
-                                    child: Icon(Icons.circle,
-                                        color: lightGrey, size: 18),
+                                    child: Icon(Icons.video_call,
+                                        color: lightGrey, size: 20),
                                   ),
                                   SizedBox(
-                                    width: 20,
+                                    width: 10,
                                   ),
                                   Column(
                                     crossAxisAlignment:
