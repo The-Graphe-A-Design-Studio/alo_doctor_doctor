@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// import '../../utils/Colors.dart';
-
-class PhotoViewer extends StatelessWidget {
+class PhotoViewer extends StatefulWidget {
   final String imgPath;
   PhotoViewer(this.imgPath);
 
   @override
+  State<PhotoViewer> createState() => _PhotoViewerState();
+}
+
+class _PhotoViewerState extends State<PhotoViewer> {
+  @override
   Widget build(BuildContext context) {
-    print('https://developers.thegraphe.com/alodoctor/public$imgPath');
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.black,
@@ -33,7 +34,7 @@ class PhotoViewer extends StatelessWidget {
       ),
       body: Center(
         child: Image.network(
-            'https://developers.thegraphe.com/alodoctor/public$imgPath'),
+            'https://developers.thegraphe.com/alodoctor/public${widget.imgPath}'),
       ),
     );
   }

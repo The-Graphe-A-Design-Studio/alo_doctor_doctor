@@ -1,3 +1,5 @@
+import 'package:alo_doctor_doctor/ui/Screens/ConsultationSchedule.dart';
+import 'package:alo_doctor_doctor/ui/Screens/RescheduleBooking.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -534,23 +536,19 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: Padding(
       //   padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      //   child: Container(
-      //     height: 56,
-      //     width: double.infinity,
-      //     decoration: BoxDecoration(
-      //         color: Color(0xffE6EAEA),
-      //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
-      //         borderRadius: BorderRadius.circular(10)),
-      //     child: Padding(
-      //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      //       child: Row(
-      //         children: [
-      //           Expanded(
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      //     child: Row(
+      //       children: [
+      //         Expanded(
+      //           child: InkWell(
+      //             onTap: () {
+      //               bottomSheet();
+      //             },
       //             child: Container(
-      //               height: 40,
+      //               height: 50,
       //               decoration: BoxDecoration(
-      //                 border: Border.all(color: Color(0xffDFF4F3), width: 1),
-      //                 color: Colors.white,
+      //                 color: Color(0xffDFF4F3),
       //                 borderRadius: BorderRadius.circular(10),
       //               ),
       //               child: Padding(
@@ -567,36 +565,45 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
       //               ),
       //             ),
       //           ),
-      //           SizedBox(
-      //             width: 30,
-      //           ),
-      //           Expanded(
-      //             child: Container(
-      //               height: 40,
-      //               decoration: BoxDecoration(
-      //                   border: Border.all(color: Color(0xffDFF4F3), width: 1),
-      //                   color: Colors.white,
-      //                   borderRadius: BorderRadius.circular(10)),
-      //               child: Padding(
-      //                 padding: const EdgeInsets.symmetric(
-      //                   horizontal: 10.0,
-      //                 ),
-      //                 child: Center(
-      //                   child: Text('Cancel Appointment',
-      //                       overflow: TextOverflow.ellipsis,
-      //                       style: TextStyle(
-      //                           fontSize: 15,
-      //                           color: Colors.black87,
-      //                           fontWeight: FontWeight.w600)),
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
+      //         ),
+      //         // SizedBox(
+      //         //   width: 30,
+      //         // ),
+      //         // Expanded(
+      //         //   child: Container(
+      //         //     height: 40,
+      //         //     decoration: BoxDecoration(
+      //         //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
+      //         //         color: Colors.white,
+      //         //         borderRadius: BorderRadius.circular(10)),
+      //         //     child: Padding(
+      //         //       padding: const EdgeInsets.symmetric(
+      //         //         horizontal: 10.0,
+      //         //       ),
+      //         //       child: Center(
+      //         //         child: Text('Cancel Appointment',
+      //         //             overflow: TextOverflow.ellipsis,
+      //         //             style: TextStyle(
+      //         //                 fontSize: 15,
+      //         //                 color: Colors.black87,
+      //         //                 fontWeight: FontWeight.w600)),
+      //         //       ),
+      //         //     ),
+      //         //   ),
+      //         // ),
+      //       ],
       //     ),
       //   ),
       // ),
     );
   }
+
+  void bottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return RescheduleBooking();
+        });
+  }
+
 }

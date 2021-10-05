@@ -1,11 +1,7 @@
+import 'package:alo_doctor_doctor/widgets/photoViewer.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// import 'package:alo_doctor_doctor/widgets/reportViewer.dart';
 import '../../utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
-import 'package:alo_doctor_doctor/ui/screens/PhotoViewer.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 
 class ViewReport extends StatelessWidget {
@@ -86,6 +82,10 @@ class ViewReport extends StatelessWidget {
                   return InkWell(
                     onTap: () {
                       print(reportList[index]["file_path"]);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => PhotoViewer('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png')),
+                      // );
                       Navigator.of(context).pushNamed(photoViewer,
                           arguments:
                               PhotoViewer(reportList[index]["file_path"]));

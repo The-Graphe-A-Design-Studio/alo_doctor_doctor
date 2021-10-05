@@ -52,6 +52,7 @@ dependencies:
   firebase_messaging: ^10.0.6
   provider: ^5.0.0
   matrix_gesture_detector: ^0.1.0
+  flutter_screenutil: ^5.0.0+2
 
 dev_dependencies:
   flutter_test:

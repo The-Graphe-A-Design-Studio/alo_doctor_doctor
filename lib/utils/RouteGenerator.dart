@@ -14,11 +14,11 @@ import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignUp.dart';
 import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
 import 'package:alo_doctor_doctor/ui/Screens/calendarScreen.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
+import 'package:alo_doctor_doctor/widgets/photoViewer.dart';
 import 'package:flutter/material.dart';
-import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
-import 'package:alo_doctor_doctor/ui/Screens/PhotoViewer.dart';
 
 import 'FadeTransition.dart';
 import 'MyConstants.dart';
@@ -110,12 +110,20 @@ class RouteGenerator {
         );
 
       case photoViewer:
-        return MaterialPageRoute(builder: (BuildContext context) {
-          PhotoViewer argument = args as PhotoViewer;
-          return PhotoViewer(
+        PhotoViewer argument = args as PhotoViewer;
+
+        return FadeRoute(
+          page: PhotoViewer(
             argument.imgPath,
-          );
-        });
+          ),
+        );
+
+        // return MaterialPageRoute(builder: (BuildContext context) {
+        //   PhotoViewer argument = args as PhotoViewer;
+        //   return PhotoViewer(
+        //     argument.imgPath,
+        //   );
+        // });
 
       // case videoCallingScreen:
       //   return FadeRoute(
