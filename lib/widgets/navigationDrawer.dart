@@ -325,11 +325,11 @@ class NavigationDrawer extends StatelessWidget {
               onTap: () async {
                 Provider.of<ProfileProvider>(context, listen: false)
                     .logOut(context);
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.remove('token');
-                prefs.remove('name');
-                prefs.clear();
-                Navigator.pushNamed(context, signIn);
+                // SharedPreferences prefs = await SharedPreferences.getInstance();
+                // prefs.remove('token');
+                // prefs.remove('name');
+                // prefs.clear();
+                // Navigator.pushNamed(context, signIn);
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
