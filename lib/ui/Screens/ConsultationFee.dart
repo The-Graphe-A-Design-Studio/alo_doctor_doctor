@@ -189,12 +189,12 @@ class _ConsultationFeeState extends State<ConsultationFee> {
           },
         ),
         iconTheme: Theme.of(context).iconTheme,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.notifications_none),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Icon(Icons.notifications_none),
+        //   ),
+        // ],
       ),
       backgroundColor: Colors.white,
       body: Padding(
