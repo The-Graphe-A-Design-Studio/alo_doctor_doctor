@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
+import 'package:alo_doctor_doctor/widgets/photoViewer.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -289,11 +291,14 @@ class _PrescriptionState extends State<Prescription> {
                                 prescriptionList[index]["file_path"]);
                             return InkWell(
                               onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => PrescriptionViewer(
-                                        docPath: prescriptionList[index]
-                                            ["file_path"]));
+                                Navigator.of(context).pushNamed(photoViewer,
+                                    arguments: PhotoViewer(
+                                        prescriptionList[index]["file_path"]));
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) => PrescriptionViewer(
+                                //         docPath: prescriptionList[index]
+                                //             ["file_path"]));
                               },
                               child: Container(
                                 child: Image.network(
