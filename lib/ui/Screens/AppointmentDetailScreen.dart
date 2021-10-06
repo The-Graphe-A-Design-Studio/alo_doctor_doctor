@@ -347,7 +347,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               height: 2,
                             ),
                             Text(
-                              widget.date,
+                              bookingDetails["slot_date"],
                               style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 15,
@@ -357,7 +357,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               height: 2,
                             ),
                             Text(
-                              widget.time,
+                              bookingDetails["slot_time"],
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
@@ -533,68 +533,68 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                 ],
               ),
             ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      //   child: Padding(
-      //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      //     child: Row(
-      //       children: [
-      //         Expanded(
-      //           child: InkWell(
-      //             onTap: () {
-      //               bottomSheet();
-      //             },
-      //             child: Container(
-      //               height: 50,
-      //               decoration: BoxDecoration(
-      //                 color: Color(0xffDFF4F3),
-      //                 borderRadius: BorderRadius.circular(10),
-      //               ),
-      //               child: Padding(
-      //                 padding: const EdgeInsets.symmetric(
-      //                   horizontal: 10.0,
-      //                 ),
-      //                 child: Center(
-      //                   child: Text('Reschedule',
-      //                       style: TextStyle(
-      //                           fontSize: 15,
-      //                           color: Colors.black87,
-      //                           fontWeight: FontWeight.w600)),
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //         // SizedBox(
-      //         //   width: 30,
-      //         // ),
-      //         // Expanded(
-      //         //   child: Container(
-      //         //     height: 40,
-      //         //     decoration: BoxDecoration(
-      //         //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
-      //         //         color: Colors.white,
-      //         //         borderRadius: BorderRadius.circular(10)),
-      //         //     child: Padding(
-      //         //       padding: const EdgeInsets.symmetric(
-      //         //         horizontal: 10.0,
-      //         //       ),
-      //         //       child: Center(
-      //         //         child: Text('Cancel Appointment',
-      //         //             overflow: TextOverflow.ellipsis,
-      //         //             style: TextStyle(
-      //         //                 fontSize: 15,
-      //         //                 color: Colors.black87,
-      //         //                 fontWeight: FontWeight.w600)),
-      //         //       ),
-      //         //     ),
-      //         //   ),
-      //         // ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    bottomSheet();
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color(0xffDFF4F3),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      child: Center(
+                        child: Text('Reschedule',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w600)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // SizedBox(
+              //   width: 30,
+              // ),
+              // Expanded(
+              //   child: Container(
+              //     height: 40,
+              //     decoration: BoxDecoration(
+              //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
+              //         color: Colors.white,
+              //         borderRadius: BorderRadius.circular(10)),
+              //     child: Padding(
+              //       padding: const EdgeInsets.symmetric(
+              //         horizontal: 10.0,
+              //       ),
+              //       child: Center(
+              //         child: Text('Cancel Appointment',
+              //             overflow: TextOverflow.ellipsis,
+              //             style: TextStyle(
+              //                 fontSize: 15,
+              //                 color: Colors.black87,
+              //                 fontWeight: FontWeight.w600)),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -602,7 +602,12 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return RescheduleBooking();
+          return RescheduleBooking(
+            widget.bookingId,
+              () {
+                setData(widget.bookingId);
+              }
+          );
         });
   }
 

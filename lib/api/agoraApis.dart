@@ -151,6 +151,30 @@ class AgoraApis {
     }
   }
 
+  Future rescheduleBooking(String bookingId, String newSlotId) async {
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    print('inside');
+
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/reschedule_booking/$bookingId/$newSlotId',
+        host: targethost);
+    print(gettokenuri);
+
+    final response = await http.put(gettokenuri,
+        headers: {HttpHeaders.authorizationHeader: authorization});
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      print(body);
+      log('Rescheduled Booking');
+      return body;
+    } else {
+      throw Exception('Unable to Reschedule Booking');
+    }
+  }
 
 }

@@ -53,11 +53,13 @@ class SlotTime {
     this.id,
     this.time,
     this.status,
+    this.selected = false,
   });
 
   int id;
   String time;
   int status;
+  bool selected;
 
   factory SlotTime.fromJson(Map<String, dynamic> json) => SlotTime(
     id: json["id"],

@@ -15,6 +15,9 @@ import '../../utils/MyConstants.dart';
 import '../../widgets/slotItem.dart';
 
 class RescheduleBooking extends StatefulWidget {
+  final String bookingId;
+  final Function onFinish;
+  RescheduleBooking(this.bookingId, this.onFinish);
   @override
   _RescheduleBookingState createState() => _RescheduleBookingState();
 }
@@ -33,7 +36,7 @@ class _RescheduleBookingState extends State<RescheduleBooking> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  TimeOfDay selectedTime = TimeOfDay.now();
+  SlotTime selectedTime;
 
   @override
   void initState() {
@@ -153,54 +156,42 @@ class _RescheduleBookingState extends State<RescheduleBooking> {
                           ),
                         )
                       else
-                        Container(
-                          margin: const EdgeInsets.only(
-                              top: 4, left: 20, right: 20),
-                          height: 300,
-                          width: double.infinity,
-                          child: Center(
-                            child: GridView.builder(
-                                shrinkWrap: true,
-                                // physics: ScrollPhysics(),
-                                itemCount: slots.slots[selectedDateInt].slotTime.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 7 / 3,
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 2),
-                                itemBuilder: (context, index) {
-                                  return InkWell(
-                                    child: SlotItem(
-                                        slots.slots[selectedDateInt].slotTime[index].status != 0,
-                                        slots.slots[selectedDateInt].slotTime[index].time
-                                    ),
-                                    onTap: slots.slots[selectedDateInt].slotTime[index].status == 1
-                                        ? null
-                                        : () {
-                                      // setState(() {
-                                      //   if (slots.slots[selectedDateInt].slotTime[index].status == 0) {
-                                      //     slots.slots[selectedDateInt].slotTime.forEach((element) {
-                                      //       // if (element.status != 1)
-                                      //       element.selected = false;
-                                      //     });
-                                      //     slots.slots[selectedDateInt].slotTime[index].selected = true;
-                                      //   }
-                                      // });
-                                      // selectedTime = slots.slots[selectedDateInt].slotTime[index] as TimeOfDay;
-                                      // print(selectedDate);
-                                      // print(selectedTime.time);
-                                      // print(selectedTime.id);
-                                    },
-                                    // onTap: () {
-                                    //   showAlertDialog(
-                                    //       context,
-                                    //       slots.slots[selectedDateInt].slotTime[index], index
-                                    //   );
-                                    // },
-                                  );
-                                }),
-                          ),
-                        ),
+                        GridView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: slots.slots[selectedDateInt].slotTime.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: 7 / 3,
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 2),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                child: SlotItem(
+                                    slots.slots[selectedDateInt].slotTime[index].status,
+                                    slots.slots[selectedDateInt].slotTime[index].time,
+                                    slots.slots[selectedDateInt].slotTime[index].selected,
+                                ),
+                                onTap: slots.slots[selectedDateInt].slotTime[index].status == 1
+                                    ? null
+                                    : () {
+                                  setState(() {
+                                    if (slots.slots[selectedDateInt].slotTime[index].status == 0) {
+                                      slots.slots[selectedDateInt].slotTime.forEach((element) {
+                                        // if (element.status != 1)
+                                        element.selected = false;
+                                      });
+                                      slots.slots[selectedDateInt].slotTime[index].selected = true;
+                                    }
+                                  });
+                                  selectedTime = slots.slots[selectedDateInt].slotTime[index];
+                                  print(selectedDate);
+                                  print(selectedTime.time);
+                                  print(selectedTime.id);
+                                },
+                              );
+                            }),
                     ],
                   ),
                 ),
@@ -263,58 +254,31 @@ class _RescheduleBookingState extends State<RescheduleBooking> {
     );
   }
 
-  showAlertDialog(BuildContext context, SlotTime slot, int index) {
-    // set up the button
-    Widget yesButton = TextButton(
-      child: Text("Yes"),
-      onPressed: () async {
-        var body = await _agoraApis.deleteSlot(slot.id.toString());
-        if (body["success"] == 1) {
-          setState(() {
-            slots.slots[selectedDateInt].slotTime.removeAt(index);
-          });
-          Navigator.pop(context);
-          showInSnackBar('Slot Deleted');
-        } else {
-          showInSnackBar(body['message']);
-        }
-      },
-    );
-
-    // set up the button
-    Widget noButton = TextButton(
-      child: Text("No"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Delete Slot"),
-      content:
-          Text("Are you sure you want to delete this (${slot.time}) slot?"),
-      actions: [
-        noButton,
-        yesButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  void _rescheduleSlot () {
+  void _rescheduleSlot () async {
+
+    if(selectedTime != null) {
+
+      try {
+        var data = await _agoraApis.rescheduleBooking(widget.bookingId, selectedTime.id.toString());
+        print(data);
+
+        widget.onFinish();
+        Navigator.pop(context);
+
+      } catch (e) {
+        setState(() {
+          error = e.toString();
+        });
+        throw e;
+      }
+
+    } else {
+      showInSnackBar('Please Select a slot to continue');
+    }
 
   }
 }

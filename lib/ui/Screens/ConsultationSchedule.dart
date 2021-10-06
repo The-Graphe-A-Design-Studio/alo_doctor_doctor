@@ -193,11 +193,10 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     child: SlotItem(
-                                        slots.slots[selectedDateInt]
-                                                .slotTime[index].status !=
-                                            0,
-                                        slots.slots[selectedDateInt]
-                                            .slotTime[index].time),
+                                        slots.slots[selectedDateInt].slotTime[index].status,
+                                        slots.slots[selectedDateInt].slotTime[index].time,
+                                        false
+                                  ),
                                     onTap: () {
                                       showAlertDialog(
                                           context,
