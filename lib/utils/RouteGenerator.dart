@@ -113,17 +113,15 @@ class RouteGenerator {
         PhotoViewer argument = args as PhotoViewer;
 
         return FadeRoute(
-          page: PhotoViewer(
-            argument.imgPath,
-          ),
+          page: PhotoViewer(argument.imgPath, argument.isNetwork),
         );
 
-        // return MaterialPageRoute(builder: (BuildContext context) {
-        //   PhotoViewer argument = args as PhotoViewer;
-        //   return PhotoViewer(
-        //     argument.imgPath,
-        //   );
-        // });
+      // return MaterialPageRoute(builder: (BuildContext context) {
+      //   PhotoViewer argument = args as PhotoViewer;
+      //   return PhotoViewer(
+      //     argument.imgPath,
+      //   );
+      // });
 
       // case videoCallingScreen:
       //   return FadeRoute(

@@ -141,6 +141,7 @@ class _PrescriptionState extends State<Prescription> {
             )
           ],
         ),
+        centerTitle: true,
         backgroundColor: accentBlueLight,
       ),
       body: _isLoading
@@ -255,14 +256,21 @@ class _PrescriptionState extends State<Prescription> {
                                 mainAxisSpacing: 5,
                               ),
                               itemBuilder: (ctx, index) {
-                                return Container(
-                                  // height:
-                                  //     MediaQuery.of(context).size.height * 2,
-                                  // width: MediaQuery.of(context).size.width * 2,
-                                  // padding: EdgeInsets.all(10),
-                                  child: Image.file(
-                                    File(_imageFile[index].path),
-                                    fit: BoxFit.cover,
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(photoViewer,
+                                        arguments: PhotoViewer(
+                                            _imageFile[index].path, false));
+                                  },
+                                  child: Container(
+                                    // height:
+                                    //     MediaQuery.of(context).size.height * 2,
+                                    // width: MediaQuery.of(context).size.width * 2,
+                                    // padding: EdgeInsets.all(10),
+                                    child: Image.file(
+                                      File(_imageFile[index].path),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 );
                               }),
@@ -293,7 +301,8 @@ class _PrescriptionState extends State<Prescription> {
                               onTap: () {
                                 Navigator.of(context).pushNamed(photoViewer,
                                     arguments: PhotoViewer(
-                                        prescriptionList[index]["file_path"]));
+                                        prescriptionList[index]["file_path"],
+                                        true));
                                 // showDialog(
                                 //     context: context,
                                 //     builder: (context) => PrescriptionViewer(

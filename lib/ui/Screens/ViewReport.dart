@@ -87,8 +87,8 @@ class ViewReport extends StatelessWidget {
                       //   MaterialPageRoute(builder: (context) => PhotoViewer('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png')),
                       // );
                       Navigator.of(context).pushNamed(photoViewer,
-                          arguments:
-                              PhotoViewer(reportList[index]["file_path"]));
+                          arguments: PhotoViewer(
+                              reportList[index]["file_path"], true));
                       // showDialog(
                       //     context: context,
                       //     builder: (context) => reportViewer(

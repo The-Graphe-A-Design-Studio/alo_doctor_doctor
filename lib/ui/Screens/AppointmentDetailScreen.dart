@@ -539,67 +539,71 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                 ),
               ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      bottomSheet();
-                    },
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Color(0xffDFF4F3),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
-                        child: Center(
-                          child: Text('Reschedule',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600)),
-                        ),
+        floatingActionButton: _isLoading
+            ? Container()
+            : bookingDetails["status"] == 1
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                bottomSheet();
+                              },
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffDFF4F3),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0,
+                                  ),
+                                  child: Center(
+                                    child: Text('Reschedule',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // SizedBox(
+                          //   width: 30,
+                          // ),
+                          // Expanded(
+                          //   child: Container(
+                          //     height: 40,
+                          //     decoration: BoxDecoration(
+                          //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
+                          //         color: Colors.white,
+                          //         borderRadius: BorderRadius.circular(10)),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.symmetric(
+                          //         horizontal: 10.0,
+                          //       ),
+                          //       child: Center(
+                          //         child: Text('Cancel Appointment',
+                          //             overflow: TextOverflow.ellipsis,
+                          //             style: TextStyle(
+                          //                 fontSize: 15,
+                          //                 color: Colors.black87,
+                          //                 fontWeight: FontWeight.w600)),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                // SizedBox(
-                //   width: 30,
-                // ),
-                // Expanded(
-                //   child: Container(
-                //     height: 40,
-                //     decoration: BoxDecoration(
-                //         border: Border.all(color: Color(0xffDFF4F3), width: 1),
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.symmetric(
-                //         horizontal: 10.0,
-                //       ),
-                //       child: Center(
-                //         child: Text('Cancel Appointment',
-                //             overflow: TextOverflow.ellipsis,
-                //             style: TextStyle(
-                //                 fontSize: 15,
-                //                 color: Colors.black87,
-                //                 fontWeight: FontWeight.w600)),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        ));
+                  )
+                : Container());
   }
 
   void bottomSheet() {

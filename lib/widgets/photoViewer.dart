@@ -1,15 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
-class PhotoViewer extends StatefulWidget {
+class PhotoViewer extends StatelessWidget {
   final String imgPath;
-  PhotoViewer(this.imgPath);
+  bool isNetwork;
+  PhotoViewer(this.imgPath, this.isNetwork);
 
-  @override
-  State<PhotoViewer> createState() => _PhotoViewerState();
-}
-
-class _PhotoViewerState extends State<PhotoViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +32,15 @@ class _PhotoViewerState extends State<PhotoViewer> {
         iconTheme: Theme.of(context).iconTheme,
       ),
       body: Center(
-        child: PhotoView(imageProvider: NetworkImage('https://developers.thegraphe.com/alodoctor/public${widget.imgPath}'),),
+        child: PhotoView(
+          imageProvider: isNetwork
+              ? NetworkImage(
+                  'https://developers.thegraphe.com/alodoctor/public$imgPath')
+              : Image.file(
+                  File(imgPath),
+                  fit: BoxFit.cover,
+                ).image,
+        ),
         // child: Image.network('https://developers.thegraphe.com/alodoctor/public${widget.imgPath}'),
       ),
     );
