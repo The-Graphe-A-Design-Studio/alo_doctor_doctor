@@ -126,6 +126,8 @@ class NavigationDrawer extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                Navigator.pop(context);
+
                 Navigator.pushNamed(context, consultFee);
               },
               child: ListTile(

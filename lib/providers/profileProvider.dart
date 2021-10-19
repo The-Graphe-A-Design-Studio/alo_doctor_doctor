@@ -59,6 +59,11 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void upadateFeePeriod(int period) {
+    userProfileDetails.feesPeriod = period;
+    notifyListeners();
+  }
+
   Details get currentUser {
     // print(
     //     'current user profile pic path ----- ${_userProfileDetails.profilePicPath}');

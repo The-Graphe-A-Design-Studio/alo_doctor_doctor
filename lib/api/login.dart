@@ -216,6 +216,32 @@ class LoginCheck {
     return 0;
   }
 
+  Future setFeesPeriod(String period) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    var map = new Map<String, dynamic>();
+    map['period'] = period;
+
+    print('inside');
+    print(map);
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/fees_period',
+        host: targethost);
+    print(gettokenuri);
+    final response = await http.post(gettokenuri,
+        body: map, headers: {HttpHeaders.authorizationHeader: authorization});
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return json["success"];
+    }
+    return 0;
+  }
+
   Future CreateSlot(List days, List Timings, int duration) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';

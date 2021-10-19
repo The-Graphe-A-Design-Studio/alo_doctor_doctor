@@ -15,8 +15,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  FirebaseMessaging fcm = FirebaseMessaging.instance;
-  String dtoken;
+  // FirebaseMessaging fcm = FirebaseMessaging.instance;
+  // String dtoken;
   bool _isLoading = false;
   Map<String, String> _authData = {
     'email': '',
@@ -24,8 +24,7 @@ class _SignInPageState extends State<SignInPage> {
   };
   @override
   void initState() {
-    // TODO: implement initState
-    fcm.getToken().then((value) => print(value));
+    // fcm.getToken().then((value) => print(value));
     super.initState();
   }
 

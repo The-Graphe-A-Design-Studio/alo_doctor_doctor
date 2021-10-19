@@ -14,7 +14,9 @@ class _ConsultationFeeState extends State<ConsultationFee> {
   int selectedWidget;
   int select = 0;
   String fee;
+  int period;
   bool _isLoading = false;
+  bool _isFeePeriodLoading = false;
 
   submitFee() async {
     setState(() {
@@ -42,7 +44,38 @@ class _ConsultationFeeState extends State<ConsultationFee> {
       _isLoading = false;
     });
     Navigator.pop(context);
-  } // Widget getConsultMode() {
+  }
+
+  saveFeePeriod() async {
+    setState(() {
+      _isFeePeriodLoading = true;
+    });
+
+    int doc = await LoginCheck().setFeesPeriod(period.toString());
+    Provider.of<ProfileProvider>(context, listen: false)
+        .upadateFeePeriod(period);
+    if (doc == 1) {
+      Fluttertoast.showToast(
+        msg: "Fee Period Saved",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+      // print('SetFee');
+    } else {
+      Fluttertoast.showToast(
+        msg: "error",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    }
+
+    setState(() {
+      _isFeePeriodLoading = false;
+    });
+    Navigator.pop(context);
+  }
+
+  // Widget getConsultMode() {
   //   return Padding(e
   //     padding: const EdgeInsets.all(20.0),
   //     child: Column(
@@ -157,7 +190,6 @@ class _ConsultationFeeState extends State<ConsultationFee> {
   @override
   void initState() {
     selectedWidget = 0;
-    // TODO: implement initState
     super.initState();
   }
 
@@ -249,6 +281,61 @@ class _ConsultationFeeState extends State<ConsultationFee> {
                               // Respond to button press
                             },
                             child: Text('Set Fee'),
+                          )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), // if you need this
+                side: BorderSide(
+                  color: Colors.grey.withOpacity(0.4),
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('Please set Patient come back time:'),
+                    Consumer<ProfileProvider>(builder: (ctx, data, child) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: TextFormField(
+                            onChanged: (value) {
+                              period = int.parse(value);
+                              print(period);
+                            },
+                            initialValue: data.currentUser.feesPeriod == null
+                                ? ''
+                                : data.currentUser.feesPeriod.toString(),
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              labelText: "Number of days",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                    _isFeePeriodLoading
+                        ? CircularProgressIndicator()
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: accentBlueLight, // background
+                              onPrimary: Colors.black, // foreground
+                            ),
+                            onPressed: () {
+                              saveFeePeriod();
+                              // Respond to button press
+                            },
+                            child: Text('Save'),
                           )
                   ],
                 ),
