@@ -40,6 +40,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   String channelName;
   String channelId;
   var doctor;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Random _rnd = Random();
 
@@ -79,13 +80,14 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
     doctor = await LoginCheck().UserInfo();
 
     //create the engine
-    _engine = await RtcEngine.createWithConfig(RtcEngineConfig(appId));
+    _engine = await RtcEngine.create(appId);
     await _engine.enableVideo();
 
     _engine.setEventHandler(
       RtcEngineEventHandler(
-        joinChannelSuccess: (String channel, int uid, int elapsed) {
+        joinChannelSuccess: (String channel, int uid, int elapsed) async {
           print("local user $uid joined");
+          await _engine.enableVideo();
         },
         tokenPrivilegeWillExpire: (token) async {
           await getAgoraToken();
@@ -130,6 +132,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        key: _scaffoldKey,
         body: SafeArea(
           child: Stack(
             children: [
@@ -220,9 +223,9 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        await _agoraApis.leaveChannel(channelId);
                         await _engine?.leaveChannel();
-                        Navigator.pop(context);
+                        await _agoraApis.leaveChannel(channelId);
+                        Navigator.pop(_scaffoldKey.currentContext);
 
                         // var tokenBody = await _serverHandler.leaveChannel(channelId);
                         // print('Leave Channel Body '+tokenBody.toString());
@@ -354,21 +357,22 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
+      context: _scaffoldKey.currentContext,
       builder: (context) =>
       new AlertDialog(
         title: new Text('Are you sure?'),
         content: new Text('Do you want to exit exit Video Call?'),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.pop(_scaffoldKey.currentContext),
             child: new Text('No'),
           ),
           TextButton(
             onPressed: () async {
               await _agoraApis.leaveChannel(channelId);
               await _engine?.leaveChannel();
-              Navigator.of(context).pop(true);
+              Navigator.pop(_scaffoldKey.currentContext);
+              Navigator.pop(_scaffoldKey.currentContext);
             },
             child: new Text('Yes'),
           ),
@@ -379,7 +383,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   _userLeftTheCall() async {
     return (await showDialog(
-      context: context,
+      context: _scaffoldKey.currentContext,
       builder: (context) =>
       new AlertDialog(
         title: new Text('Patient Left'),
@@ -389,9 +393,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
             onPressed: () async {
               await _agoraApis.leaveChannel(channelId);
               await _engine?.leaveChannel();
-              Navigator.of(context).pop(true);
-              Navigator.of(context).pop(true);
-              Navigator.of(context).pop(true);
+              Navigator.pop(_scaffoldKey.currentContext);
+              Navigator.pop(_scaffoldKey.currentContext);
             },
             child: new Text('Okay'),
           ),
