@@ -73,26 +73,18 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   }
 
   Future<void> initForAgora() async {
+
     // retrieve permissions
     await [Permission.microphone, Permission.camera].request();
-
     doctor = await LoginCheck().UserInfo();
-
-    print('***************** Agore Init 1 ****************');
 
     //create the engine
     _engine = await RtcEngine.createWithConfig(RtcEngineConfig(appId));
-
-    print('***************** Agore Init 2 ****************');
-
     await _engine.enableVideo();
-
-    print('***************** Agore Init 3 ****************');
 
     _engine.setEventHandler(
       RtcEngineEventHandler(
         joinChannelSuccess: (String channel, int uid, int elapsed) {
-          print('***************** Agore Init 4 ****************');
           print("local user $uid joined");
         },
         tokenPrivilegeWillExpire: (token) async {
@@ -100,7 +92,6 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           await _engine.renewToken(token);
         },
         userJoined: (int uid, int elapsed) {
-          print('***************** Agore Init 5 ****************');
           print("remote user $uid joined");
           _engine.enableVideo();
           setState(() {
@@ -108,7 +99,6 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           });
         },
         userOffline: (int uid, UserOfflineReason reason) {
-          print('***************** Agore Init 6 ****************');
           print("remote user $uid left channel");
           setState(() {
             _remoteUid = null;
@@ -132,9 +122,6 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
     await getAgoraToken();
     await _engine.joinChannel(token, channelName, null, doctor['id']);
-    // await getAgoraToken().then((value) async {
-    //   await _engine.joinChannel(token, channelName, null, 70);
-    // });
   }
 
   // Create UI with local view and remote view
@@ -143,10 +130,6 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Agora Video Call'),
-        // ),
-
         body: SafeArea(
           child: Stack(
             children: [
@@ -187,16 +170,42 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                 top: 8,
                 left: 8,
                 child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      resizeVideo = !resizeVideo;
-                    });
-                  },
+
+                  //Uncomment it to unable resize
+
+                  // onTap: () {
+                  //   setState(() {
+                  //     resizeVideo = !resizeVideo;
+                  //   });
+                  // },
                   child: Container(
                     width: 100,
                     height: 120,
-                    child: Center(
-                      child: resizeVideo ? _renderRemoteVideo() : _renderLocalPreview(),
+                    child: Stack(
+                      children: [
+                    ImageFiltered(
+                        imageFilter: muteVideo ? ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0) : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                          child: resizeVideo ? _renderRemoteVideo() : _renderLocalPreview(),  // Widget that is blurred
+                        ),
+                        if (muteVideo)
+                          Positioned(
+                            top: 4,
+                            left: 4,
+                            child: Icon(Icons.videocam_off_outlined,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                          ),
+                        if (muteAudio)
+                          Positioned(
+                            bottom: 4,
+                            right: 4,
+                            child: Icon(Icons.mic_off_outlined,
+                                color: Colors.white,
+                              size: 32,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
