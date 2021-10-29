@@ -52,13 +52,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
     // getAgoraToken().then((value) => initForAgora());
     initForAgora();
-  }
-
-  initPlatformState() async {
-    await Screen.keepOn(true);
   }
 
   Future<void> getAgoraToken() async {
@@ -80,6 +75,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   }
 
   Future<void> initForAgora() async {
+    await Screen.keepOn(true);
 
     // retrieve permissions
     await [Permission.microphone, Permission.camera].request();
@@ -229,6 +225,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                   children: [
                     InkWell(
                       onTap: () async {
+                        await Screen.keepOn(false);
                         await _engine?.leaveChannel();
                         await _agoraApis.leaveChannel(channelId);
                         Navigator.pop(_scaffoldKey.currentContext);
@@ -375,6 +372,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           ),
           TextButton(
             onPressed: () async {
+              await Screen.keepOn(false);
               await _engine?.leaveChannel();
               await _agoraApis.leaveChannel(channelId);
               Navigator.pop(_scaffoldKey.currentContext);
@@ -398,6 +396,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           TextButton(
             onPressed: () async {
               // await _agoraApis.leaveChannel(channelId);
+              await Screen.keepOn(false);
               await _engine?.leaveChannel();
               Navigator.pop(_scaffoldKey.currentContext);
               Navigator.pop(_scaffoldKey.currentContext);
