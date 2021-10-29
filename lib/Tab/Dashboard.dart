@@ -70,7 +70,10 @@ class _DashboardTabState extends State<DashboardTab> {
     LoginCheck().getMyBookings().then((value) {
       setState(() {
         value.forEach((appointment) {
-          if (appointment["status"] != 2) {
+          if (appointment["status"] != 2 &&
+              DateTime.parse(appointment["slot_date_time"])
+                      .compareTo(DateTime.now()) >
+                  0) {
             appointList.add(Modal(
               name: appointment["patient"]["name"],
               pId: appointment["patient"]["id"].toString(),
@@ -94,55 +97,7 @@ class _DashboardTabState extends State<DashboardTab> {
 
   @override
   void initState() {
-    LoginCheck().getMyBookings().then((value) {
-      setState(() {
-        value.forEach((appointment) {
-          if (appointment["status"] != 2) {
-            appointList.add(Modal(
-              name: appointment["patient"]["name"],
-              pId: appointment["patient"]["id"].toString(),
-              time: appointment["slot_time"],
-              profile: appointment["patient"]["profile_pic_path"],
-              date: appointment["slot_date"],
-              id: appointment["id"],
-              isSelected: false,
-              bookingStatus: appointment["status"],
-            ));
-          }
-
-          appointList.sort((a, b) =>
-              DateTime.parse(a.date + " " + a.time.split(" ")[0]).compareTo(
-                  DateTime.parse(b.date + " " + b.time.split(" ")[0])));
-          // appointList = appointList.reversed.toList();
-        });
-      });
-    });
-    // appointList.add(Modal(
-    //     name: 'Akash Bose',
-    //     time: '4:30',
-    //     date: '03 Aug, 2021',
-    //     isSelected: false));
-    // appointList.add(Modal(
-    //     name: 'Priya shetty',
-    //     time: '5:30',
-    //     date: '03 Aug, 2021',
-    //     isSelected: false));
-    // appointList.add(Modal(
-    //     name: 'Pooja Bhel',
-    //     time: '6:30',
-    //     date: '03 Aug, 2021',
-    //     isSelected: false));
-    // appointList.add(Modal(
-    //     name: 'Akash Bose',
-    //     time: '4:30',
-    //     date: '03 Aug, 2021',
-    //     isSelected: false));
-    // appointList.add(Modal(
-    //     name: 'Priya shetty',
-    //     time: '5:30',
-    //     date: '03 Aug, 2021',
-    //     isSelected: false));
-
+    setData();
     super.initState();
   }
 
@@ -218,7 +173,7 @@ class _DashboardTabState extends State<DashboardTab> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -229,26 +184,28 @@ class _DashboardTabState extends State<DashboardTab> {
                     'Upcoming Appointments',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, appointmentScreen);
-                    },
-                    child: Text('See all'),
-                    style: ButtonStyle(
-                      overlayColor:
-                          MaterialStateProperty.all(Colors.transparent),
-                      // padding: MaterialStateProperty.all(EdgeInsets.all(0))
-                      // backgroundColor: MaterialStateProperty.all(Colors.black),
-                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.blue;
-                          return Colors.black;
-                        },
+                  if (appointList.length > 3)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, appointmentScreen);
+                      },
+                      child: Text('See all'),
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        // padding: MaterialStateProperty.all(EdgeInsets.all(0))
+                        // backgroundColor: MaterialStateProperty.all(Colors.black),
+                        foregroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.blue;
+                            return Colors.black;
+                          },
+                        ),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                  )
+                    )
                 ],
               ),
               if (appointList.length == 0)

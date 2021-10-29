@@ -77,8 +77,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
         appBar: AppBar(
           title: Text(
             'My Appointments',
-            style:
-                TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+            style: Styles.regularHeading,
           ),
           centerTitle: true,
           backgroundColor: accentBlueLight,

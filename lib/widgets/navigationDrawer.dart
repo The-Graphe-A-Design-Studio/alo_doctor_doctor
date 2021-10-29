@@ -184,29 +184,29 @@ class NavigationDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            ListTile(
-              leading: Image(
-                image: AssetImage(
-                  'assets/images/medicalRecords.png',
-                ),
-                height: 30.0,
-                width: 50.0,
-              ),
-              title: Text(
-                "Documents",
-                style: Styles.buttonTextBlack,
-              ),
-              trailing: RotatedBox(
-                quarterTurns: 2,
-                child: Image(
-                  image: AssetImage(
-                    'assets/images/planeArrow.png',
-                  ),
-                  height: 14.0,
-                  width: 14.0,
-                ),
-              ),
-            ),
+            // ListTile(
+            //   leading: Image(
+            //     image: AssetImage(
+            //       'assets/images/medicalRecords.png',
+            //     ),
+            //     height: 30.0,
+            //     width: 50.0,
+            //   ),
+            //   title: Text(
+            //     "Documents",
+            //     style: Styles.buttonTextBlack,
+            //   ),
+            //   trailing: RotatedBox(
+            //     quarterTurns: 2,
+            //     child: Image(
+            //       image: AssetImage(
+            //         'assets/images/planeArrow.png',
+            //       ),
+            //       height: 14.0,
+            //       width: 14.0,
+            //     ),
+            //   ),
+            // ),
             // ListTile(
             //   leading: Image(
             //     image: AssetImage(
