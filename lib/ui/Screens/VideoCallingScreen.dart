@@ -58,7 +58,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   }
 
   initPlatformState() async {
-    await Screen.isKeptOn;
+    await Screen.keepOn(true);
   }
 
   Future<void> getAgoraToken() async {
