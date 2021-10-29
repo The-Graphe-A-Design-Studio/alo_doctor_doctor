@@ -10,6 +10,7 @@ import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:screen/screen.dart';
 
 const appId = "4795c84bf0ac47299f693efe2b8553db";
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -51,8 +52,13 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     // getAgoraToken().then((value) => initForAgora());
     initForAgora();
+  }
+
+  initPlatformState() async {
+    await Screen.isKeptOn;
   }
 
   Future<void> getAgoraToken() async {
