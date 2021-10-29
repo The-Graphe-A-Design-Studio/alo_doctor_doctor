@@ -62,7 +62,7 @@ class _AppointmentsState extends State<Appointments> {
           historyList.sort((a, b) =>
               DateTime.parse(a.date + " " + a.time.split(" ")[0]).compareTo(
                   DateTime.parse(b.date + " " + b.time.split(" ")[0])));
-          // historyList = historyList.reversed.toList();
+          historyList = historyList.reversed.toList();
         }
       });
 
