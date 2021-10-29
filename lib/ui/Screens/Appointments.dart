@@ -43,10 +43,10 @@ class _AppointmentsState extends State<Appointments> {
             id: appointment["id"],
             isSelected: false,
             bookingStatus: appointment["status"],
+            slotDateTime: appointment["slot_date_time"],
           ));
-          upcomingList.sort((a, b) =>
-              DateTime.parse(a.date + " " + a.time.split(" ")[0]).compareTo(
-                  DateTime.parse(b.date + " " + b.time.split(" ")[0])));
+          upcomingList.sort((a, b) => DateTime.parse(a.slotDateTime)
+              .compareTo(DateTime.parse(b.slotDateTime)));
           // appointList = appointList.reversed.toList();
         } else {
           historyList.add(Modal(
@@ -58,10 +58,10 @@ class _AppointmentsState extends State<Appointments> {
             id: appointment["id"],
             isSelected: false,
             bookingStatus: appointment["status"],
+            slotDateTime: appointment["slot_date_time"],
           ));
-          historyList.sort((a, b) =>
-              DateTime.parse(a.date + " " + a.time.split(" ")[0]).compareTo(
-                  DateTime.parse(b.date + " " + b.time.split(" ")[0])));
+          historyList.sort((a, b) => DateTime.parse(a.slotDateTime)
+              .compareTo(DateTime.parse(b.slotDateTime)));
           historyList = historyList.reversed.toList();
         }
       });
@@ -378,6 +378,7 @@ class Modal {
   String profile;
   int id;
   int bookingStatus;
+  String slotDateTime;
   Modal({
     this.name,
     this.pId,
@@ -387,5 +388,6 @@ class Modal {
     this.date,
     this.id,
     this.bookingStatus,
+    this.slotDateTime,
   });
 }
