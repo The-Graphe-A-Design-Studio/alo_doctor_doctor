@@ -256,7 +256,7 @@ class Details {
   List<Document> documents;
   int doctorVerified;
   int totalSessions;
-  int rating;
+  double rating;
 
   factory Details.fromJson(Map<String, dynamic> json) => Details(
         id: json["id"],
@@ -293,7 +293,7 @@ class Details {
             json["documents"].map((x) => Document.fromJson(x))),
         doctorVerified: json["doctor_verified"],
         totalSessions: json["total_sessions"],
-        rating: json["rating"],
+        rating: json["rating"].toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
