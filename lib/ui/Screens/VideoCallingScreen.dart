@@ -87,7 +87,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
       RtcEngineEventHandler(
         joinChannelSuccess: (String channel, int uid, int elapsed) async {
           print("local user $uid joined");
-          await _engine.enableVideo();
+          // await _engine.enableVideo();
         },
         tokenPrivilegeWillExpire: (token) async {
           await getAgoraToken();
@@ -95,7 +95,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
         },
         userJoined: (int uid, int elapsed) {
           print("remote user $uid joined");
-          _engine.enableVideo();
+          // _engine.enableVideo();
           setState(() {
             _remoteUid = uid;
           });
@@ -369,8 +369,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           ),
           TextButton(
             onPressed: () async {
-              await _agoraApis.leaveChannel(channelId);
               await _engine?.leaveChannel();
+              await _agoraApis.leaveChannel(channelId);
               Navigator.pop(_scaffoldKey.currentContext);
               Navigator.pop(_scaffoldKey.currentContext);
             },
@@ -391,7 +391,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-              await _agoraApis.leaveChannel(channelId);
+              // await _agoraApis.leaveChannel(channelId);
               await _engine?.leaveChannel();
               Navigator.pop(_scaffoldKey.currentContext);
               Navigator.pop(_scaffoldKey.currentContext);
