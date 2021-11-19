@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
-import 'package:flutter/material.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 
 class Consultation extends StatefulWidget {
   @override
@@ -37,10 +39,7 @@ class _ConsultationState extends State<Consultation> {
           children: [
             Text(
               'Consultations',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
+              style: Styles.regularHeading,
             )
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/Colors.dart';
 import '../../utils/MyConstants.dart';
+import '../../utils/styles.dart';
 
 class PaymentScreen extends StatefulWidget {
   @override
@@ -22,28 +23,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
       appBar: AppBar(
         title: Text(
           'Payment',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+          style: Styles.regularHeading,
         ),
         centerTitle: true,
         backgroundColor: accentBlueLight,
-        leading: ElevatedButton(
-          style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-          child: Image(
-            image: AssetImage('./assets/images/arrow.png'),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: backButton(context),
         iconTheme: Theme.of(context).iconTheme,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.notifications_none),
-          ),
-        ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,

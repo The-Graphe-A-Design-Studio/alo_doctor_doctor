@@ -4,6 +4,9 @@ import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:alo_doctor_doctor/providers/profileProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class DashboardTab extends StatefulWidget {
   @override
@@ -64,16 +67,28 @@ class _DashboardTabState extends State<DashboardTab> {
   String number;
   String email;
   List pList;
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
 
   Future<void> setData() async {
+    Provider.of<ProfileProvider>(context, listen: false).setProfile();
+
     appointList.clear();
     LoginCheck().getMyBookings().then((value) {
       setState(() {
         value.forEach((appointment) {
           if (appointment["status"] != 2 &&
-              DateTime.parse(appointment["slot_date_time"])
-                      .compareTo(DateTime.now()) >
-                  0) {
+                  calculateDifference(
+                          DateTime.parse(appointment["slot_date_time"])) >=
+                      0
+              // DateTime.parse(appointment["slot_date_time"])
+              //         .compareTo(DateTime.now()) >
+              //     0
+              ) {
             appointList.add(Modal(
               name: appointment["patient"]["name"],
               pId: appointment["patient"]["id"].toString(),
@@ -98,6 +113,8 @@ class _DashboardTabState extends State<DashboardTab> {
   @override
   void initState() {
     setData();
+    Provider.of<ProfileProvider>(context, listen: false).setProfile();
+
     super.initState();
   }
 
@@ -162,15 +179,26 @@ class _DashboardTabState extends State<DashboardTab> {
         // ),
         Container(
           padding: EdgeInsets.only(top: 8),
-          child: CarouselSlider(
-            options: CarouselOptions(
-              autoPlay: true,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-              enlargeStrategy: CenterPageEnlargeStrategy.height,
-            ),
-            items: imageSliders,
+          child: FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            height: MediaQuery.of(context).size.height * 0.3,
+            image:
+                'https://alodoctor-care.com/wp-content/uploads/2021/11/doctor-app-home-banner.png',
           ),
+          //  Image(
+          //     image: NetworkImage(
+          //         "https://alodoctor-care.com/wp-content/uploads/2021/11/doctor-app-home-banner.png"),
+          //   ),
+
+          // CarouselSlider(
+          //   options: CarouselOptions(
+          //     autoPlay: true,
+          //     aspectRatio: 2.0,
+          //     enlargeCenterPage: true,
+          //     enlargeStrategy: CenterPageEnlargeStrategy.height,
+          //   ),
+          //   items: imageSliders,
+          // ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -180,10 +208,18 @@ class _DashboardTabState extends State<DashboardTab> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Upcoming Appointments',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
+                  if (appointList.length != 0)
+                    Text(
+                      'Upcoming Appointments',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                  // if (appointList.length == 0)
+                  //   Text(
+                  //     'No Upcoming Appointments',
+                  //     style:
+                  //         TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  //   ),
                   if (appointList.length > 3)
                     TextButton(
                       onPressed: () {
@@ -217,13 +253,16 @@ class _DashboardTabState extends State<DashboardTab> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/notavailable.jpg'),
+                        Image.asset(
+                          'assets/images/appointment-1.png',
+                          height: 100,
+                        ),
                         Text(
-                          "NO UPCOMING APPOINTMENTS",
+                          "No Upcoming Appointments",
                           style: TextStyle(
                             color: Colors.black87,
                             fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
+                            fontSize: 15.0,
                           ),
                         ),
                       ],
@@ -343,7 +382,7 @@ class _DashboardTabState extends State<DashboardTab> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
+          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -356,6 +395,19 @@ class _DashboardTabState extends State<DashboardTab> {
               Categories('Slots', () {
                 Navigator.pushNamed(context, consultSched);
               }, 'calendar'),
+              // Categories('Cover Photo', () {
+              //   Navigator.pushNamed(context, addCoverPhoto);
+              // }, 'banner'),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+          child: Row(
+            children: [
+              Categories('Cover Photo', () {
+                Navigator.pushNamed(context, addCoverPhoto);
+              }, 'banner'),
             ],
           ),
         ),
@@ -410,8 +462,8 @@ Widget Categories(String catName, ontap, String catIcon) {
         children: [
           Image(
             image: AssetImage('./assets/images/$catIcon.png'),
-            height: 40,
-            width: 38,
+            height: 30,
+            width: 28,
             fit: BoxFit.contain,
           ),
           Text(

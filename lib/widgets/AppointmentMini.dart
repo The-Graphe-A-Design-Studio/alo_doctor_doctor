@@ -1,3 +1,4 @@
+import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/DateFormatter.dart';
@@ -50,11 +51,12 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                   borderRadius: BorderRadius.circular(50),
                   child: Image(
                     image: widget.path == null
-                        ? AssetImage('assets/images/userdash.png')
+                        ? NetworkImage(
+                            "https://tse2.mm.bing.net/th?id=OIP.e8X4CTvV9XF1DJHi47CCBgHaHa&pid=Api&P=0&w=300&h=300")
                         : NetworkImage(
                             'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
-                    height: 43,
-                    width: 43,
+                    height: 40,
+                    width: 40,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -66,11 +68,12 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.Name,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
+                      widget.Name.split(" ").length > 1
+                          ? widget.Name.split(" ")[0] +
+                              " " +
+                              widget.Name.split(" ")[1]
+                          : widget.Name,
+                      style: Styles.buttonTextBlackBold,
                     ),
                     Row(
                       children: [

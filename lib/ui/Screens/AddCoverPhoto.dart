@@ -8,18 +8,22 @@ import '../../providers/profileProvider.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/api/profile.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/models/doctor.dart';
 
-class AddPhoto extends StatefulWidget {
+class AddCoverPhoto extends StatefulWidget {
   @override
-  _AddPhotoState createState() => _AddPhotoState();
+  _AddCoverPhotoState createState() => _AddCoverPhotoState();
 }
 
-class _AddPhotoState extends State<AddPhoto> {
+class _AddCoverPhotoState extends State<AddCoverPhoto> {
   ProfileServer serverHandler = ProfileServer();
+  Details userProfileDetails = Details();
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
-
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final _descriptionController = TextEditingController();
+  String bannerPath;
   void takePhoto(ImageSource source) async {
     final userHandler = Provider.of<ProfileProvider>(context, listen: false);
 
@@ -28,26 +32,29 @@ class _AddPhotoState extends State<AddPhoto> {
     try {
       // print('picked file path ------------ ${pickedFile?.path}');
       if (pickedFile != null) {
-        setState(() {
-          _isLoading = true;
-        });
-        await userHandler.postProfilePic(File(pickedFile.path));
+        // setState(() {
+        //   _isLoading = true;
+        // });
+        // await userHandler.postProfilePic(File(pickedFile.path));
 
+        // setState(() {
+        //   _imageFile = pickedFile;
+        //   _isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('Cover Photo uploaded successfully!'),
+        //     backgroundColor: Colors.green,
+        //   ),
+        // );
         setState(() {
           _imageFile = pickedFile;
-          _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Profile picture updated successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      // setState(() {
+      //   _isLoading = false;
+      // });
       // print('eroor in takephoto ------------- ${e.toString()}');
       return showDialog(
           context: context,
@@ -74,9 +81,64 @@ class _AddPhotoState extends State<AddPhoto> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setData();
+  }
+
+  void setData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    userProfileDetails = await serverHandler.getUserProfile();
+    bannerPath = userProfileDetails.docBannerPath;
+    _descriptionController.text = userProfileDetails.docBannerDescription;
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _imageFile = null;
+  }
+
+  void upload(PickedFile cover, String desc) async {
+    print(cover == null);
+
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      try {
+        setState(() {
+          _isLoading = true;
+        });
+        await serverHandler.postCoverPhoto(
+            cover == null ? null : File(cover.path), desc);
+
+        setState(() {
+          // _imageFile = pickedFile;
+          _isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cover Photo uploaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red.shade400,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -86,10 +148,11 @@ class _AddPhotoState extends State<AddPhoto> {
       appBar: AppBar(
         elevation: 0,
         leading: backButton(context),
+        centerTitle: true,
         title: Column(
           children: [
             Text(
-              'Add Profile Picture',
+              'Add Cover Photo',
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.black87,
@@ -97,87 +160,75 @@ class _AddPhotoState extends State<AddPhoto> {
             )
           ],
         ),
-        centerTitle: true,
         backgroundColor: accentBlueLight,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 40.0, top: 60),
+          padding: const EdgeInsets.only(bottom: 40.0, top: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30.0),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 30.0),
                 child: Center(
                   child: _isLoading
                       ? Column(
                           children: [
-                            CircularProgressIndicator(),
+                            Container(
+                                height: 177,
+                                child:
+                                    Center(child: CircularProgressIndicator())),
                             SizedBox(
                               height: 5,
                             ),
-                            Text(
-                              "Uploading..",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            )
+                            // Text(
+                            //   "Uploading..",
+                            //   style: TextStyle(
+                            //       fontWeight: FontWeight.bold, fontSize: 18),
+                            // )
                           ],
                         )
                       : Container(
                           child: Stack(
                             children: [
-                              Consumer<ProfileProvider>(
-                                builder: (context, userData, _) {
-                                  print((userData.userProfileDetails
-                                                  .profilePicPath !=
-                                              "" ||
-                                          userData.userProfileDetails
-                                                  .profilePicPath !=
-                                              null) &&
-                                      _imageFile == null);
-                                  return Container(
-                                    width: 177,
-                                    height: 177,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: ((userData.userProfileDetails
-                                                                .profilePicPath !=
-                                                            "" &&
-                                                        userData.userProfileDetails
-                                                                .profilePicPath !=
-                                                            null) &&
-                                                    _imageFile == null)
-                                                ? NetworkImage(
-                                                    'https://developers.thegraphe.com/alodoctor/public${userData.userProfileDetails.profilePicPath}')
-                                                : (_imageFile != null)
-                                                    ? Image.file(File(
-                                                            _imageFile.path))
-                                                        .image
-                                                    : AssetImage(
-                                                        './assets/images/user.png'),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: 177,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: (userProfileDetails
+                                                        .docBannerPath !=
+                                                    null &&
+                                                _imageFile == null)
+                                            ? NetworkImage(
+                                                'https://developers.thegraphe.com/alodoctor/public${userProfileDetails.docBannerPath}')
+                                            : (_imageFile != null)
+                                                ? Image.file(
+                                                        File(_imageFile.path))
+                                                    .image
+                                                : NetworkImage(
+                                                    "https://news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg"),
 
-                                            // (_imageFile == null &&
-                                            //         userData.currentUser
-                                            //                 .profilePicPath ==
-                                            //             null)
-                                            //     ?(AssetImage('./assets/images/user.png')):
-                                            //      (userData.currentUser
-                                            //                 .profilePicPath !=
-                                            //             null)
-                                            //         ?(NetworkImage('https://developers.thegraphe.com/alodoctor/public${userData.currentUser.profilePicPath}') ):
+                                        // (_imageFile == null &&
+                                        //         userData.currentUser
+                                        //                 .profilePicPath ==
+                                        //             null)
+                                        //     ?(AssetImage('./assets/images/user.png')):
+                                        //      (userData.currentUser
+                                        //                 .profilePicPath !=
+                                        //             null)
+                                        //         ?(NetworkImage('https://developers.thegraphe.com/alodoctor/public${userData.currentUser.profilePicPath}') ):
 
-                                            //         FileImage(
-                                            //             File(_imageFile.path),
-                                            //           ) ,
-                                            fit: BoxFit.fill),
-                                        border: Border.all(width: 0),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(200),
-                                        ),
-                                        color: Color(0xffC4C4C4)),
-                                  );
-                                },
+                                        //         FileImage(
+                                        //             File(_imageFile.path),
+                                        //           ) ,
+                                        fit: BoxFit.fill),
+                                    border: Border.all(width: 0),
+                                    // borderRadius: BorderRadius.all(
+                                    //   Radius.circular(200),
+                                    // ),
+                                    color: Color(0xffC4C4C4)),
                               ),
                               Positioned(
                                 bottom: 10,
@@ -208,6 +259,55 @@ class _AddPhotoState extends State<AddPhoto> {
                             ],
                           ),
                         ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        maxLines: 15,
+                        // key: _formKeyDesc,
+                        controller: _descriptionController,
+                        // initialValue: _descriptionController.text,
+                        validator: (value) => value.trim().isEmpty
+                            ? "This field is required"
+                            : null,
+                        // onSaved: (value) => _descriptionController.text = value,
+                        decoration: InputDecoration(
+                          hintText: "Add description",
+                          // hintStyle: TextStyle(color: Colors.blueAccent),
+                          // border: InputBorder.none,
+                          // suffixIcon: Icon(Icons.edit),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(accentBlueLight),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.black)),
+                          child: Text("Upload"),
+                          onPressed: () {
+                            upload(_imageFile, _descriptionController.text);
+                          }
+                          // () {
+                          //   if (_formKeyDesc.currentState.validate()) {
+                          //     _formKeyDesc.currentState.save();
+                          //     upload(_imageFile, _descriptionController.text);
+                          //   }
+                          // },
+                          )
+                    ],
+                  ),
                 ),
               ),
             ],

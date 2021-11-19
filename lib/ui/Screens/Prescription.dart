@@ -2,14 +2,21 @@ import 'dart:io';
 
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Video/NetworkVideoPlayer.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Video/FileVideoPlayer.dart';
+
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:alo_doctor_doctor/widgets/photoViewer.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:alo_doctor_doctor/widgets/prescriptionViewer.dart';
+// import 'package:alo_doctor_doctor/ui/screens/video/NetworkVideoPlayer.dart';
+import 'package:video_player/video_player.dart';
 
 class Prescription extends StatefulWidget {
   final String id;
@@ -21,8 +28,12 @@ class Prescription extends StatefulWidget {
 
 class _PrescriptionState extends State<Prescription> {
   List<File> _imageFile = [];
+  List<File> _videoFile = [];
+  VideoPlayerController _controller;
+
   // PickedFile _imageFile;
   List prescriptionList;
+  String videoPrescription;
   bool _isLoading = false;
   int uploaded = 0;
   final ImagePicker _picker = ImagePicker();
@@ -31,7 +42,24 @@ class _PrescriptionState extends State<Prescription> {
     await LoginCheck().getBookingsById(int.parse(widget.id)).then((value) {
       setState(() {
         prescriptionList = value[0]["prescription"];
-        _isLoading = false;
+        print("prescription list --> $prescriptionList");
+        if (prescriptionList != null) {
+          if (prescriptionList.length == 1 &&
+              prescriptionList[0]["file_name"].split(".")[1] == "mp4") {
+            _controller = VideoPlayerController.network(
+                "$baseUrl${prescriptionList[0]["file_path"]}")
+              ..initialize().then((_) {
+                setState(() {
+                  videoPrescription = prescriptionList[0]["file_path"];
+                  _isLoading = false;
+                });
+              });
+          } else {
+            videoPrescription = null;
+            _isLoading = false;
+          }
+        } else
+          _isLoading = false;
       });
     });
   }
@@ -56,21 +84,37 @@ class _PrescriptionState extends State<Prescription> {
   //   return doctor;
   // }
 
-  void takePhoto(ImageSource source) async {
-    List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
-    // final pickedFile = await _picker.getImage(source: source);
+  void takePhoto(ImageSource source, bool isVideo) async {
+    print(source);
+    if (isVideo) {
+      XFile pickedFile = await _picker.pickVideo(source: source);
+      List<File> selected = List<File>.empty(growable: true);
 
-    List<File> selected = List<File>.empty(growable: true);
-    for (int i = 0; i < pickedFile.length; i++) {
-      selected.insert(i, File(pickedFile[i].path));
+      selected.insert(0, File(pickedFile.path));
+      setVideoFileController(File(pickedFile.path));
+      setState(() {
+        _videoFile = selected;
+        _isLoading = true;
+      });
+    } else {
+      List pickedFile = await _picker.pickMultiImage(imageQuality: 20);
+      // final pickedFile = await _picker.getImage(source: source);
+
+      List<File> selected = List<File>.empty(growable: true);
+      for (int i = 0; i < pickedFile.length; i++) {
+        selected.insert(i, File(pickedFile[i].path));
+      }
+      setState(() {
+        _imageFile = selected;
+        _isLoading = true;
+      });
     }
+
     print(widget.id);
     print('yoo');
-    setState(() {
-      _imageFile = selected;
-      _isLoading = true;
-    });
-    int success = await LoginCheck().PrescriptionUpload(_imageFile, widget.id);
+
+    int success = await LoginCheck()
+        .PrescriptionUpload(isVideo ? _videoFile : _imageFile, widget.id);
     if (success == 1) {
       Fluttertoast.showToast(
         msg: "Uploaded successfully",
@@ -91,21 +135,22 @@ class _PrescriptionState extends State<Prescription> {
     print(success);
   }
 
+  void setVideoFileController(File videoFilePath) {
+    setState(() {
+      _controller = VideoPlayerController.file(videoFilePath)
+        ..initialize().then((_) {
+          print("Done file controller initialization");
+        });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // print("prescription screen-------" + widget.id);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
+        leading: backButton(context),
         // actions: [
         //   if (prescriptionList != null)
         //     IconButton(
@@ -134,10 +179,7 @@ class _PrescriptionState extends State<Prescription> {
           children: [
             Text(
               'Upload Prescription',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
+              style: Styles.regularHeading,
             )
           ],
         ),
@@ -147,7 +189,7 @@ class _PrescriptionState extends State<Prescription> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : (prescriptionList == null || prescriptionList.isEmpty)
-              ? _imageFile.isEmpty
+              ? (_imageFile.isEmpty && _videoFile.isEmpty)
                   ? SingleChildScrollView(
                       child: Padding(
                       padding: const EdgeInsets.only(bottom: 40.0, top: 60),
@@ -247,7 +289,9 @@ class _PrescriptionState extends State<Prescription> {
                           child: GridView.builder(
                               physics: BouncingScrollPhysics(),
                               padding: const EdgeInsets.all(10.0),
-                              itemCount: _imageFile.length,
+                              itemCount: _videoFile.isNotEmpty
+                                  ? _videoFile.length
+                                  : _imageFile.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
@@ -258,19 +302,27 @@ class _PrescriptionState extends State<Prescription> {
                               itemBuilder: (ctx, index) {
                                 return InkWell(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed(photoViewer,
-                                        arguments: PhotoViewer(
-                                            _imageFile[index].path, false));
+                                    _videoFile.isNotEmpty
+                                        ? Navigator.of(context).pushNamed(
+                                            filevideo,
+                                            arguments:
+                                                FilePlayerWidget(_videoFile[0]))
+                                        : Navigator.of(context).pushNamed(
+                                            photoViewer,
+                                            arguments: PhotoViewer(
+                                                _imageFile[index].path, false));
                                   },
                                   child: Container(
                                     // height:
                                     //     MediaQuery.of(context).size.height * 2,
                                     // width: MediaQuery.of(context).size.width * 2,
                                     // padding: EdgeInsets.all(10),
-                                    child: Image.file(
-                                      File(_imageFile[index].path),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: _videoFile.isNotEmpty
+                                        ? VideoPlayer(_controller)
+                                        : Image.file(
+                                            File(_imageFile[index].path),
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                 );
                               }),
@@ -280,44 +332,60 @@ class _PrescriptionState extends State<Prescription> {
               : Column(
                   children: [
                     Expanded(
-                      child: GridView.builder(
-                          physics: BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(15.0),
-                          itemCount: prescriptionList.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 1 / 1,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                          ),
-                          itemBuilder: (ctx, index) {
-                            // var nowParam =
-                            //     DateFormat('yyyyddMMHHmmss').format(DateTime.now());
+                        child: GridView.builder(
+                            physics: BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(15.0),
+                            itemCount: prescriptionList.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 1 / 1,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                            ),
+                            itemBuilder: (ctx, index) {
+                              // var nowParam =
+                              //     DateFormat('yyyyddMMHHmmss').format(DateTime.now());
 
-                            print(prescriptionList.length.toString() +
-                                prescriptionList[index]["file_path"]);
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(photoViewer,
-                                    arguments: PhotoViewer(
-                                        prescriptionList[index]["file_path"],
-                                        true));
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (context) => PrescriptionViewer(
-                                //         docPath: prescriptionList[index]
-                                //             ["file_path"]));
-                              },
-                              child: Container(
-                                child: Image.network(
-                                  'https://developers.thegraphe.com/alodoctor/public${prescriptionList[index]["file_path"]}',
-                                  fit: BoxFit.cover,
+                              print(prescriptionList.length.toString() +
+                                  prescriptionList[index]["file_path"]);
+                              return InkWell(
+                                onTap: videoPrescription != null
+                                    ? () {
+                                        print("hello");
+                                        Navigator.pushNamed(
+                                            context, networkVideo,
+                                            arguments: NetworkPlayerWidget(
+                                                videoPrescription));
+                                      }
+                                    : () {
+                                        Navigator.of(context).pushNamed(
+                                            photoViewer,
+                                            arguments: PhotoViewer(
+                                                prescriptionList[index]
+                                                    ["file_path"],
+                                                true));
+                                        // showDialog(
+                                        //     context: context,
+                                        //     builder: (context) => PrescriptionViewer(
+                                        //         docPath: prescriptionList[index]
+                                        //             ["file_path"]));
+                                      },
+                                child: Container(
+                                  child: videoPrescription != null
+                                      ? _controller.value.isInitialized
+                                          ? VideoPlayer(_controller)
+                                          : Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                      : Image.network(
+                                          'https://developers.thegraphe.com/alodoctor/public${prescriptionList[index]["file_path"]}',
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
-                              ),
-                            );
-                          }),
-                    )
+                              );
+                            }))
                   ],
                 ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -341,11 +409,11 @@ class _PrescriptionState extends State<Prescription> {
                                   Navigator.of(context).pop();
                                   prescriptionList.clear();
                                   //  Navigator.of(context).pop();
-                                  takePhoto(ImageSource.gallery);
-                                  // showModalBottomSheet(
-                                  //   context: context,
-                                  //   builder: ((builder) => bottomSheet()),
-                                  // );
+                                  // takePhoto(ImageSource.gallery, false);
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: ((builder) => bottomSheet()),
+                                  );
                                 },
                               )
                             ],
@@ -438,49 +506,12 @@ class _PrescriptionState extends State<Prescription> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 4.0),
-          //   child: Column(
-          //     children: [
-          //       Text(
-          //         'Camera',
-          //         style: TextStyle(
-          //             color: Color(0xff8C8FA5),
-          //             fontWeight: FontWeight.w400,
-          //             fontSize: 13),
-          //       ),
-          //       Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: GestureDetector(
-          //           onTap: () {
-          //             takePhoto(ImageSource.camera);
-          //           },
-          //           child: Container(
-          //             height: 111,
-          //             width: 147,
-          //             child: Icon(
-          //               Icons.camera_alt_outlined,
-          //               color: Colors.grey,
-          //               size: 50,
-          //             ),
-          //             decoration: BoxDecoration(
-          //                 border: Border.all(width: 0),
-          //                 borderRadius: BorderRadius.all(
-          //                   Radius.circular(20),
-          //                 ),
-          //                 color: Color(0xffC4C4C4)),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Column(
               children: [
                 Text(
-                  'Gallery',
+                  'Video',
                   style: TextStyle(
                       color: Color(0xff8C8FA5),
                       fontWeight: FontWeight.w400,
@@ -491,7 +522,46 @@ class _PrescriptionState extends State<Prescription> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop();
-                      takePhoto(ImageSource.gallery);
+
+                      takePhoto(ImageSource.gallery, true);
+                    },
+                    child: Container(
+                      height: 111,
+                      width: 147,
+                      child: Icon(
+                        Icons.video_collection,
+                        color: Colors.grey,
+                        size: 50,
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 0),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          color: Color(0xffC4C4C4)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Column(
+              children: [
+                Text(
+                  'Photos',
+                  style: TextStyle(
+                      color: Color(0xff8C8FA5),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      takePhoto(ImageSource.gallery, false);
                     },
                     child: Container(
                       height: 111,

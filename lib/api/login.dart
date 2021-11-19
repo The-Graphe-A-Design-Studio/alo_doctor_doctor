@@ -108,6 +108,8 @@ class LoginCheck {
   }
 
   Future setsub(List cat) async {
+    print("subcategory----------------------");
+    print(cat);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     String pass = "";
@@ -141,8 +143,8 @@ class LoginCheck {
     return 0;
   }
 
-  Future Register(String gender, String dob, String name, String phone,
-      String category, String concode) async {
+  Future Register(String gender, String dob, String name, String qualification,
+      String exp, String phone, String category, String concode) async {
     String dtoken = await FirebaseMessaging.instance.getToken();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -162,6 +164,8 @@ class LoginCheck {
     map['height'] = "";
     map['weight'] = "1";
     map['city'] = "kolkata";
+    map['doc_qualification'] = qualification;
+    map['doc_experience'] = exp;
     map['state'] = "wb";
     map['country'] = "india";
     map['lat'] = "22.2";

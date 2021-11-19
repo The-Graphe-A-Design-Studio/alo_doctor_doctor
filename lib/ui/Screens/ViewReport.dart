@@ -21,19 +21,7 @@ class ViewReport extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: accentBlueLight,
-        leading: ElevatedButton(
-          style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-          child: Image(
-            image: AssetImage('./assets/images/arrow.png'),
-            height: 20,
-            width: 20,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: backButton(context),
         iconTheme: Theme.of(context).iconTheme,
       ),
       body: Column(

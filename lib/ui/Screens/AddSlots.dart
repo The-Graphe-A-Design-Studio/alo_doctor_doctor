@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:alo_doctor_doctor/api/agoraApis.dart';
-import 'package:alo_doctor_doctor/models/Slots.dart';
-import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
-import 'package:alo_doctor_doctor/utils/form_validator.dart';
-import 'package:alo_doctor_doctor/widgets/customButton.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:alo_doctor_doctor/api/agoraApis.dart';
+
+import 'package:alo_doctor_doctor/models/Slots.dart';
+import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
+import 'package:alo_doctor_doctor/widgets/customButton.dart';
 
 class AddSlots extends StatefulWidget {
   const AddSlots({Key key}) : super(key: key);
@@ -241,26 +241,12 @@ class _AddSlotsState extends State<AddSlots> {
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Image(
-              image: AssetImage(
-                'assets/images/arrow.png',
-              ),
-              height: 18.0,
-              width: 30.0,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+        leading: backButton(context),
         title: Column(
           children: [
             Text(
               'Create Slots',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600),
+              style: Styles.regularHeading,
             )
           ],
         ),

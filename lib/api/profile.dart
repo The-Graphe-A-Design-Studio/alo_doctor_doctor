@@ -39,6 +39,8 @@ class ProfileServer {
                 "lat": profileDetails.lat,
                 "lng": profileDetails.lng,
                 "cat_id": profileDetails.catId,
+                "doc_qualification": profileDetails.docQualification,
+                "doc_experience": profileDetails.docExperience,
               }),
               headers: {
             'Content-type': 'application/json',
@@ -86,6 +88,67 @@ class ProfileServer {
     } catch (e) {
       print('throwed error in profile pic-------------------${e.toString()}');
       throw e;
+    }
+  }
+
+// ***************************** Post cover Photo ************************
+  Future<dynamic> postCoverPhoto(dynamic coverPhoto, String desc) async {
+    print("Inside function");
+    print(coverPhoto == null);
+    String token = await getToken();
+    if (coverPhoto != null) {
+      String targethost = 'developers.thegraphe.com';
+      String authorization = 'Bearer ' + token;
+      var gettokenuri = Uri(
+          scheme: 'https',
+          path: '/alodoctor/public/api/doctor/update_banner',
+          host: targethost);
+      var request = new http.MultipartRequest("POST", gettokenuri);
+
+      var stream = new http.ByteStream(coverPhoto.openRead());
+      stream.cast();
+      var length = await coverPhoto.length();
+      var multipartFile = new http.MultipartFile('doc_banner', stream, length,
+          filename: basename(coverPhoto.path));
+
+      request.files.add(multipartFile);
+
+      // else {
+      //   request.fields["doc_banner"] = null;
+      // }
+      request.fields["doc_banner_description"] = desc;
+      request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
+      request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
+      try {
+        var responses = await request.send();
+        var response = await http.Response.fromStream(responses);
+        final json = jsonDecode(response.body);
+        print(json);
+        if (json["success"] == 0) {
+          throw json["error"]["doc_banner"][0];
+        } else {
+          return json["success"];
+        }
+      } catch (e) {
+        print(
+            'throwed error in cover photo -------------------${e.toString()}');
+        throw e;
+      }
+    } else {
+      print("else part called");
+      var response = await http.post(
+          Uri.https(authority, commonUnencodedPath + "/doctor/update_banner"),
+          headers: {
+            'Content-type': 'application/json',
+            "Authorization": "Bearer " + token,
+          },
+          body: jsonEncode({
+            'doc_banner': null,
+            'doc_banner_description': desc,
+          }));
+      print(response.body);
+      final json = jsonDecode(response.body);
+      return json["success"];
     }
   }
 

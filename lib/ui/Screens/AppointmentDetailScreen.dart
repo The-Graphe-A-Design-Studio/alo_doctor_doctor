@@ -81,17 +81,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
           ),
           centerTitle: true,
           backgroundColor: accentBlueLight,
-          leading: ElevatedButton(
-            style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-            child: Image(
-              image: AssetImage('./assets/images/arrow.png'),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          leading: backButton(context),
           iconTheme: Theme.of(context).iconTheme,
           // actions: [
           //   Padding(
@@ -136,23 +126,25 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               CircleAvatar(
                                 backgroundColor: Colors.transparent,
                                 backgroundImage: widget.path == null
-                                    ? AssetImage('assets/images/userdash.png')
+                                    ? NetworkImage(
+                                        "https://tse2.mm.bing.net/th?id=OIP.e8X4CTvV9XF1DJHi47CCBgHaHa&pid=Api&P=0&w=300&h=300")
                                     : NetworkImage(
                                         'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
                                 radius: 35,
                               ),
                               SizedBox(
-                                width: 30,
+                                width: 15,
                               ),
                               Container(
-                                width: 190,
+                                width: 200,
                                 child: Column(
                                   children: [
                                     Text(
                                       widget.Name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
+                                      style: widget.Name.split(" ").length > 2
+                                          ? Styles.buttonTextBlackBold
+                                          : Styles.regularHeading,
+                                      textAlign: TextAlign.center,
                                     ),
                                     SizedBox(
                                       height: 10,
@@ -189,102 +181,114 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                           //     ),
                           //   ),
                           // ),
-                          InkWell(
-                            onTap: () {
-                              if (widget.bookingStatus == 2) {
-                                Fluttertoast.cancel();
-                                Fluttertoast.showToast(msg: 'Session is over');
-                              } else {
+                          Tooltip(
+                            message: "Video Call",
+                            child: InkWell(
+                              onTap: () {
+                                if (widget.bookingStatus == 2) {
+                                  Fluttertoast.cancel();
+                                  Fluttertoast.showToast(
+                                      msg: 'Session is over');
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VideoCallingScreen(
+                                                widget.pId, widget.bookingId)),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                height: 65,
+                                width: 65,
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.grey,
+                                        style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: Image(
+                                  image: AssetImage(
+                                      './assets/images/video-camera.png'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Tooltip(
+                            message: "Upload Prescription",
+                            child: InkWell(
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => VideoCallingScreen(
-                                          widget.pId, widget.bookingId)),
+                                      builder: (context) =>
+                                          Prescription(widget.bookingId)),
                                 );
-                              }
-                            },
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Image(
-                                image: AssetImage(
-                                    './assets/images/video-camera.png'),
+                                // if (widget.prescriptionList == null) {
+                                //   Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             Prescription(widget.bookingId)),
+                                //   );
+                                // } else {
+                                //   Navigator.of(context).pushNamed(viewPrescription,
+                                //       arguments: ViewPrescription(
+                                //         prescriptionList: widget.prescriptionList,
+                                //         bookingId: widget.bookingId,
+                                //       ));
+                                // }
+                              },
+                              child: Container(
+                                height: 65,
+                                width: 65,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.grey,
+                                        style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: Image(
+                                  image:
+                                      AssetImage('./assets/images/pupload.png'),
+                                  color: Color.fromRGBO(140, 143, 165, 1),
+                                ),
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        Prescription(widget.bookingId)),
-                              );
-                              // if (widget.prescriptionList == null) {
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             Prescription(widget.bookingId)),
-                              //   );
-                              // } else {
-                              //   Navigator.of(context).pushNamed(viewPrescription,
-                              //       arguments: ViewPrescription(
-                              //         prescriptionList: widget.prescriptionList,
-                              //         bookingId: widget.bookingId,
-                              //       ));
-                              // }
-                            },
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Image(
-                                image:
-                                    AssetImage('./assets/images/pupload.png'),
-                                color: Color.fromRGBO(140, 143, 165, 1),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              if (bookingDetails["reports"] == null) {
-                                Fluttertoast.cancel();
-                                Fluttertoast.showToast(
-                                    msg: 'Report Unavailable');
-                              } else {
-                                Navigator.of(context).pushNamed(viewReport,
-                                    arguments: ViewReport(
-                                      reportList: bookingDetails["reports"],
-                                      rDescription:
-                                          bookingDetails["report_description"],
-                                    ));
-                              }
-                            },
-                            child: Container(
-                              height: 65,
-                              width: 65,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Image(
-                                height: 10,
-                                color: Color.fromRGBO(140, 143, 165, 1),
-                                image: AssetImage('./assets/images/report.png'),
+                          Tooltip(
+                            message: "View Report",
+                            child: InkWell(
+                              onTap: () {
+                                if (bookingDetails["reports"] == null) {
+                                  Fluttertoast.cancel();
+                                  Fluttertoast.showToast(
+                                      msg: 'Report Unavailable');
+                                } else {
+                                  Navigator.of(context).pushNamed(viewReport,
+                                      arguments: ViewReport(
+                                        reportList: bookingDetails["reports"],
+                                        rDescription: bookingDetails[
+                                            "report_description"],
+                                      ));
+                                }
+                              },
+                              child: Container(
+                                height: 65,
+                                width: 65,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.grey,
+                                        style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: Image(
+                                  height: 10,
+                                  color: Color.fromRGBO(140, 143, 165, 1),
+                                  image:
+                                      AssetImage('./assets/images/report.png'),
+                                ),
                               ),
                             ),
                           ),
@@ -309,13 +313,79 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                     //         fontWeight: FontWeight.w700),
                     //   ),
                     // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       vertical: 10, horizontal: 30),
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Container(
+                    //         height: 25,
+                    //         width: 25,
+                    //         child: Image(
+                    //           image: AssetImage('./assets/images/clock.png'),
+                    //         ),
+                    //       ),
+                    //       SizedBox(
+                    //         width: 10,
+                    //       ),
+                    //       Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Text(
+                    //             'Video call',
+                    //             style: TextStyle(
+                    //                 color: Colors.black,
+                    //                 fontSize: 15,
+                    //                 fontWeight: FontWeight.w700),
+                    //           ),
+                    //           SizedBox(
+                    //             height: 3,
+                    //           ),
+                    //           Text(
+                    //             'Morning',
+                    //             style: TextStyle(
+                    //                 color: Colors.grey.shade600,
+                    //                 fontSize: 15,
+                    //                 fontWeight: FontWeight.w400),
+                    //           ),
+                    //           SizedBox(
+                    //             height: 2,
+                    //           ),
+                    //           Text(
+                    //             bookingDetails["slot_date"],
+                    //             style: TextStyle(
+                    //                 color: Colors.grey.shade600,
+                    //                 fontSize: 15,
+                    //                 fontWeight: FontWeight.w400),
+                    //           ),
+                    //           SizedBox(
+                    //             height: 2,
+                    //           ),
+                    //           Text(
+                    //             bookingDetails["slot_time"],
+                    //             style: TextStyle(
+                    //                 color: Colors.black,
+                    //                 fontSize: 15,
+                    //                 fontWeight: FontWeight.w700),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 30),
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        left: 30,
+                        right: 30,
+                        bottom: 10,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
+                            // color: Colors.red,
                             height: 25,
                             width: 25,
                             child: Image(
@@ -323,47 +393,35 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             ),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 4,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Video call',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700),
+                                'Booking Details',
+                                style: Styles.regularGreyText,
                               ),
                               SizedBox(
                                 height: 3,
                               ),
                               Text(
-                                'Morning',
-                                style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400),
+                                'Slot Date - ${bookingDetails["slot_date"]}',
+                                style: Styles.regularGreyText,
                               ),
                               SizedBox(
-                                height: 2,
+                                height: 3,
                               ),
                               Text(
-                                bookingDetails["slot_date"],
-                                style: TextStyle(
-                                    color: Colors.grey.shade600,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400),
+                                'Slot Time - ${bookingDetails["slot_time"]}',
+                                style: Styles.regularGreyText,
                               ),
                               SizedBox(
-                                height: 2,
+                                height: 3,
                               ),
                               Text(
-                                bookingDetails["slot_time"],
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700),
+                                'Consultation Fee - ${bookingDetails["payment"]["amount"]} ${bookingDetails["payment"]["currency"]}',
+                                style: Styles.regularGreyText,
                               ),
                             ],
                           ),
@@ -399,10 +457,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                               Text(
                                 "Call History",
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700),
+                                style: Styles.regularGreyText,
                               ),
                             ],
                           ),

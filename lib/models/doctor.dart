@@ -209,6 +209,11 @@ class Details {
     this.lng,
     this.userType,
     this.catId,
+    this.docQualification,
+    this.docExperience,
+    this.docBanner,
+    this.docBannerPath,
+    this.docBannerDescription,
     this.docFees,
     this.feesPeriod,
     this.profilePic,
@@ -244,6 +249,11 @@ class Details {
   String lng;
   int userType;
   int catId;
+  String docQualification;
+  int docExperience;
+  dynamic docBanner;
+  dynamic docBannerPath;
+  dynamic docBannerDescription;
   String docFees;
   int feesPeriod;
   String profilePic;
@@ -267,7 +277,9 @@ class Details {
         emailVerifiedAt: json["email_verified_at"],
         otp: json["otp"],
         gender: json["gender"],
-        dob: DateTime.parse(json["dob"]),
+        dob: json["dob"] == null
+            ? DateTime.parse("1999-10-12")
+            : DateTime.parse(json["dob"]),
         bloodGroup: json["blood_group"],
         maritalStatus: json["marital_status"],
         height: json["height"],
@@ -279,6 +291,11 @@ class Details {
         lng: json["lng"],
         userType: json["user_type"],
         catId: json["cat_id"],
+        docQualification: json["doc_qualification"],
+        docExperience: json["doc_experience"],
+        docBanner: json["doc_banner"],
+        docBannerPath: json["doc_banner_path"],
+        docBannerDescription: json["doc_banner_description"],
         docFees: json["doc_fees"],
         feesPeriod: json["fees_period"],
         profilePic: json["profile_pic"],
@@ -318,6 +335,11 @@ class Details {
         "lng": lng,
         "user_type": userType,
         "cat_id": catId,
+        "doc_qualification": docQualification,
+        "doc_experience": docExperience,
+        "doc_banner": docBanner,
+        "doc_banner_path": docBannerPath,
+        "doc_banner_description": docBannerDescription,
         "doc_fees": docFees,
         "fees_period": feesPeriod,
         "profile_pic": profilePic,

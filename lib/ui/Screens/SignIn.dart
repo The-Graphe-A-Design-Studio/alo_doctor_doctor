@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alo_doctor_doctor/api/login.dart';
+import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/form_validator.dart';
@@ -31,7 +32,8 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   _showSnackBar(msg, context) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
+      content:
+          msg == "Unauthorised" ? Text("Invalid email or password") : Text(msg),
       action: SnackBarAction(
         label: 'Close',
         textColor: Colors.white,
@@ -77,6 +79,7 @@ class _SignInPageState extends State<SignInPage> {
             Navigator.pushReplacementNamed(
               context,
               registerPage,
+              arguments: RegisterPage(false),
             );
           }
           // if (registered) {
@@ -88,7 +91,7 @@ class _SignInPageState extends State<SignInPage> {
           throw HttpException(response['error']);
         }
       } catch (e) {
-        _showSnackBar('Invalid email or password!', context);
+        _showSnackBar(e.toString(), context);
       }
       setState(() {
         _isLoading = false;
@@ -112,13 +115,14 @@ class _SignInPageState extends State<SignInPage> {
                     tag: "Logo",
                     child: Image(
                       image: AssetImage('assets/images/alo_logo.png'),
-                      height: 250.0,
-                      width: 250.0,
+                      height: MediaQuery.of(context).size.height * 0.35,
+                      width: MediaQuery.of(context).size.width * 0.58,
                     ),
                   ),
                   TextFormField(
                     decoration: InputDecoration(labelText: 'E-mail'),
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
                     validator: (value) => FormValidator.validateEmail(value),
                     onChanged: (value) {
                       _authData['email'] = value;
@@ -130,6 +134,8 @@ class _SignInPageState extends State<SignInPage> {
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Password'),
                     obscureText: true,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _submitLogin(),
                     validator: (value) => FormValidator.validatePassword(value),
                     onChanged: (value) {
                       _authData['password'] = value;

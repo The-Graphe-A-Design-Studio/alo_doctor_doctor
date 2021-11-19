@@ -1,9 +1,11 @@
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/providers/profileProvider.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 
 class ConsultationFee extends StatefulWidget {
   @override
@@ -24,7 +26,9 @@ class _ConsultationFeeState extends State<ConsultationFee> {
     });
 
     int doc = await LoginCheck().SetFee(fee);
+    print("docfee--$doc");
     Provider.of<ProfileProvider>(context, listen: false).upadateFee(fee);
+    print(doc);
     if (doc == 1) {
       Fluttertoast.showToast(
         msg: "Fee is Set",
@@ -199,27 +203,11 @@ class _ConsultationFeeState extends State<ConsultationFee> {
       appBar: AppBar(
         title: Text(
           'Consultations Fee',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+          style: Styles.regularHeading,
         ),
         centerTitle: true,
         backgroundColor: accentBlueLight,
-        leading: ElevatedButton(
-          style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-          child: Image(
-            image: AssetImage('./assets/images/arrow.png'),
-          ),
-          onPressed: () {
-            if (selectedWidget == 1) {
-              setState(() {
-                selectedWidget = 0;
-              });
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
-        ),
+        leading: backButton(context),
         iconTheme: Theme.of(context).iconTheme,
         // actions: [
         //   Padding(
@@ -258,9 +246,7 @@ class _ConsultationFeeState extends State<ConsultationFee> {
                             },
                             initialValue: data.currentUser.docFees == null
                                 ? ''
-                                : double.parse(data.currentUser.docFees)
-                                    .round()
-                                    .toString(),
+                                : data.currentUser.docFees,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),

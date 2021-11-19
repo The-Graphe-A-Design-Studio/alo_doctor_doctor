@@ -20,17 +20,44 @@ class ProfileProvider with ChangeNotifier {
     print('in Provider---------$userProfileDetails');
   }
 
-  Future<void> postProfileData(user) async {
+  Future<void> postProfileData(Details user) async {
     try {
-      var response = await serverHandler.postUserPofileData(user);
-      if (response["success"] == 1) {
-        userProfileDetails = user;
+      // print(user.gender +
+      //     "${user.dob.year.toString().padLeft(4, '0')}-${user.dob.month.toString().padLeft(2, '0')}-${user.dob.day.toString().padLeft(2, '0')}" +
+      //     user.name +
+      //     user.docQualification +
+      //     user.docExperience.toString() +
+      //     user.phone.toString() +
+      //     user.category +
+      //     user.conCode.toString());
+      // var response = await serverHandler.postUserPofileData(user);
+      var response = await LoginCheck().Register(
+          user.gender,
+          "${user.dob.year.toString().padLeft(4, '0')}-${user.dob.month.toString().padLeft(2, '0')}-${user.dob.day.toString().padLeft(2, '0')}",
+          user.name,
+          user.docQualification,
+          user.docExperience.toString(),
+          user.phone.toString(),
+          user.category,
+          user.conCode.toString());
+      if (response == 1) {
+        // Details updatedUser = await serverHandler.getUserProfile();
+        userProfileDetails = await serverHandler.getUserProfile();
+        print("After posting data----> $userProfileDetails");
         notifyListeners();
       } else {
         throw HttpException(
             'Something went wrong, Please make sure all the fields are filled.');
       }
+      // if (response["success"] == 1) {
+      //   userProfileDetails = user;
+      //   notifyListeners();
+      // } else {
+      //   throw HttpException(
+      //       'Something went wrong, Please make sure all the fields are filled.');
+      // }
     } catch (e) {
+      print(e);
       throw e;
     }
   }
@@ -55,7 +82,9 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void upadateFee(String fee) {
+    print(fee);
     userProfileDetails.docFees = fee;
+    print(userProfileDetails.docFees);
     notifyListeners();
   }
 

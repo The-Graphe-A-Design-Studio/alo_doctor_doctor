@@ -1,11 +1,13 @@
-import 'package:alo_doctor_doctor/utils/Colors.dart';
-import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/doctor.dart';
 import '../../providers/profileProvider.dart';
+import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 
 class ProfileDetails extends StatefulWidget {
   @override
@@ -23,26 +25,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-          ),
+          leading: backButton(context),
           title: Column(
             children: [
               Text(
-                userDetails.name ?? 'Doctor',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w600),
+                // userDetails.name ?? 'Doctor',
+                "Profile",
+                style: Styles.regularHeading,
               )
             ],
           ),
+          centerTitle: true,
           backgroundColor: accentBlueLight,
         ),
         body: SingleChildScrollView(
@@ -67,16 +60,33 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xff62798C)),
                             ),
-                            Text(
-                              userDetails.name ?? 'Add your name',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
-                            )
+                            userDetails.name.split(" ").length > 2
+                                ? Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    child: FittedBox(
+                                      child: Text(
+                                        userDetails.name ?? 'Add your name',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    userDetails.name ?? 'Add your name',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black),
+                                  ),
                           ],
                         ),
-                        Expanded(child: Container()),
+                        Expanded(
+                            child: Container(
+                          color: Colors.red,
+                        )),
                         userDetails.profilePicPath == null
                             ? GestureDetector(
                                 onTap: () {
@@ -167,30 +177,40 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 ),
                 ProfileField(
                   label: 'Gender',
-                  value: userDetails.gender ?? "",
+                  value: userDetails.gender ?? "unavailable",
                 ),
                 ProfileField(
                   label: 'Date of Birth',
-                  value:
-                      "${DateFormat("yyyy-MM-dd").format(userDetails.dob)}" ??
-                          "",
+                  value: userDetails.dob == null
+                      ? ""
+                      : "${DateFormat("yyyy-MM-dd").format(userDetails.dob)}",
                 ),
                 ProfileField(
                   label: 'Category',
-                  value: 'Physiotherapy',
+                  value: userDetails.category ?? "unavailable",
                 ),
                 ProfileField(
-                  label: 'Documents',
-                  icon: Icons.picture_as_pdf_outlined,
+                  label: 'Qualifications',
+                  value: userDetails.docQualification ?? 'unavailable',
                 ),
                 ProfileField(
-                  label: 'Sub category',
-                  icon: Icons.arrow_forward_ios,
+                  label: 'Experience',
+                  value: userDetails.docExperience == null
+                      ? '0'
+                      : userDetails.docExperience.toString() + " year",
                 ),
-                ProfileField(
-                  label: 'Clinic Location',
-                  icon: Icons.arrow_forward_ios,
-                ),
+                // ProfileField(
+                //   label: 'Documents',
+                //   icon: Icons.picture_as_pdf_outlined,
+                // ),
+                // ProfileField(
+                //   label: 'Sub category',
+                //   icon: Icons.arrow_forward_ios,
+                // ),
+                // ProfileField(
+                //   label: 'Clinic Location',
+                //   icon: Icons.arrow_forward_ios,
+                // ),
               ],
             ),
           ),
@@ -200,7 +220,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
             child: new Icon(Icons.edit),
             backgroundColor: accentBlue,
             onPressed: () {
-              Navigator.pushNamed(context, registerPage);
+              Navigator.pushNamed(context, registerPage,
+                  arguments: RegisterPage(true));
             }));
   }
 }
@@ -244,7 +265,7 @@ class ProfileField extends StatelessWidget {
                         ? Text(
                             value ?? "",
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 15,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600),
                           )

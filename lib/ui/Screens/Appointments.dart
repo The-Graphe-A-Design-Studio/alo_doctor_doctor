@@ -23,6 +23,13 @@ class _AppointmentsState extends State<Appointments> {
   List pList;
   bool _isLoading = false;
 
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
   Future<void> setData() async {
     var data = await LoginCheck().getMyBookings();
 
@@ -31,9 +38,13 @@ class _AppointmentsState extends State<Appointments> {
       upcomingList.clear();
       data.forEach((appointment) {
         if (appointment["status"] != 2 &&
-            DateTime.parse(appointment["slot_date_time"])
-                    .compareTo(DateTime.now()) >=
-                0) {
+                calculateDifference(
+                        DateTime.parse(appointment["slot_date_time"])) >=
+                    0
+            // DateTime.parse(appointment["slot_date_time"])
+            //         .compareTo(DateTime.now()) >=
+            //     0
+            ) {
           upcomingList.add(Modal(
             name: appointment["patient"]["name"],
             pId: appointment["patient"]["id"].toString(),
@@ -89,23 +100,10 @@ class _AppointmentsState extends State<Appointments> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: ElevatedButton(
-            style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-            child: Image(
-              image: AssetImage('./assets/images/arrow.png'),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          leading: backButton(context),
           title: Text(
             'Appointments',
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.black87,
-                fontWeight: FontWeight.w600),
+            style: Styles.regularHeading,
           ),
           centerTitle: true,
           backgroundColor: accentBlueLight,

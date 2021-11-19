@@ -1,6 +1,7 @@
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:alo_doctor_doctor/providers/profileProvider.dart';
+import 'package:alo_doctor_doctor/ui/Screens/WebView.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +47,14 @@ class NavigationDrawer extends StatelessWidget {
                               )),
                         ),
                   title: Text(
-                    "${data.currentUser.name}",
-                    style: Styles.boldHeading,
+                    data.currentUser.name == null
+                        ? "Hello"
+                        : data.currentUser.name.split(" ").length > 2
+                            ? data.currentUser.name.split(" ")[0] +
+                                " " +
+                                data.currentUser.name.split(" ")[1]
+                            : data.currentUser.name,
+                    style: Styles.regularHeading,
                   ),
                   subtitle: Text('View and edit profile'),
                   trailing: child,
@@ -255,6 +262,11 @@ class NavigationDrawer extends StatelessWidget {
             // ),
             Divider(color: Colors.black87),
             ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, webView,
+                    arguments: WebViewLoad("Privacy Policy",
+                        "https://alodoctor-care.com/privacy-policy-for-app/"));
+              },
               leading: Image(
                 image: AssetImage(
                   'assets/images/info.png',
@@ -263,7 +275,7 @@ class NavigationDrawer extends StatelessWidget {
                 width: 50.0,
               ),
               title: Text(
-                "Read about health",
+                "Privacy Policy",
                 style: Styles.buttonTextBlack,
               ),
               trailing: RotatedBox(
@@ -278,6 +290,11 @@ class NavigationDrawer extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, webView,
+                    arguments: WebViewLoad("Terms & Conditions",
+                        "https://alodoctor-care.com/terms-conditions-for-app/"));
+              },
               leading: Image(
                 image: AssetImage(
                   'assets/images/question.png',
@@ -286,7 +303,7 @@ class NavigationDrawer extends StatelessWidget {
                 width: 50.0,
               ),
               title: Text(
-                "Help Center",
+                "Terms & Conditions",
                 style: Styles.buttonTextBlack,
               ),
               trailing: RotatedBox(
@@ -336,7 +353,11 @@ class NavigationDrawer extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: ListTile(
-                  leading: Icon(Icons.power_settings_new, size: 32),
+                  leading: Icon(
+                    Icons.power_settings_new,
+                    size: 32,
+                    color: Colors.black,
+                  ),
                   title: Text(
                     "Logout",
                     style: Styles.buttonTextBlack,
@@ -353,7 +374,9 @@ class NavigationDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+
+            //
           ],
         ),
       ),

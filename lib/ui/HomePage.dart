@@ -73,7 +73,13 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                     Text(
-                      profileData.getUserName ?? "",
+                      profileData.getUserName == null
+                          ? "Loading.."
+                          : profileData.getUserName.split(" ").length > 2
+                              ? profileData.getUserName.split(" ")[0] +
+                                  " " +
+                                  profileData.getUserName.split(" ")[1]
+                              : profileData.getUserName,
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,

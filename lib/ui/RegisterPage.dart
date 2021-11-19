@@ -21,6 +21,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
+  bool isEdit;
+  RegisterPage(this.isEdit);
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -28,16 +30,22 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   Details userDetails;
 
-  TextEditingController NameController;
-  TextEditingController PhoneController;
+  TextEditingController nameController;
+  TextEditingController qualificationController;
+  TextEditingController expController;
+  TextEditingController phoneController;
 
   List<int> uploaded = [0, 0, 0, 0, 0];
   int selectedWidget;
-  String name = "";
+  String name;
+  String qualification = "";
+  String exp = "";
   String phone = "";
-  String concode = '';
+  String concode = '91';
   String selectedGender = '';
   String selectedBloodGroup = '';
+  String birthday = "";
+
   File _imageFile;
   List<String> categories;
   List<String> scategories;
@@ -60,41 +68,105 @@ class _RegisterPageState extends State<RegisterPage> {
     false,
     false,
   ];
-  String birthday = "";
   List<Modal> uploadList = [];
   List<Modal> locationchoice = [];
   int locChoice;
-  int isUpdate;
+  // int isUpdate;
   String chosenCategory = null;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadCat();
     selectedWidget = 0;
-    uploadList.add(Modal(name: 'National Id (FRONT)', isSelected: false));
-    uploadList.add(Modal(name: 'National Id (BACK)', isSelected: false));
-    uploadList.add(Modal(name: 'Passport (Front)', isSelected: false));
-    uploadList.add(Modal(name: 'Passport (Back)', isSelected: false));
-    uploadList.add(Modal(name: 'Degree', isSelected: false));
-    locationchoice.add(Modal(name: 'Use my Location', isSelected: false));
-    locationchoice.add(Modal(name: 'Pick a city', isSelected: false));
+    if (widget.isEdit) {
+      final profileData = Provider.of<ProfileProvider>(context, listen: false);
+      userDetails = profileData.currentUser;
+      print(userDetails.docExperience);
+      print(exp);
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String formatted = formatter.format(userDetails.dob);
+      birthday = formatted;
+      selectedGender = userDetails.gender;
+      phone = userDetails.phone.toString();
+      chosenCategory = userDetails.category;
+      concode = userDetails.conCode.toString();
+      exp = userDetails.docExperience.toString();
+      qualification = userDetails.docQualification;
+      nameController = TextEditingController(
+          text: userDetails.name == null ? name : userDetails.name);
+      qualificationController = TextEditingController(
+          text: userDetails.docQualification == null
+              ? qualification
+              : userDetails.docQualification);
+      expController = TextEditingController(
+          text: userDetails.docExperience == null
+              ? exp
+              : userDetails.docExperience.toString());
+      phoneController = TextEditingController(
+          text: userDetails == null
+              ? phone
+              : (userDetails.phone == null
+                  ? phone
+                  : userDetails.phone.toString()));
+
+      userDetails.documents[0].file != null ? uploaded[0] = 1 : uploaded[0] = 0;
+      userDetails.documents[1].file != null ? uploaded[1] = 1 : uploaded[1] = 0;
+      userDetails.documents[2].file != null ? uploaded[2] = 1 : uploaded[2] = 0;
+      userDetails.documents[3].file != null ? uploaded[3] = 1 : uploaded[3] = 0;
+    }
+    uploadList.add(Modal(
+        name: 'National Id (FRONT)',
+        isSelected: widget.isEdit
+            ? userDetails.documents[0].file != null
+                ? true
+                : false
+            : false));
+    uploadList.add(Modal(
+        name: 'National Id (BACK)',
+        isSelected: widget.isEdit
+            ? userDetails.documents[1].file != null
+                ? true
+                : false
+            : false));
+    uploadList.add(Modal(
+        name: 'Passport (Front)',
+        isSelected: widget.isEdit
+            ? userDetails.documents[2].file != null
+                ? true
+                : false
+            : false));
+    uploadList.add(Modal(
+        name: 'Passport (Back)',
+        isSelected: widget.isEdit
+            ? userDetails.documents[3].file != null
+                ? true
+                : false
+            : false));
+    uploadList.add(Modal(
+        name: 'Degree',
+        isSelected: widget.isEdit
+            ? userDetails.documents[4].file != null
+                ? true
+                : false
+            : false));
+    // locationchoice.add(Modal(name: 'Use my Location', isSelected: widget.isEdit? userDetails.documents.length>=1?true: false:false));
+    // locationchoice.add(Modal(name: 'Pick a city', isSelected: widget.isEdit? userDetails.documents.length>=1?true: false:false));
   }
 
   void loadCat() async {
     categories = await LoginCheck().getCategories();
 
     // check  if this screen is used for registration or profile edit
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isUpdate = prefs.getInt('update');
-    });
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   isUpdate = prefs.getInt('update');
+    // });
   }
 
   Future loadSubCat() async {
     scategories = await LoginCheck().getSub(chosenCategory);
-
+    print('subcategories--------$scategories');
     return scategories;
   }
 
@@ -121,12 +193,79 @@ class _RegisterPageState extends State<RegisterPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(64, 40, 64, 0),
           child: TextFormField(
-            controller: NameController,
+            controller: nameController,
             onChanged: (value) {
               name = value;
             },
             decoration: InputDecoration(
                 hintText: 'Name',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0)),
+            style: Styles.buttonTextBlack,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getUserQualificationWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Text(
+            'What are your Qualifications?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 22.0,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(64, 40, 64, 0),
+          child: TextFormField(
+            controller: qualificationController,
+            onChanged: (value) {
+              qualification = value;
+            },
+            decoration: InputDecoration(
+                hintText: 'Enter your qualifications',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0)),
+            style: Styles.buttonTextBlack,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getUserExperienceWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Text(
+            'How many years of experience you have?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 22.0,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(64, 40, 64, 0),
+          child: TextFormField(
+            controller: expController,
+            // keyboardType: TextInputType.number,
+            onChanged: (value) {
+              exp = value;
+            },
+            decoration: InputDecoration(
+                hintText: 'Experience in years',
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0)),
             style: Styles.buttonTextBlack,
@@ -165,10 +304,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     setState(() {
                       String code = e.toString();
                       concode = e.toString().substring(1, code.length);
-                      concode = e.toString().substring(1, code.length);
+                      print(concode);
+                      // concode = e.toString().substring(1, code.length);
                     });
                   },
-                  initialSelection: 'IN',
+                  initialSelection: concode == "" ? 'IN' : "+$concode",
                   showCountryOnly: false,
                   favorite: ['+91', 'IN'],
                 ),
@@ -178,7 +318,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                   child: TextFormField(
-                    controller: PhoneController,
+                    controller: phoneController,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       phone = value;
@@ -226,6 +366,8 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 selectedGender = 'male';
               });
+              print(selectedGender);
+              print(selectedGender == 'male');
             },
             child: Container(
                 width: 120,
@@ -263,6 +405,8 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 selectedGender = 'female';
               });
+              print(selectedGender);
+              print(selectedGender == 'female');
             },
             child: Container(
                 width: 120,
@@ -300,6 +444,8 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 selectedGender = 'other';
               });
+              print(selectedGender);
+              print(selectedGender == 'other');
             },
             child: Container(
                 width: 120,
@@ -399,7 +545,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           selected[scategories.indexOf(i)] =
                               !selected[scategories.indexOf(i)];
                         });
-                        print('yes');
+
                         print(selectedscat);
                         if (selectedscat.contains(
                             scatid[scategories.indexOf(i)].toString())) {
@@ -468,7 +614,7 @@ class _RegisterPageState extends State<RegisterPage> {
               // default is not looping
               firstDate: DateTime(1901, 01, 01),
               lastDate: DateTime(2030, 1, 1),
-              initialDate: DateTime(1991, 10, 12),
+              initialDate: _selectedBirthday ?? DateTime(1991, 10, 12),
               dateFormat: "dd-MMM-yyyy",
               locale: DatePicker.localeFromString('en'),
               onChange: (DateTime newDate, _) {
@@ -565,6 +711,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
     int success = await LoginCheck().DocUpload(_imageFile, index);
     if (success == 1) {
+      Fluttertoast.cancel();
       Fluttertoast.showToast(
         msg: "Uploaded successfully",
         toastLength: Toast.LENGTH_SHORT,
@@ -606,6 +753,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      Navigator.pop(context);
+
                       takePhoto(ImageSource.camera, index);
                     },
                     child: Container(
@@ -643,6 +792,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      Navigator.pop(context);
                       takePhoto(ImageSource.gallery, index);
                     },
                     child: Container(
@@ -665,41 +815,41 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Column(
-              children: [
-                Text(
-                  'Delete',
-                  style: TextStyle(
-                      color: Color(0xff8C8FA5),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 111,
-                      width: 147,
-                      child: Icon(
-                        Icons.restore_from_trash_outlined,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color(0xffC4C4C4)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 4.0),
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         'Delete',
+          //         style: TextStyle(
+          //             color: Color(0xff8C8FA5),
+          //             fontWeight: FontWeight.w400,
+          //             fontSize: 13),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: GestureDetector(
+          //           onTap: () {},
+          //           child: Container(
+          //             height: 111,
+          //             width: 147,
+          //             child: Icon(
+          //               Icons.restore_from_trash_outlined,
+          //               color: Colors.grey,
+          //               size: 50,
+          //             ),
+          //             decoration: BoxDecoration(
+          //                 border: Border.all(width: 0),
+          //                 borderRadius: BorderRadius.all(
+          //                   Radius.circular(20),
+          //                 ),
+          //                 color: Color(0xffC4C4C4)),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -710,10 +860,23 @@ class _RegisterPageState extends State<RegisterPage> {
     print(birthday);
     print(name);
     print(phone);
-    await LoginCheck().Register(
-        selectedGender, birthday, name, phone, chosenCategory, concode);
+    Details updatedUser = Details();
+    updatedUser.dob = DateTime.parse(birthday);
+    updatedUser.category = chosenCategory;
+    updatedUser.conCode = int.parse(concode);
+    updatedUser.name = name;
+    updatedUser.phone = int.parse(phone);
+    updatedUser.gender = selectedGender;
+    updatedUser.docExperience = exp == "" ? 0 : int.parse(exp);
+    updatedUser.docQualification = qualification ?? "";
+    Provider.of<ProfileProvider>(context, listen: false)
+        .postProfileData(updatedUser);
+    // await LoginCheck().Register(selectedGender, birthday, name, qualification,
+    //     exp, phone, chosenCategory, concode);
     await LoginCheck().setsub(selectedscat);
-    Navigator.pushReplacementNamed(context, homePage);
+    widget.isEdit
+        ? Navigator.of(context).pop()
+        : Navigator.pushReplacementNamed(context, homePage);
   }
 
   Widget getLocationWidget() {
@@ -765,27 +928,43 @@ class _RegisterPageState extends State<RegisterPage> {
       case 1:
         return getPhoneWidget();
       case 2:
-        return getGenderWidget();
+        return getUserQualificationWidget();
       case 3:
-        return getBirthdayWidget();
+        return getUserExperienceWidget();
       case 4:
-        return getCategoryWidget();
+        return getGenderWidget();
       case 5:
+        return getBirthdayWidget();
+      case 6:
+        return getCategoryWidget();
+      case 7:
         return scategories == null
             ? Center(child: CircularProgressIndicator())
             : getSubCategoryWidget();
-      case 6:
+      case 8:
         return getDocumentsWidget(context);
-      case 7:
-        return getLocationWidget();
+      // case 7:
+      //   return getLocationWidget();
     }
     return getUserNameWidget();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(concode);
     if (name == null && userDetails != null) {
       name = userDetails.name;
+    }
+    if (qualification == null && userDetails != null) {
+      qualification = userDetails.docQualification;
+    }
+    if (exp == null && userDetails != null) {
+      exp = userDetails.docExperience == null
+          ? ""
+          : userDetails.docExperience.toString();
+    }
+    if (_selectedBirthday == null && userDetails != null) {
+      _selectedBirthday = userDetails.dob;
     }
     if (phone == null && userDetails != null) {
       phone = userDetails.phone.toString();
@@ -793,18 +972,35 @@ class _RegisterPageState extends State<RegisterPage> {
     Details dummy = new Details();
     final profileData = Provider.of<ProfileProvider>(context);
     userDetails = profileData.currentUser;
-    print(userDetails);
-    NameController = TextEditingController(
-        text: userDetails == null ? name : userDetails.name);
-    PhoneController = TextEditingController(
+    print(userDetails == null);
+    nameController = TextEditingController(
+        text: userDetails == null
+            ? name
+            : userDetails.name == null
+                ? name
+                : userDetails.name);
+    qualificationController = TextEditingController(
+        text: userDetails == null
+            ? qualification
+            : userDetails.docQualification == null
+                ? qualification
+                : userDetails.docQualification);
+    expController = TextEditingController(
+        text: userDetails == null
+            ? exp
+            : userDetails.docExperience == null
+                ? exp
+                : userDetails.docExperience.toString());
+    phoneController = TextEditingController(
         text: userDetails == null
             ? phone
             : (userDetails.phone == null
                 ? phone
                 : userDetails.phone.toString()));
-    selectedGender = userDetails == null
-        ? selectedGender
-        : (userDetails.gender == null ? selectedGender : userDetails.gender);
+    // selectedGender =userDetails == null
+    //         ?selectedGender:userDetails.gender == null
+    //     ? selectedGender
+    //     :  userDetails.gender;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -834,7 +1030,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           size: 25,
                         ),
                       ),
-                    if (isUpdate != null && selectedWidget == 0)
+                    if (widget.isEdit && selectedWidget == 0)
                       GestureDetector(
                         onTap: () {
                           print('hey');
@@ -849,12 +1045,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     Expanded(child: Container()),
                     GestureDetector(
                       onTap: () async {
-                        selectedWidget == 6
-                            ? _register()
+                        selectedWidget == 8
+                            ? !uploaded.contains(1)
+                                ? Fluttertoast.showToast(
+                                    msg: "Please upload documents",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                  )
+                                : _register()
                             : setState(() {
                                 print(selectedWidget);
                                 if (selectedWidget == 0) {
-                                  if (NameController.text.isNotEmpty == false) {
+                                  print(nameController.text);
+                                  if (nameController.text.isNotEmpty == false) {
                                     Fluttertoast.showToast(
                                       msg: "Name cannot be null",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -864,26 +1067,33 @@ class _RegisterPageState extends State<RegisterPage> {
                                     selectedWidget++;
                                   }
                                 } else if (selectedWidget == 1) {
-                                  if (PhoneController.text.length < 10) {
+                                  if (phoneController.text.length == 0) {
                                     Fluttertoast.showToast(
-                                      msg: "Phone cannot be less than 10",
+                                      msg: "Please Enter phone number",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                  } else if (phoneController.text.length !=
+                                      10) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please enter valid phone number",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );
                                   } else {
                                     selectedWidget++;
                                   }
-                                } else if (selectedWidget == 3) {
-                                  if (birthday == "") {
+                                } else if (selectedWidget == 5) {
+                                  if (_selectedBirthday == null) {
                                     Fluttertoast.showToast(
-                                      msg: "please choose your birthday",
+                                      msg: "Please set your birth date",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );
                                   } else {
                                     selectedWidget++;
                                   }
-                                } else if (selectedWidget == 4) {
+                                } else if (selectedWidget == 6) {
                                   loadSubCat().then((doctor) {
                                     setState(() {
                                       this.scategories = doctor;
@@ -895,7 +1105,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                       this.scatid = doctor;
                                     });
                                   });
-                                  selectedWidget++;
+                                  if (chosenCategory != null)
+                                    selectedWidget++;
+                                  else
+                                    Fluttertoast.showToast(
+                                      msg: "Please select Category",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                } else if (selectedWidget == 7) {
+                                  print('sub category--- $selectedscat');
+                                  if (selectedscat.isNotEmpty)
+                                    selectedWidget++;
+                                  else
+                                    Fluttertoast.showToast(
+                                      msg: "Please select subcategory",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
                                 }
                                 // } else if (selectedWidget == 6) {
                                 //   bool check =

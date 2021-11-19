@@ -2,6 +2,7 @@ import 'package:alo_doctor_doctor/ui/HomePage.dart';
 import 'package:alo_doctor_doctor/ui/LoginPage.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddPhoto.dart';
+import 'package:alo_doctor_doctor/ui/Screens/AddCoverPhoto.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddSlots.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Appointments.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Consultation.dart';
@@ -14,7 +15,10 @@ import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignUp.dart';
 import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Video/NetworkVideoPlayer.dart';
+import 'package:alo_doctor_doctor/ui/Screens/Video/FileVideoPlayer.dart';
 import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
+import 'package:alo_doctor_doctor/ui/Screens/WebView.dart';
 import 'package:alo_doctor_doctor/ui/Screens/calendarScreen.dart';
 import 'package:alo_doctor_doctor/ui/SplashScreen.dart';
 import 'package:alo_doctor_doctor/widgets/photoViewer.dart';
@@ -42,9 +46,12 @@ class RouteGenerator {
         );
 
       case registerPage:
-        return FadeRoute(
-          page: RegisterPage(),
-        );
+        return MaterialPageRoute(builder: (BuildContext context) {
+          RegisterPage argument = args as RegisterPage;
+          return RegisterPage(
+            argument.isEdit,
+          );
+        });
 
       case appointmentScreen:
         return FadeRoute(
@@ -86,6 +93,10 @@ class RouteGenerator {
         return FadeRoute(
           page: AddPhoto(),
         );
+      case addCoverPhoto:
+        return FadeRoute(
+          page: AddCoverPhoto(),
+        );
       case paymentScreen:
         return FadeRoute(
           page: PaymentScreen(),
@@ -111,11 +122,27 @@ class RouteGenerator {
 
       case photoViewer:
         PhotoViewer argument = args as PhotoViewer;
-
         return FadeRoute(
           page: PhotoViewer(argument.imgPath, argument.isNetwork),
         );
 
+      case webView:
+        WebViewLoad argument = args as WebViewLoad;
+        return FadeRoute(
+          page: WebViewLoad(argument.title, argument.webLink),
+        );
+
+      case networkVideo:
+        NetworkPlayerWidget argument = args as NetworkPlayerWidget;
+        return FadeRoute(
+          page: NetworkPlayerWidget(argument.networkVideo),
+        );
+
+      case filevideo:
+        FilePlayerWidget argument = args as FilePlayerWidget;
+        return FadeRoute(
+          page: FilePlayerWidget(argument.videoFile),
+        );
       // return MaterialPageRoute(builder: (BuildContext context) {
       //   PhotoViewer argument = args as PhotoViewer;
       //   return PhotoViewer(

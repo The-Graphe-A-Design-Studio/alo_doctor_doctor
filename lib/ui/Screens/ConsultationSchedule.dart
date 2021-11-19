@@ -11,6 +11,7 @@ import '../../models/ServerSlots.dart';
 import '../../models/Slots.dart' as slotsModel;
 import '../../models/slotModel.dart';
 import '../../utils/Colors.dart';
+import '../../utils/styles.dart';
 import '../../utils/MyConstants.dart';
 import '../../widgets/slotItem.dart';
 
@@ -78,21 +79,11 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
       appBar: AppBar(
         title: Text(
           'Consultations',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+          style: Styles.regularHeading,
         ),
         centerTitle: true,
         backgroundColor: accentBlueLight,
-        leading: ElevatedButton(
-          style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(accentBlueLight)),
-          child: Image(
-            image: AssetImage('./assets/images/arrow.png'),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: backButton(context),
         iconTheme: Theme.of(context).iconTheme,
         actions: [
           Padding(
@@ -193,10 +184,11 @@ class _ConsultationScheduleState extends State<ConsultationSchedule> {
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     child: SlotItem(
-                                        slots.slots[selectedDateInt].slotTime[index].status,
-                                        slots.slots[selectedDateInt].slotTime[index].time,
-                                        false
-                                  ),
+                                        slots.slots[selectedDateInt]
+                                            .slotTime[index].status,
+                                        slots.slots[selectedDateInt]
+                                            .slotTime[index].time,
+                                        false),
                                     onTap: () {
                                       showAlertDialog(
                                           context,

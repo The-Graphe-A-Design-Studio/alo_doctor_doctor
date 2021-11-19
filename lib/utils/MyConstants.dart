@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:alo_doctor_doctor/utils/Colors.dart';
+
 //API Key
 
 //Basic Pages
@@ -28,9 +31,29 @@ const String recordScreen = '/recordScreen';
 const String appointmentDetails = './appointmentDetails';
 const String profileDetails = './profileDetails';
 const String addPhoto = './addPhoto';
+const String addCoverPhoto = './addCoverPhoto';
 const String signIn = './signIn';
 const String signUp = './signUp';
 // const String videoCallingScreen = './videoCalling';
 const String addSlotes = './addslotes';
 const String viewReport = './viewReport';
 const String photoViewer = './photoViewer';
+const String webView = './webView';
+const String networkVideo = './networkVideo';
+const String filevideo = './filevideo';
+
+// buttons
+Widget backButton(BuildContext context) => ElevatedButton(
+      style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0),
+          backgroundColor: MaterialStateProperty.all(accentBlueLight)),
+      child: Image(
+        image: AssetImage('./assets/images/arrow.png'),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+// base url
+const baseUrl = "https://developers.thegraphe.com/alodoctor/public";
