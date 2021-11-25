@@ -30,6 +30,7 @@ class CustomDropdown<T> extends StatelessWidget {
             dropdownColor: Colors.white,
             isExpanded: true,
             itemHeight: 50.0,
+            hint: Text("Select Category"),
             style: TextStyle(
                 fontSize: 15.0,
                 color: isEnabled ? Colors.black : Colors.grey[700]),

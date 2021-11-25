@@ -73,6 +73,7 @@ class LoginCheck {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String targethost = 'developers.thegraphe.com';
     print(email);
+    print(password);
     var map = new Map<String, dynamic>();
     map['email'] = email;
     map['password'] = password;
@@ -94,7 +95,7 @@ class LoginCheck {
         host: targethost);
     print(gettokenuri);
     final response = await http.post(gettokenuri, body: map);
-    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       print(response.body);
@@ -118,9 +119,11 @@ class LoginCheck {
     for (int i = 0; i < cat.length; i++) {
       if (i == 0) {
         pass = cat[i];
+        print(cat[i]);
       } else {
         pass = pass + '* ' + cat[i];
       }
+      print(pass);
     }
     var map = new Map<String, dynamic>();
     map['sub_cat_ids'] = pass;
@@ -143,8 +146,15 @@ class LoginCheck {
     return 0;
   }
 
-  Future Register(String gender, String dob, String name, String qualification,
-      String exp, String phone, String category, String concode) async {
+  Future<int> Register(
+      String gender,
+      String dob,
+      String name,
+      String qualification,
+      String exp,
+      String phone,
+      String category,
+      String concode) async {
     String dtoken = await FirebaseMessaging.instance.getToken();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -152,7 +162,7 @@ class LoginCheck {
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     String catid = await LoginCheck().getCatID(category);
-    print(catid);
+    print('cat id-------------$catid');
     var map = new Map<String, dynamic>();
     map['name'] = name;
     map['gender'] = gender;
@@ -410,7 +420,62 @@ class LoginCheck {
     return 0;
   }
 
-  Future PrescriptionUpload(List<File> imageFile, String Id) async {
+  // Future PrescriptionUpload(List imageFile, String Id) async {
+  //   int succ;
+  //   // print('yo');
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   String targethost = 'developers.thegraphe.com';
+  //   // var map = new Map<String, dynamic>();
+  //   //
+  //   // map['file'] = img != null
+  //   //     ? 'data:image/png;base64,' + base64Encode(img.readAsBytesSync())
+  //   //     : '';
+  //   // print(prefs.getString('token'));
+  //   String token = prefs.getString('token');
+  //   String authorization = 'Bearer ' + token;
+  //   // print(authorization);
+  //   print('inside');
+  //   var gettokenuri;
+  //   gettokenuri = new Uri(
+  //       scheme: 'https',
+  //       path: '/alodoctor/public/api/doctor/prescription/' + Id,
+  //       host: targethost);
+  //   print(gettokenuri);
+
+  //   var request = new http.MultipartRequest("POST", gettokenuri);
+  //   List<MultipartFile> newList = [];
+  //   for (int i = 0; i < imageFile.length; i++) {
+  //     var stream = new http.ByteStream(imageFile[i].openRead());
+  //     stream.cast();
+  //     var length = await imageFile[i].length();
+  //     var multipartFile = new http.MultipartFile("file[]", stream, length,
+  //         filename: basename(imageFile[i].path));
+  //     newList.add(multipartFile);
+  //   }
+  //   request.files.addAll(newList);
+  //   request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
+  //   request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
+  //   var responses = await request.send();
+  //   var response = await http.Response.fromStream(responses);
+  //   // final response = await http.post(gettokenuri,
+  //   //     body: map, headers: {HttpHeaders.authorizationHeader: authorization});
+  //   // print(response.statusCode);
+  //   final json = jsonDecode(response.body);
+  //   print(json);
+  //   print(response.statusCode);
+  //   succ = json['success'];
+  //   print(json['message']);
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body);
+  //     succ = json['success'];
+  //     print(json['message']);
+  //     return succ;
+  //   }
+  //   return 0;
+  // }
+
+  Future PrescriptionUpload(List selectedFiles, String Id) async {
     int succ;
     // print('yo');
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -435,74 +500,67 @@ class LoginCheck {
 
     var request = new http.MultipartRequest("POST", gettokenuri);
     List<MultipartFile> newList = [];
-    for (int i = 0; i < imageFile.length; i++) {
-      var stream = new http.ByteStream(imageFile[i].openRead());
+    for (int i = 0; i < selectedFiles.length; i++) {
+      var stream = new http.ByteStream(selectedFiles[i].openRead());
       stream.cast();
-      var length = await imageFile[i].length();
+      var length = await selectedFiles[i].length();
       var multipartFile = new http.MultipartFile("file[]", stream, length,
-          filename: basename(imageFile[i].path));
+          filename: basename(selectedFiles[i].path));
       newList.add(multipartFile);
     }
     request.files.addAll(newList);
     request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
     request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
-    var responses = await request.send();
-    var response = await http.Response.fromStream(responses);
-    // final response = await http.post(gettokenuri,
-    //     body: map, headers: {HttpHeaders.authorizationHeader: authorization});
-    // print(response.statusCode);
-    final json = jsonDecode(response.body);
-    print(json);
-    print(response.statusCode);
-    succ = json['success'];
-    print(json['message']);
-    if (response.statusCode == 200) {
+    try {
+      var responses = await request.send();
+      var response = await http.Response.fromStream(responses);
+      // final response = await http.post(gettokenuri,
+      //     body: map, headers: {HttpHeaders.authorizationHeader: authorization});
+      // print(response.statusCode);
       final json = jsonDecode(response.body);
+      print(json);
+      print(response.statusCode);
       succ = json['success'];
       print(json['message']);
-      return succ;
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        succ = json['success'];
+        print(json['message']);
+        return succ;
+      }
+      return 0;
+    } catch (e) {
+      throw "Something went wrong";
     }
-    return 0;
   }
 
-  // Future<String> PrescriptionUpload(File profilePic, String Id) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  // ****************************** Delete files from prescription
+  Future<dynamic> deletePrescription(int bookingId, String fileName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String targethost = 'developers.thegraphe.com';
 
-  //   String token = prefs.getString('token');
-  //   String targethost = 'developers.thegraphe.com';
-  //   String authorization = 'Bearer ' + token;
-  //   var gettokenuri = new Uri(
-  //       scheme: 'https',
-  //       path: '/alodoctor/public/api/doctor/prescription/' + Id,
-  //       host: targethost);
-  //   var request = new http.MultipartRequest("POST", gettokenuri);
+    String token = prefs.getString('token');
+    String authorization = 'Bearer ' + token;
+    print('inside');
 
-  //   var stream = new http.ByteStream(profilePic.openRead());
-  //   stream.cast();
-  //   var length = await profilePic.length();
-  //   var multipartFile = new http.MultipartFile('file[]', stream, length,
-  //       filename: basename(profilePic.path));
-  //   List<http.MultipartFile> fileList = [];
-  //   fileList.add(multipartFile);
-  //   request.files.addAll(fileList);
-  //   request.headers[HttpHeaders.contentTypeHeader] = 'application/json';
-  //   request.headers[HttpHeaders.authorizationHeader] = 'Bearer ' + token;
-  //   try {
-  //     var responses = await request.send();
-  //     var response = await http.Response.fromStream(responses);
-  //     final json = jsonDecode(response.body);
-  //     print(json);
-  //     if (json["success"] == 0) {
-  //       print('error in profile pic---------------${json["error"]["file"][0]}');
-  //       throw HttpException(json["error"]["file"][0]);
-  //     } else {
-  //       return json["profile_pic_path"];
-  //     }
-  //   } catch (e) {
-  //     print('throwed error in profile pic-------------------${e.toString()}');
-  //     throw e;
-  //   }
-  // }
+    var gettokenuri = new Uri(
+        scheme: 'https',
+        path: '/alodoctor/public/api/doctor/prescription/$bookingId/$fileName',
+        host: targethost);
+    print(gettokenuri);
+
+    final response = await http.delete(gettokenuri,
+        headers: {HttpHeaders.authorizationHeader: authorization});
+    print(response.body);
+    print(response.statusCode);
+    var decodedData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return decodedData["success"];
+    } else {
+      throw HttpException("Error Deleting files, try again later");
+    }
+  }
 
   Future<dynamic> UserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -632,7 +690,7 @@ class LoginCheck {
           i++) {
         subCat.add(json['categories'][index]["subcategories"][i]['name']);
       }
-      print(subCat);
+      print("subcat successful $subCat");
     }
     return subCat;
   }

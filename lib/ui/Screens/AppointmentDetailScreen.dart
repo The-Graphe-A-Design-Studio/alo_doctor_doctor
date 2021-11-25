@@ -1,5 +1,6 @@
 import 'package:alo_doctor_doctor/ui/Screens/ConsultationSchedule.dart';
 import 'package:alo_doctor_doctor/ui/Screens/RescheduleBooking.dart';
+import 'package:alo_doctor_doctor/ui/Screens/UploadPrescription.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -219,12 +220,15 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                             message: "Upload Prescription",
                             child: InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Prescription(widget.bookingId)),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           Prescription(widget.bookingId)),
+                                // );
+                                Navigator.of(context).pushNamed(prescription,
+                                    arguments:
+                                        UploadPrescription(widget.bookingId));
                                 // if (widget.prescriptionList == null) {
                                 //   Navigator.push(
                                 //     context,

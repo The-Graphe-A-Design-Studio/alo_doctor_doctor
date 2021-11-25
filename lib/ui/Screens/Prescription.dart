@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:alo_doctor_doctor/widgets/prescriptionViewer.dart';
-// import 'package:alo_doctor_doctor/ui/screens/video/NetworkVideoPlayer.dart';
 import 'package:video_player/video_player.dart';
 
 class Prescription extends StatefulWidget {
@@ -253,7 +252,10 @@ class _PrescriptionState extends State<Prescription> {
                                         bottom: 10,
                                         right: 10,
                                         child: GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
+                                            // final result = await FilePicker
+                                            //     .platform
+                                            //     .pickFiles();
                                             showModalBottomSheet(
                                               context: context,
                                               builder: ((builder) =>

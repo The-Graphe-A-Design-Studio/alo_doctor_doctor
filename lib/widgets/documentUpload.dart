@@ -88,21 +88,21 @@ class _documentUploadState extends State<documentUpload> {
             ),
           ),
         ),
-        Row(
-          children: [
-            Expanded(child: Container()),
-            Visibility(
-              child: Text(
-                'Choose from gallery',
-                style: TextStyle(
-                    color: Color(0xff8C8FA5),
-                    fontWeight: FontWeight.w400,
-                    fontSize: 15),
-              ),
-              visible: widget.isSelected,
-            ),
-          ],
-        )
+        // Row(
+        //   children: [
+        //     Expanded(child: Container()),
+        //     Visibility(
+        //       child: Text(
+        //         'Choose from gallery',
+        //         style: TextStyle(
+        //             color: Color(0xff8C8FA5),
+        //             fontWeight: FontWeight.w400,
+        //             fontSize: 12),
+        //       ),
+        //       visible: widget.isSelected,
+        //     ),
+        //   ],
+        // )
       ],
     );
   }

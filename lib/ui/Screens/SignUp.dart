@@ -46,9 +46,10 @@ class _SignUpPageState extends State<SignUpPage> {
       try {
         int doc = await LoginCheck()
             .UserSignUp(registerData['email'], registerData['password']);
+        print(doc == 1);
         if (doc == 1) {
           print('logged');
-          await LoginCheck().getSub("Physiotherapy");
+          // await LoginCheck().getSub("Physiotherapy");
           Navigator.pushReplacementNamed(context, registerPage,
               arguments: RegisterPage(false));
         } else {

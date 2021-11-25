@@ -18,6 +18,7 @@ class _NetworkPlayerWidgetState extends State<NetworkPlayerWidget> {
   @override
   void initState() {
     super.initState();
+    print("network");
     print(widget.networkVideo);
     controller = VideoPlayerController.network("$baseUrl${widget.networkVideo}")
       ..addListener(() => setState(() {}))
@@ -54,8 +55,9 @@ class _NetworkPlayerWidgetState extends State<NetworkPlayerWidget> {
           // alignment: Alignment.center,
           child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
+                // SizedBox(height: 100),
                 VideoPlayerWidget(controller: controller),
                 // buildTextField(),
               ],

@@ -35,7 +35,13 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController expController;
   TextEditingController phoneController;
 
-  List<int> uploaded = [0, 0, 0, 0, 0];
+  List<int> uploaded = [
+    0,
+    0,
+    0,
+    0,
+    0,
+  ];
   int selectedWidget;
   String name;
   String qualification = "";
@@ -45,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String selectedGender = '';
   String selectedBloodGroup = '';
   String birthday = "";
-
+  bool loadingSubCat = false;
   File _imageFile;
   List<String> categories;
   List<String> scategories;
@@ -114,6 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
       userDetails.documents[1].file != null ? uploaded[1] = 1 : uploaded[1] = 0;
       userDetails.documents[2].file != null ? uploaded[2] = 1 : uploaded[2] = 0;
       userDetails.documents[3].file != null ? uploaded[3] = 1 : uploaded[3] = 0;
+      userDetails.documents[4].file != null ? uploaded[4] = 1 : uploaded[4] = 0;
+      print("Edit-------------$uploaded");
     }
     uploadList.add(Modal(
         name: 'National Id (FRONT)',
@@ -165,15 +173,24 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future loadSubCat() async {
-    scategories = await LoginCheck().getSub(chosenCategory);
-    print('subcategories--------$scategories');
-    return scategories;
+    if (chosenCategory != null) {
+      setState(() {
+        loadingSubCat = true;
+      });
+      scategories = await LoginCheck().getSub(chosenCategory);
+      print('subcategories--------$scategories');
+      setState(() {
+        loadingSubCat = false;
+      });
+      return scategories;
+    }
   }
 
   Future loadSubCatid() async {
-    scatid = await LoginCheck().getSubId(chosenCategory);
-
-    return scatid;
+    if (chosenCategory != null) {
+      scatid = await LoginCheck().getSubId(chosenCategory);
+      return scatid;
+    }
   }
 
   Widget getUserNameWidget() {
@@ -325,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                     validator: (text) {
                       if (text == null || text.isEmpty) {
-                        return 'Text is empty';
+                        return 'Please enter mobile number';
                       }
                       return null;
                     },
@@ -614,7 +631,7 @@ class _RegisterPageState extends State<RegisterPage> {
               // default is not looping
               firstDate: DateTime(1901, 01, 01),
               lastDate: DateTime(2030, 1, 1),
-              initialDate: _selectedBirthday ?? DateTime(1991, 10, 12),
+              initialDate: _selectedBirthday ?? DateTime.now(),
               dateFormat: "dd-MMM-yyyy",
               locale: DatePicker.localeFromString('en'),
               onChange: (DateTime newDate, _) {
@@ -674,11 +691,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         isSelected: uploadList[index].isSelected,
                         onTap: () {
                           setState(() {
-                            uploadList.forEach((element) {
-                              element.isSelected = false;
-                            });
+                            if (uploaded[index] == 1) {
+                              uploadList.forEach((element) {
+                                element.isSelected = false;
+                              });
 
-                            uploadList[index].isSelected = true;
+                              uploadList[index].isSelected = true;
+                            }
                           });
                           showModalBottomSheet(
                             context: context,
@@ -870,10 +889,10 @@ class _RegisterPageState extends State<RegisterPage> {
     updatedUser.docExperience = exp == "" ? 0 : int.parse(exp);
     updatedUser.docQualification = qualification ?? "";
     Provider.of<ProfileProvider>(context, listen: false)
-        .postProfileData(updatedUser);
+        .postProfileData(updatedUser, selectedscat);
     // await LoginCheck().Register(selectedGender, birthday, name, qualification,
     //     exp, phone, chosenCategory, concode);
-    await LoginCheck().setsub(selectedscat);
+    // await LoginCheck().setsub(selectedscat);
     widget.isEdit
         ? Navigator.of(context).pop()
         : Navigator.pushReplacementNamed(context, homePage);
@@ -938,7 +957,7 @@ class _RegisterPageState extends State<RegisterPage> {
       case 6:
         return getCategoryWidget();
       case 7:
-        return scategories == null
+        return loadingSubCat
             ? Center(child: CircularProgressIndicator())
             : getSubCategoryWidget();
       case 8:
@@ -1018,10 +1037,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         onTap: () {
                           print('hey');
                           setState(() {
-                            if (selectedWidget != 0)
-                              setState(() {
-                                selectedWidget--;
-                              });
+                            if (selectedWidget != 0) {
+                              if (selectedWidget == 8 && scategories.isEmpty)
+                                setState(() {
+                                  selectedWidget = selectedWidget - 2;
+                                });
+                              else
+                                setState(() {
+                                  selectedWidget--;
+                                });
+                            }
                           });
                         },
                         child: Icon(
@@ -1046,9 +1071,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     GestureDetector(
                       onTap: () async {
                         selectedWidget == 8
-                            ? !uploaded.contains(1)
+                            ? uploaded.contains(0)
                                 ? Fluttertoast.showToast(
-                                    msg: "Please upload documents",
+                                    msg: "Please upload all documents",
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                   )
@@ -1069,14 +1094,40 @@ class _RegisterPageState extends State<RegisterPage> {
                                 } else if (selectedWidget == 1) {
                                   if (phoneController.text.length == 0) {
                                     Fluttertoast.showToast(
-                                      msg: "Please Enter phone number",
+                                      msg: "Please enter phone number",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );
-                                  } else if (phoneController.text.length !=
-                                      10) {
+                                  } else {
+                                    selectedWidget++;
+                                  }
+                                } else if (selectedWidget == 2) {
+                                  if (qualification == null ||
+                                      qualification == "") {
                                     Fluttertoast.showToast(
-                                      msg: "Please enter valid phone number",
+                                      msg:
+                                          "Please provide qualification details",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                  } else {
+                                    selectedWidget++;
+                                  }
+                                } else if (selectedWidget == 3) {
+                                  if (exp == null || exp == "") {
+                                    Fluttertoast.showToast(
+                                      msg: "Please provide experience year",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                  } else {
+                                    selectedWidget++;
+                                  }
+                                } else if (selectedWidget == 4) {
+                                  if (selectedGender == null ||
+                                      selectedGender == "") {
+                                    Fluttertoast.showToast(
+                                      msg: "Please select gender",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                     );
@@ -1094,20 +1145,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                     selectedWidget++;
                                   }
                                 } else if (selectedWidget == 6) {
-                                  loadSubCat().then((doctor) {
+                                  loadSubCat().then((item) {
+                                    print("Subcategory------item");
                                     setState(() {
-                                      this.scategories = doctor;
+                                      this.scategories = item;
                                     });
                                   });
 
-                                  loadSubCatid().then((doctor) {
+                                  loadSubCatid().then((id) {
                                     setState(() {
-                                      this.scatid = doctor;
+                                      this.scatid = id;
                                     });
                                   });
-                                  if (chosenCategory != null)
+                                  if (chosenCategory != null) {
                                     selectedWidget++;
-                                  else
+                                  } else
                                     Fluttertoast.showToast(
                                       msg: "Please select Category",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -1115,14 +1167,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                     );
                                 } else if (selectedWidget == 7) {
                                   print('sub category--- $selectedscat');
-                                  if (selectedscat.isNotEmpty)
-                                    selectedWidget++;
-                                  else
-                                    Fluttertoast.showToast(
-                                      msg: "Please select subcategory",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                    );
+                                  // if (scategories.isNotEmpty) {
+                                  //   if (selectedscat.isNotEmpty)
+                                  selectedWidget++;
+                                  //   else
+                                  //     Fluttertoast.showToast(
+                                  //       msg: "Please select subcategory",
+                                  //       toastLength: Toast.LENGTH_SHORT,
+                                  //       gravity: ToastGravity.CENTER,
+                                  //     );
+                                  // }else{
+
+                                  // }
                                 }
                                 // } else if (selectedWidget == 6) {
                                 //   bool check =

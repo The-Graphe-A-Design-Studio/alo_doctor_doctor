@@ -141,6 +141,16 @@ class _SignInPageState extends State<SignInPage> {
                       _authData['password'] = value;
                     },
                   ),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
                   SizedBox(
                     height: 20,
                   ),

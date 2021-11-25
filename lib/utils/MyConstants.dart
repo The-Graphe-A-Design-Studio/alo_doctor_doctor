@@ -41,6 +41,7 @@ const String photoViewer = './photoViewer';
 const String webView = './webView';
 const String networkVideo = './networkVideo';
 const String filevideo = './filevideo';
+const String prescription = './prescription';
 
 // buttons
 Widget backButton(BuildContext context) => ElevatedButton(

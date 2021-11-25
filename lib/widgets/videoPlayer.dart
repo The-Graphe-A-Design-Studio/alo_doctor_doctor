@@ -13,7 +13,7 @@ class VideoPlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       controller != null && controller.value.isInitialized
-          ? Container(alignment: Alignment.center, child: buildVideo())
+          ? Container(child: buildVideo())
           : Container(
               height: 200,
               child: Center(
@@ -31,7 +31,7 @@ class VideoPlayerWidget extends StatelessWidget {
       );
 
   Widget buildVideoPlayer() => AspectRatio(
-        aspectRatio: 5 / 5,
+        aspectRatio: 5 / 4,
         child: VideoPlayer(controller),
       );
 }

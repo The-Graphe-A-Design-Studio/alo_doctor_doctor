@@ -14,6 +14,7 @@ import 'package:alo_doctor_doctor/ui/Screens/RecordScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignUp.dart';
+import 'package:alo_doctor_doctor/ui/Screens/UploadPrescription.dart';
 import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Video/NetworkVideoPlayer.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Video/FileVideoPlayer.dart';
@@ -142,6 +143,12 @@ class RouteGenerator {
         FilePlayerWidget argument = args as FilePlayerWidget;
         return FadeRoute(
           page: FilePlayerWidget(argument.videoFile),
+        );
+
+      case prescription:
+        UploadPrescription argument = args as UploadPrescription;
+        return FadeRoute(
+          page: UploadPrescription(argument.id),
         );
       // return MaterialPageRoute(builder: (BuildContext context) {
       //   PhotoViewer argument = args as PhotoViewer;

@@ -20,17 +20,10 @@ class ProfileProvider with ChangeNotifier {
     print('in Provider---------$userProfileDetails');
   }
 
-  Future<void> postProfileData(Details user) async {
+  Future<void> postProfileData(Details user, List<String> subcat) async {
     try {
-      // print(user.gender +
-      //     "${user.dob.year.toString().padLeft(4, '0')}-${user.dob.month.toString().padLeft(2, '0')}-${user.dob.day.toString().padLeft(2, '0')}" +
-      //     user.name +
-      //     user.docQualification +
-      //     user.docExperience.toString() +
-      //     user.phone.toString() +
-      //     user.category +
-      //     user.conCode.toString());
       // var response = await serverHandler.postUserPofileData(user);
+      print("category in user update ${user.category}");
       var response = await LoginCheck().Register(
           user.gender,
           "${user.dob.year.toString().padLeft(4, '0')}-${user.dob.month.toString().padLeft(2, '0')}-${user.dob.day.toString().padLeft(2, '0')}",
@@ -42,6 +35,7 @@ class ProfileProvider with ChangeNotifier {
           user.conCode.toString());
       if (response == 1) {
         // Details updatedUser = await serverHandler.getUserProfile();
+        await LoginCheck().setsub(subcat);
         userProfileDetails = await serverHandler.getUserProfile();
         print("After posting data----> $userProfileDetails");
         notifyListeners();

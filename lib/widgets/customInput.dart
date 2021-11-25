@@ -29,7 +29,6 @@ class _CustomInputState extends State<CustomInput> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isPassword = widget.isPasswordField ?? false;
     _showVisibilityIcon = widget.isPasswordField ?? false;
@@ -55,6 +54,7 @@ class _CustomInputState extends State<CustomInput> {
             border: InputBorder.none,
             prefixIcon: widget.prefixIcon != null
                 ? IconButton(
+                    onPressed: () {},
                     icon: widget.prefixIcon,
                   )
                 : null,

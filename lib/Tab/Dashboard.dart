@@ -178,27 +178,10 @@ class _DashboardTabState extends State<DashboardTab> {
         //   ),
         // ),
         Container(
-          padding: EdgeInsets.only(top: 8),
-          child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            height: MediaQuery.of(context).size.height * 0.3,
-            image:
-                'https://alodoctor-care.com/wp-content/uploads/2021/11/doctor-app-home-banner.png',
+          padding: EdgeInsets.only(top: 1),
+          child: Image(
+            image: AssetImage("assets/images/doctor-app-home-banner.png"),
           ),
-          //  Image(
-          //     image: NetworkImage(
-          //         "https://alodoctor-care.com/wp-content/uploads/2021/11/doctor-app-home-banner.png"),
-          //   ),
-
-          // CarouselSlider(
-          //   options: CarouselOptions(
-          //     autoPlay: true,
-          //     aspectRatio: 2.0,
-          //     enlargeCenterPage: true,
-          //     enlargeStrategy: CenterPageEnlargeStrategy.height,
-          //   ),
-          //   items: imageSliders,
-          // ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -220,7 +203,7 @@ class _DashboardTabState extends State<DashboardTab> {
                   //     style:
                   //         TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   //   ),
-                  if (appointList.length > 3)
+                  if (appointList.length > 2)
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, appointmentScreen);
@@ -273,7 +256,7 @@ class _DashboardTabState extends State<DashboardTab> {
                 ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: appointList.length < 3 ? appointList.length : 3,
+                    itemCount: appointList.length <= 2 ? appointList.length : 2,
                     itemBuilder: (context, index) {
                       return AppointmentMini(
                           time: appointList[index].time,
@@ -353,7 +336,7 @@ class _DashboardTabState extends State<DashboardTab> {
         ),
         Padding(
           padding:
-              const EdgeInsets.only(top: 10, left: 30, right: 25, bottom: 2),
+              const EdgeInsets.only(top: 5, left: 30, right: 25, bottom: 2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

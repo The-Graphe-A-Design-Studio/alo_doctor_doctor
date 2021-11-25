@@ -234,7 +234,7 @@ class _ConsultationFeeState extends State<ConsultationFee> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text('Please set your consultation fee:'),
+                    Text('Please set your consultation fee in USD :'),
                     Consumer<ProfileProvider>(builder: (ctx, data, child) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
