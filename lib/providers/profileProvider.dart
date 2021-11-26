@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -107,6 +108,11 @@ class ProfileProvider with ChangeNotifier {
     SharedPreferences localstorage = await SharedPreferences.getInstance();
     localstorage.clear();
     userProfileDetails = null;
-    Navigator.pushReplacementNamed(context, signIn);
+    // Navigator.pushReplacementNamed(context, signIn);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) => SignInPage(),
+        ),
+        (route) => false);
   }
 }

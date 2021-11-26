@@ -1,6 +1,7 @@
 import 'package:alo_doctor_doctor/ui/HomePage.dart';
 import 'package:alo_doctor_doctor/ui/LoginPage.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
+import 'package:alo_doctor_doctor/ui/Screens/PasswordReset.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddPhoto.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddCoverPhoto.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AddSlots.dart';
@@ -15,7 +16,6 @@ import 'package:alo_doctor_doctor/ui/Screens/ReminderScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignIn.dart';
 import 'package:alo_doctor_doctor/ui/Screens/SignUp.dart';
 import 'package:alo_doctor_doctor/ui/Screens/UploadPrescription.dart';
-import 'package:alo_doctor_doctor/ui/Screens/VideoCallingScreen.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Video/NetworkVideoPlayer.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Video/FileVideoPlayer.dart';
 import 'package:alo_doctor_doctor/ui/Screens/ViewReport.dart';
@@ -53,6 +53,12 @@ class RouteGenerator {
             argument.isEdit,
           );
         });
+
+      case passwordReset:
+        PasswordReset argument = args as PasswordReset;
+        return FadeRoute(
+          page: PasswordReset(argument.isfromProfile, argument.userId),
+        );
 
       case appointmentScreen:
         return FadeRoute(

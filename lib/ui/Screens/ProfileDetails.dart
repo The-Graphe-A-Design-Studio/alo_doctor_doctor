@@ -1,4 +1,5 @@
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
+import 'package:alo_doctor_doctor/ui/Screens/PasswordReset.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,9 @@ import '../../providers/profileProvider.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:alo_doctor_doctor/api/login.dart';
+import 'package:alo_doctor_doctor/providers/profileProvider.dart';
 
 class ProfileDetails extends StatefulWidget {
   @override
@@ -21,6 +25,26 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     final profileData = Provider.of<ProfileProvider>(context);
     userDetails = profileData.currentUser;
+
+    void sendOtp(String email) async {
+      try {
+        var response = await LoginCheck().forgetPassword(email);
+
+        Fluttertoast.showToast(
+          msg: "Verification mail sent",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+        Navigator.of(context).pushReplacementNamed(passwordReset,
+            arguments: PasswordReset(true, userDetails.id));
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: e,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    }
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -199,6 +223,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       ? '0'
                       : userDetails.docExperience.toString() + " year",
                 ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
+                  child: TextButton(
+                    onPressed: () {
+                      sendOtp(userDetails.email);
+                    },
+                    child: Text("Change Password"),
+                  ),
+                )
                 // ProfileField(
                 //   label: 'Documents',
                 //   icon: Icons.picture_as_pdf_outlined,

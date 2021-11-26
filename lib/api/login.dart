@@ -64,7 +64,7 @@ class LoginCheck {
       return result;
       // return json["success"];
     }
-    result["error"] = "Something went wrong";
+    result["error"] = "Unautorised";
     return result;
   }
 
@@ -202,6 +202,101 @@ class LoginCheck {
       return json["success"];
     }
     return 0;
+  }
+
+  // *********************************** Forget password **************
+  Future<dynamic> forgetPassword(String email) async {
+    try {
+      String targethost = 'developers.thegraphe.com';
+      var map = new Map<String, dynamic>();
+      map['email'] = email;
+      map['user_type'] = "2";
+      print('inside');
+      print(map);
+      var gettokenuri = new Uri(
+          scheme: 'https',
+          path: '/alodoctor/public/api/forgot_password',
+          host: targethost);
+      print(gettokenuri);
+      final response = await http.post(gettokenuri, body: map);
+      print(response.body);
+      print(response.statusCode);
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return json;
+      } else {
+        throw json["error"];
+      }
+    } catch (e) {
+      print('error in forget password ------$e');
+      throw e.toString() ==
+              "This email account that you tried to reach does not exist."
+          ? e.toString()
+          : "Something went wrong, try again.";
+    }
+  }
+
+  // *********************************** Verify OTP **************
+  Future<dynamic> verifyOtp(int otp, int userId) async {
+    try {
+      String targethost = 'developers.thegraphe.com';
+
+      print('inside');
+      var gettokenuri = new Uri(
+          scheme: 'https',
+          path: '/alodoctor/public/api/verify_code/$userId/$otp',
+          host: targethost);
+      print(gettokenuri);
+      final response = await http.put(gettokenuri);
+      print(response.body);
+      print(response.statusCode);
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return json;
+      } else {
+        throw json["error"];
+      }
+    } catch (e) {
+      print('error in forget password ------$e');
+      throw e.toString() == "Wrong verification code."
+          ? e.toString()
+          : "Something went wrong, try again.";
+    }
+  }
+
+  // *********************************** Forget password **************
+  Future<dynamic> changePassword(
+      int userId, int password, int cpassword) async {
+    try {
+      String targethost = 'developers.thegraphe.com';
+      var map = new Map<String, dynamic>();
+      map['user_id'] = '$userId';
+      map["password"] = '$password';
+      map["c_password"] = '$cpassword';
+      map['user_type'] = "2";
+      print('inside');
+      print(map);
+      var gettokenuri = new Uri(
+          scheme: 'https',
+          path: '/alodoctor/public/api/change_password',
+          host: targethost);
+      print(gettokenuri);
+      final response = await http.post(gettokenuri, body: map);
+      print(response.body);
+      print(response.statusCode);
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return json;
+      } else {
+        throw json["error"];
+      }
+    } catch (e) {
+      print('error in forget password ------$e');
+      throw e.toString();
+    }
   }
 
   Future SetFee(String fee) async {

@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/ui/RegisterPage.dart';
+import 'package:alo_doctor_doctor/ui/Screens/PasswordReset.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/form_validator.dart';
 import 'package:alo_doctor_doctor/widgets/customButton.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -23,13 +22,14 @@ class _SignInPageState extends State<SignInPage> {
     'email': '',
     'password': '',
   };
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   @override
   void initState() {
     // fcm.getToken().then((value) => print(value));
     super.initState();
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey();
   _showSnackBar(msg, context) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content:
@@ -88,7 +88,7 @@ class _SignInPageState extends State<SignInPage> {
           //   Navigator.pushReplacementNamed(context, registerPage);
           // }
         } else {
-          throw HttpException(response['error']);
+          throw 'Unauthorised';
         }
       } catch (e) {
         _showSnackBar(e.toString(), context);
@@ -142,13 +142,30 @@ class _SignInPageState extends State<SignInPage> {
                     },
                   ),
                   Container(
+                    padding: EdgeInsets.all(0),
                     alignment: Alignment.topRight,
                     child: TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.black;
+                            return Colors.blue;
+                          },
+                        ),
+                        overlayColor: MaterialStateProperty.all(Colors.white),
+                      ),
                       child: Text(
                         "Forgot Password?",
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(passwordReset,
+                            arguments: PasswordReset(false, null));
+                      },
                     ),
                   ),
                   SizedBox(

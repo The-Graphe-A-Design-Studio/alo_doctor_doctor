@@ -202,7 +202,7 @@ class _AddCoverPhotoState extends State<AddCoverPhoto> {
                                                     null &&
                                                 _imageFile == null)
                                             ? NetworkImage(
-                                                'https://developers.thegraphe.com/alodoctor/public${userProfileDetails.docBannerPath}')
+                                                '$baseUrl${userProfileDetails.docBannerPath}')
                                             : (_imageFile != null)
                                                 ? Image.file(
                                                         File(_imageFile.path))
@@ -218,7 +218,7 @@ class _AddCoverPhotoState extends State<AddCoverPhoto> {
                                         //      (userData.currentUser
                                         //                 .profilePicPath !=
                                         //             null)
-                                        //         ?(NetworkImage('https://developers.thegraphe.com/alodoctor/public${userData.currentUser.profilePicPath}') ):
+                                        //         ?(NetworkImage('$baseUrl${userData.currentUser.profilePicPath}') ):
 
                                         //         FileImage(
                                         //             File(_imageFile.path),

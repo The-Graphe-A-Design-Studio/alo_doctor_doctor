@@ -42,7 +42,7 @@ const String webView = './webView';
 const String networkVideo = './networkVideo';
 const String filevideo = './filevideo';
 const String prescription = './prescription';
-
+const String passwordReset = "./passwordReset";
 // buttons
 Widget backButton(BuildContext context) => ElevatedButton(
       style: ButtonStyle(
