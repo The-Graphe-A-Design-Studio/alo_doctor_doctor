@@ -119,7 +119,7 @@ class _DashboardTabState extends State<DashboardTab> {
     Provider.of<ProfileProvider>(context, listen: false).setProfile();
     Provider.of<ProfileProvider>(context, listen: false).getFee().then((value) {
       print(value);
-      if (value == null || value == "") {
+      if (value == null) {
         setState(() {
           isFeeEmpty = true;
         });

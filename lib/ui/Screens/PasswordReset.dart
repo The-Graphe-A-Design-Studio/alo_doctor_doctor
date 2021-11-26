@@ -152,8 +152,8 @@ class _PasswordResetState extends State<PasswordReset> {
   @override
   void dispose() {
     super.dispose();
-    emailController.dispose();
-    _passwordController.dispose();
+    if (emailController != null) emailController.dispose();
+    if (_passwordController != null) _passwordController.dispose();
   }
 
   @override
@@ -271,7 +271,7 @@ class _PasswordResetState extends State<PasswordReset> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            64, 40, 64, 0),
+                                            40, 40, 40, 0),
                                         child: TextFormField(
                                           keyboardType:
                                               TextInputType.emailAddress,
@@ -291,7 +291,7 @@ class _PasswordResetState extends State<PasswordReset> {
                                               hintText: 'E-mail',
                                               contentPadding:
                                                   EdgeInsets.symmetric(
-                                                      horizontal: 16.0,
+                                                      horizontal: 0,
                                                       vertical: 16.0)),
                                           style: Styles.buttonTextBlack,
                                           textAlign: TextAlign.center,
