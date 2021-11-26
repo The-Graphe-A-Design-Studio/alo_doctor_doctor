@@ -36,7 +36,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           gravity: ToastGravity.CENTER,
         );
         Navigator.of(context).pushReplacementNamed(passwordReset,
-            arguments: PasswordReset(true, userDetails.id));
+            arguments: PasswordReset(true, userDetails.id, userDetails.email));
       } catch (e) {
         Fluttertoast.showToast(
           msg: e,

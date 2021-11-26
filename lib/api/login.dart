@@ -266,7 +266,7 @@ class LoginCheck {
     }
   }
 
-  // *********************************** Forget password **************
+  // *********************************** Change password **************
   Future<dynamic> changePassword(
       int userId, int password, int cpassword) async {
     try {

@@ -57,7 +57,8 @@ class RouteGenerator {
       case passwordReset:
         PasswordReset argument = args as PasswordReset;
         return FadeRoute(
-          page: PasswordReset(argument.isfromProfile, argument.userId),
+          page: PasswordReset(
+              argument.isfromProfile, argument.userId, argument.userEmail),
         );
 
       case appointmentScreen:

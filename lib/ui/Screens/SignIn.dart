@@ -164,7 +164,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       onPressed: () {
                         Navigator.of(context).pushNamed(passwordReset,
-                            arguments: PasswordReset(false, null));
+                            arguments: PasswordReset(false, null, ""));
                       },
                     ),
                   ),

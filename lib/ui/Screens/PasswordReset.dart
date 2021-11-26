@@ -13,7 +13,8 @@ import 'package:alo_doctor_doctor/providers/profileProvider.dart';
 class PasswordReset extends StatefulWidget {
   bool isfromProfile;
   int userId;
-  PasswordReset(this.isfromProfile, this.userId);
+  String userEmail;
+  PasswordReset(this.isfromProfile, this.userId, this.userEmail);
 
   @override
   _PasswordResetState createState() => _PasswordResetState();
@@ -42,6 +43,7 @@ class _PasswordResetState extends State<PasswordReset> {
     if (widget.isfromProfile) {
       userId = widget.userId;
       otpSent = true;
+      email = widget.userEmail;
     }
   }
 
