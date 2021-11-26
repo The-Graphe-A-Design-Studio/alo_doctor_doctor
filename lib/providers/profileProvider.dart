@@ -95,6 +95,11 @@ class ProfileProvider with ChangeNotifier {
     return userProfileDetails;
   }
 
+  Future<String> getFee() async {
+    await Future.delayed(Duration(seconds: 1));
+    return Future.value(userProfileDetails.docFees);
+  }
+
   void logOut(context) async {
     try {
       var success = await LoginCheck().logOut();

@@ -4,6 +4,8 @@ import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/widgets/navigationDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PageController _tabPageController;
   int _selectedTab = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -36,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       drawer: NavigationDrawer(),
       appBar: AppBar(

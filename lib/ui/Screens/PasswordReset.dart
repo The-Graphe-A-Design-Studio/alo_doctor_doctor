@@ -148,6 +148,13 @@ class _PasswordResetState extends State<PasswordReset> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    _passwordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -308,63 +315,6 @@ class _PasswordResetState extends State<PasswordReset> {
                                     ],
                                   ),
                                 ),
-                          // if (verified)
-                          //   Form(
-                          //     key: _passKey,
-                          //     child: Column(
-                          //       children: [
-                          //         TextFormField(
-                          //           decoration:
-                          //               InputDecoration(labelText: 'Password'),
-                          //           obscureText: true,
-                          //           textInputAction: TextInputAction.next,
-                          //           controller: _passwordController,
-                          //           validator: (value) =>
-                          //               FormValidator.validatePassword(value),
-                          //           onChanged: (value) {
-                          //             password = int.parse(value);
-                          //           },
-                          //         ),
-                          //         SizedBox(
-                          //           height: 10,
-                          //         ),
-                          //         TextFormField(
-                          //             decoration: InputDecoration(
-                          //                 labelText: 'Confirm Password'),
-                          //             obscureText: true,
-                          //             textInputAction: TextInputAction.done,
-                          //             onChanged: (value) {
-                          //               cpassword = int.parse(value);
-                          //             },
-                          //             onFieldSubmitted: (_) => changePassword(),
-                          //             validator: (value) {
-                          //               if (value != _passwordController.text) {
-                          //                 return 'Password do not Match';
-                          //               }
-                          //               return null;
-                          //             }),
-                          //         SizedBox(
-                          //           height: 20,
-                          //         ),
-                          //         ElevatedButton(
-                          //           onPressed: () {
-                          //             forgotPassword(email);
-                          //           },
-                          //           child: Text("Verify"),
-                          //           style: ButtonStyle(
-                          //               backgroundColor:
-                          //                   MaterialStateProperty.all(
-                          //                       accentBlueLight),
-                          //               foregroundColor:
-                          //                   MaterialStateProperty.all(
-                          //                       Colors.black)),
-                          //         ),
-                          //         TextButton(
-                          //             onPressed: () {},
-                          //             child: Text("Resend OTP"))
-                          //       ],
-                          //     ),
-                          //   ),
                         ]),
                   )
                 : Container(

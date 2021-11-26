@@ -1,12 +1,13 @@
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/ui/Screens/AppointmentDetailScreen.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+
 import 'package:alo_doctor_doctor/widgets/AppointmentMini.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:alo_doctor_doctor/providers/profileProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:alo_doctor_doctor/utils/styles.dart';
 
 class DashboardTab extends StatefulWidget {
   @override
@@ -74,6 +75,8 @@ class _DashboardTabState extends State<DashboardTab> {
         .inDays;
   }
 
+  bool isFeeEmpty = false;
+
   Future<void> setData() async {
     Provider.of<ProfileProvider>(context, listen: false).setProfile();
 
@@ -114,12 +117,54 @@ class _DashboardTabState extends State<DashboardTab> {
   void initState() {
     setData();
     Provider.of<ProfileProvider>(context, listen: false).setProfile();
+    Provider.of<ProfileProvider>(context, listen: false).getFee().then((value) {
+      print(value);
+      if (value == null || value == "") {
+        setState(() {
+          isFeeEmpty = true;
+        });
+      }
+    });
 
     super.initState();
   }
 
+  void setFeePop(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                "Please Set your Consultation Fee",
+                style: Styles.buttonTextBlackBold,
+              ),
+              // content: Text("Previous uploads will get deleted."),
+              actions: [
+                // TextButton(
+                //   child: Text("Skip"),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    setState(() {
+                      isFeeEmpty = false;
+                    });
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(
+                      context,
+                      consultFee,
+                    );
+                  },
+                ),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isFeeEmpty) Future.delayed(Duration.zero, () => setFeePop(context));
     return RefreshIndicator(
       backgroundColor: Colors.grey.shade800,
       color: Colors.white,
