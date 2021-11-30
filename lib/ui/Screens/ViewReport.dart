@@ -84,7 +84,7 @@ class ViewReport extends StatelessWidget {
                     },
                     child: Container(
                       child: Image.network(
-                        'https://developers.thegraphe.com/alodoctor/public${reportList[index]["file_path"]}',
+                        'https://www.alodoctor-care.com/app-backend/public${reportList[index]["file_path"]}',
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -54,7 +54,7 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                         ? NetworkImage(
                             "https://tse2.mm.bing.net/th?id=OIP.e8X4CTvV9XF1DJHi47CCBgHaHa&pid=Api&P=0&w=300&h=300")
                         : NetworkImage(
-                            'https://developers.thegraphe.com/alodoctor/public${widget.path}'),
+                            'https://www.alodoctor-care.com/app-backend/public${widget.path}'),
                     height: 40,
                     width: 40,
                     fit: BoxFit.fill,

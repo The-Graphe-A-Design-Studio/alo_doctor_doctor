@@ -42,7 +42,7 @@ class _PrescriptionViewerState extends State<PrescriptionViewer> {
           child: Transform(
             transform: matrix,
             child: Image.network(
-              'https://developers.thegraphe.com/alodoctor/public${widget.docPath}',
+              'https://www.alodoctor-care.com/app-backend/public${widget.docPath}',
               fit: BoxFit.contain,
             ),
           ),

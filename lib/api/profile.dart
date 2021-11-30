@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/doctor.dart';
 
 class ProfileServer {
-  String authority = 'developers.thegraphe.com';
-  String commonUnencodedPath = '/alodoctor/public/api';
+  String authority = 'www.alodoctor-care.com';
+  String commonUnencodedPath = '/app-backend/public/api';
   Details currentUserProfileDetails;
   Future<String> getToken() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -57,11 +57,11 @@ class ProfileServer {
 // ***************************** Post Profile Pic ************************
   Future<String> postProfilepic(File profilePic) async {
     String token = await getToken();
-    String targethost = 'developers.thegraphe.com';
+    String targethost = 'www.alodoctor-care.com';
     String authorization = 'Bearer ' + token;
     var gettokenuri = Uri(
         scheme: 'https',
-        path: '/alodoctor/public/api/update_profile_pic',
+        path: '/app-backend/public/api/update_profile_pic',
         host: targethost);
     var request = new http.MultipartRequest("POST", gettokenuri);
 
@@ -97,11 +97,11 @@ class ProfileServer {
     print(coverPhoto == null);
     String token = await getToken();
     if (coverPhoto != null) {
-      String targethost = 'developers.thegraphe.com';
+      String targethost = 'www.alodoctor-care.com';
       String authorization = 'Bearer ' + token;
       var gettokenuri = Uri(
           scheme: 'https',
-          path: '/alodoctor/public/api/doctor/update_banner',
+          path: '/app-backend/public/api/doctor/update_banner',
           host: targethost);
       var request = new http.MultipartRequest("POST", gettokenuri);
 

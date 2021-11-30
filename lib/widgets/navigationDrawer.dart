@@ -43,7 +43,7 @@ class NavigationDrawer extends StatelessWidget {
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                    'https://developers.thegraphe.com/alodoctor/public${data.currentUser.profilePicPath}'),
+                                    'https://www.alodoctor-care.com/app-backend/public${data.currentUser.profilePicPath}'),
                               )),
                         ),
                   title: Text(

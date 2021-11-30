@@ -150,7 +150,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(
-                                                'https://developers.thegraphe.com/alodoctor/public${userDetails.profilePicPath}')),
+                                                'https://www.alodoctor-care.com/app-backend/public${userDetails.profilePicPath}')),
                                         border: Border.all(width: 0),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(200),

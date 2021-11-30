@@ -35,13 +35,13 @@ class PhotoViewer extends StatelessWidget {
         child: PhotoView(
           imageProvider: isNetwork
               ? NetworkImage(
-                  'https://developers.thegraphe.com/alodoctor/public$imgPath')
+                  'https://www.alodoctor-care.com/app-backend/public$imgPath')
               : Image.file(
                   File(imgPath),
                   fit: BoxFit.cover,
                 ).image,
         ),
-        // child: Image.network('https://developers.thegraphe.com/alodoctor/public${widget.imgPath}'),
+        // child: Image.network('https://www.alodoctor-care.com/app-backend/public${widget.imgPath}'),
       ),
     );
   }

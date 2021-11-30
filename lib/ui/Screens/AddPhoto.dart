@@ -149,7 +149,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                                             null) &&
                                                     _imageFile == null)
                                                 ? NetworkImage(
-                                                    'https://developers.thegraphe.com/alodoctor/public${userData.userProfileDetails.profilePicPath}')
+                                                    'https://www.alodoctor-care.com/app-backend/public${userData.userProfileDetails.profilePicPath}')
                                                 : (_imageFile != null)
                                                     ? Image.file(File(
                                                             _imageFile.path))
@@ -165,7 +165,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                             //      (userData.currentUser
                                             //                 .profilePicPath !=
                                             //             null)
-                                            //         ?(NetworkImage('https://developers.thegraphe.com/alodoctor/public${userData.currentUser.profilePicPath}') ):
+                                            //         ?(NetworkImage('https://www.alodoctor-care.com/app-backend/public${userData.currentUser.profilePicPath}') ):
 
                                             //         FileImage(
                                             //             File(_imageFile.path),

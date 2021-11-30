@@ -72,7 +72,7 @@ class ViewPrescription extends StatelessWidget {
                     },
                     child: Container(
                       child: Image.network(
-                        'https://developers.thegraphe.com/alodoctor/public${prescriptionList[index]["file_path"]}',
+                        'https://www.alodoctor-care.com/app-backend/public${prescriptionList[index]["file_path"]}',
                         fit: BoxFit.cover,
                       ),
                     ),

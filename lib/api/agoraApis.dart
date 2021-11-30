@@ -10,10 +10,11 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AgoraApis {
-  String authority = 'developers.thegraphe.com';
-  String commonUnencodedPath = '/alodoctor/public/api';
+  String authority = 'www.alodoctor-care.com';
+  String commonUnencodedPath = '/app-backend/public/api';
 
-  Future getAgoraToken(String channelName, String pUid, String bookingId) async {
+  Future getAgoraToken(
+      String channelName, String pUid, String bookingId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
@@ -47,14 +48,14 @@ class AgoraApis {
 
   Future leaveChannel(String channelId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'developers.thegraphe.com';
+    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     print('inside');
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/alodoctor/public/api/leave_channel/$channelId',
+        path: '/app-backend/public/api/leave_channel/$channelId',
         host: targethost);
     print(gettokenuri);
 
@@ -102,7 +103,7 @@ class AgoraApis {
     // print("Slots from API " + slots);
     try {
       var response = await http.delete(
-          Uri.https(authority, commonUnencodedPath + "/doctor/slot/"+id),
+          Uri.https(authority, commonUnencodedPath + "/doctor/slot/" + id),
           headers: {
             "Authorization": "Bearer " + token,
             "Content-type": "application/json"
@@ -127,7 +128,7 @@ class AgoraApis {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/alodoctor/public/api/doctor/allslots',
+        path: '/app-backend/public/api/doctor/allslots',
         host: authority);
     print(gettokenuri);
     try {
@@ -152,16 +153,16 @@ class AgoraApis {
   }
 
   Future rescheduleBooking(String bookingId, String newSlotId) async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'developers.thegraphe.com';
+    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     print('inside');
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/alodoctor/public/api/doctor/reschedule_booking/$bookingId/$newSlotId',
+        path:
+            '/app-backend/public/api/doctor/reschedule_booking/$bookingId/$newSlotId',
         host: targethost);
     print(gettokenuri);
 
@@ -176,5 +177,4 @@ class AgoraApis {
       throw Exception('Unable to Reschedule Booking');
     }
   }
-
 }
