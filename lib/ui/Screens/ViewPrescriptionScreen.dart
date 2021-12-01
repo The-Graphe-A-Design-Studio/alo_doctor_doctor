@@ -6,6 +6,7 @@ import '../../utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Prescription.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class ViewPrescription extends StatelessWidget {
   List prescriptionList;
@@ -72,7 +73,7 @@ class ViewPrescription extends StatelessWidget {
                     },
                     child: Container(
                       child: Image.network(
-                        'https://www.alodoctor-care.com/app-backend/public${prescriptionList[index]["file_path"]}',
+                        '$baseUrl${prescriptionList[index]["file_path"]}',
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class PhotoViewer extends StatelessWidget {
   final String imgPath;
@@ -34,14 +35,13 @@ class PhotoViewer extends StatelessWidget {
       body: Center(
         child: PhotoView(
           imageProvider: isNetwork
-              ? NetworkImage(
-                  'https://www.alodoctor-care.com/app-backend/public$imgPath')
+              ? NetworkImage('$baseUrl$imgPath')
               : Image.file(
                   File(imgPath),
                   fit: BoxFit.cover,
                 ).image,
         ),
-        // child: Image.network('https://www.alodoctor-care.com/app-backend/public${widget.imgPath}'),
+        // child: Image.network('$baseUrl${widget.imgPath}'),
       ),
     );
   }

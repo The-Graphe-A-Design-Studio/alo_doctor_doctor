@@ -55,6 +55,3 @@ Widget backButton(BuildContext context) => ElevatedButton(
         Navigator.of(context).pop();
       },
     );
-
-// base url
-const baseUrl = "https://www.alodoctor-care.com/app-backend/public";

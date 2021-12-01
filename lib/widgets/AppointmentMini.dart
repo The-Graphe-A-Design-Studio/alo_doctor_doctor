@@ -2,6 +2,7 @@ import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/DateFormatter.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class AppointmentMini extends StatefulWidget {
   String Name;
@@ -53,8 +54,7 @@ class _AppointmentMiniState extends State<AppointmentMini> {
                     image: widget.path == null
                         ? NetworkImage(
                             "https://tse2.mm.bing.net/th?id=OIP.e8X4CTvV9XF1DJHi47CCBgHaHa&pid=Api&P=0&w=300&h=300")
-                        : NetworkImage(
-                            'https://www.alodoctor-care.com/app-backend/public${widget.path}'),
+                        : NetworkImage('$baseUrl${widget.path}'),
                     height: 40,
                     width: 40,
                     fit: BoxFit.fill,

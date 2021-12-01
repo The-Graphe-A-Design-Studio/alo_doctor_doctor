@@ -6,6 +6,7 @@ import 'package:alo_doctor_doctor/ui/Screens/Video/NetworkVideoPlayer.dart';
 import 'package:alo_doctor_doctor/ui/Screens/Video/FileVideoPlayer.dart';
 
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
@@ -382,7 +383,7 @@ class _PrescriptionState extends State<Prescription> {
                                                   CircularProgressIndicator(),
                                             )
                                       : Image.network(
-                                          'https://www.alodoctor-care.com/app-backend/public${prescriptionList[index]["file_path"]}',
+                                          '$baseUrl${prescriptionList[index]["file_path"]}',
                                           fit: BoxFit.cover,
                                         ),
                                 ),

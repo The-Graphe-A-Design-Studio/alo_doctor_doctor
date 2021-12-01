@@ -19,6 +19,7 @@ import 'package:video_player/video_player.dart';
 import '../../utils/styles.dart';
 import '../../utils/Colors.dart';
 import '../../utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class UploadPrescription extends StatefulWidget {
   final String id;

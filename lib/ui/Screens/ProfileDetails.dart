@@ -12,6 +12,7 @@ import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:alo_doctor_doctor/api/login.dart';
 import 'package:alo_doctor_doctor/providers/profileProvider.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class ProfileDetails extends StatefulWidget {
   @override
@@ -88,14 +89,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                 ? Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.6,
-                                    child: FittedBox(
-                                      child: Text(
-                                        userDetails.name ?? 'Add your name',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black),
-                                      ),
+                                    child: Text(
+                                      userDetails.name ?? "Anonymous",
+                                      style: Styles.regularHeading,
                                     ),
                                   )
                                 : Text(
@@ -150,7 +146,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(
-                                                'https://www.alodoctor-care.com/app-backend/public${userDetails.profilePicPath}')),
+                                                '$baseUrl${userDetails.profilePicPath}')),
                                         border: Border.all(width: 0),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(200),

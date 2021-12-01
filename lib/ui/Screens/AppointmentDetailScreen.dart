@@ -14,6 +14,7 @@ import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:alo_doctor_doctor/utils/DateFormatter.dart';
 
 import 'package:alo_doctor_doctor/api/login.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class AppointmentDetails extends StatefulWidget {
   final String Name;
@@ -129,8 +130,7 @@ class _AppointmentDetailsState extends State<AppointmentDetails> {
                                 backgroundImage: widget.path == null
                                     ? NetworkImage(
                                         "https://tse2.mm.bing.net/th?id=OIP.e8X4CTvV9XF1DJHi47CCBgHaHa&pid=Api&P=0&w=300&h=300")
-                                    : NetworkImage(
-                                        'https://www.alodoctor-care.com/app-backend/public${widget.path}'),
+                                    : NetworkImage('$baseUrl${widget.path}'),
                                 radius: 35,
                               ),
                               SizedBox(

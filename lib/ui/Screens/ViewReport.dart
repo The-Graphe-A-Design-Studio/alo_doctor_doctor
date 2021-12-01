@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/Colors.dart';
 import 'package:alo_doctor_doctor/utils/styles.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class ViewReport extends StatelessWidget {
   List reportList;
@@ -84,7 +85,7 @@ class ViewReport extends StatelessWidget {
                     },
                     child: Container(
                       child: Image.network(
-                        'https://www.alodoctor-care.com/app-backend/public${reportList[index]["file_path"]}',
+                        '$baseUrl${reportList[index]["file_path"]}',
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:alo_doctor_doctor/widgets/videoPlayer.dart';
-import 'package:alo_doctor_doctor/utils/MyConstants.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class NetworkPlayerWidget extends StatefulWidget {
   String networkVideo;

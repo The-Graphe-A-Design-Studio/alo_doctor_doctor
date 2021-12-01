@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class PrescriptionViewer extends StatefulWidget {
   String docPath;
@@ -42,7 +43,7 @@ class _PrescriptionViewerState extends State<PrescriptionViewer> {
           child: Transform(
             transform: matrix,
             child: Image.network(
-              'https://www.alodoctor-care.com/app-backend/public${widget.docPath}',
+              '$baseUrl${widget.docPath}',
               fit: BoxFit.contain,
             ),
           ),

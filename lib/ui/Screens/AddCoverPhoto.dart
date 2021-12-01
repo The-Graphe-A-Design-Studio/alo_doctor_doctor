@@ -9,6 +9,7 @@ import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/api/profile.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
 import 'package:alo_doctor_doctor/models/doctor.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class AddCoverPhoto extends StatefulWidget {
   @override

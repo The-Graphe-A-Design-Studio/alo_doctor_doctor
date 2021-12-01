@@ -6,6 +6,7 @@ import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 import '../utils/styles.dart';
 
@@ -43,7 +44,7 @@ class NavigationDrawer extends StatelessWidget {
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                    'https://www.alodoctor-care.com/app-backend/public${data.currentUser.profilePicPath}'),
+                                    '$baseUrl${data.currentUser.profilePicPath}'),
                               )),
                         ),
                   title: Text(

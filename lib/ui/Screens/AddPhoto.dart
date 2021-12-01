@@ -8,6 +8,7 @@ import '../../providers/profileProvider.dart';
 import 'package:alo_doctor_doctor/utils/MyConstants.dart';
 import 'package:alo_doctor_doctor/api/profile.dart';
 import 'package:alo_doctor_doctor/utils/Colors.dart';
+import 'package:alo_doctor_doctor/utils/EnvironmentVariables.dart';
 
 class AddPhoto extends StatefulWidget {
   @override
@@ -149,7 +150,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                                             null) &&
                                                     _imageFile == null)
                                                 ? NetworkImage(
-                                                    'https://www.alodoctor-care.com/app-backend/public${userData.userProfileDetails.profilePicPath}')
+                                                    '$baseUrl${userData.userProfileDetails.profilePicPath}')
                                                 : (_imageFile != null)
                                                     ? Image.file(File(
                                                             _imageFile.path))
@@ -165,7 +166,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                             //      (userData.currentUser
                                             //                 .profilePicPath !=
                                             //             null)
-                                            //         ?(NetworkImage('https://www.alodoctor-care.com/app-backend/public${userData.currentUser.profilePicPath}') ):
+                                            //         ?(NetworkImage('$baseUrl${userData.currentUser.profilePicPath}') ):
 
                                             //         FileImage(
                                             //             File(_imageFile.path),
