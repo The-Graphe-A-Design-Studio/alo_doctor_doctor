@@ -4,8 +4,8 @@
 
 // ** Backend Variables **
 
-const String authority = 'developers.thegraphe.com';
-const String commonUnencodedPath = '/alodoctor/public/api';
+// const String authority = 'developers.thegraphe.com';
+// const String commonUnencodedPath = '/alodoctor/public/api';
 
 
 
@@ -15,5 +15,5 @@ const String commonUnencodedPath = '/alodoctor/public/api';
 
 // ** Backend Variables **
 
-// const String authority = 'www.alodoctor-care.com';
-// const String commonUnencodedPath = '/app-backend/public/api';
+const String authority = 'www.alodoctor-care.com';
+const String commonUnencodedPath = '/app-backend/public/api';
