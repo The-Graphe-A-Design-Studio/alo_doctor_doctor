@@ -8,12 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/EnvironmentVariables.dart';
 
 class LoginCheck {
   Future UserLogin(String email, String password) async {
     String dtoken = await FirebaseMessaging.instance.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     print(email);
     var map = new Map<String, dynamic>();
     map['email'] = email;
@@ -31,8 +31,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/login',
-        host: targethost);
+        path: '$commonUnencodedPath/login',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.post(gettokenuri, body: map);
@@ -73,7 +73,6 @@ class LoginCheck {
   Future UserSignUp(String email, String password) async {
     String dtoken = await FirebaseMessaging.instance.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     print(email);
     print(password);
     var map = new Map<String, dynamic>();
@@ -93,8 +92,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/register',
-        host: targethost);
+        path: '$commonUnencodedPath/register',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri, body: map);
     print(response.body);
@@ -114,7 +113,6 @@ class LoginCheck {
     print("subcategory----------------------");
     print(cat);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String pass = "";
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
@@ -134,8 +132,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/doctors_subcategory',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/doctors_subcategory',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri,
         body: map, headers: {HttpHeaders.authorizationHeader: authorization});
@@ -160,7 +158,6 @@ class LoginCheck {
     String dtoken = await FirebaseMessaging.instance.getToken();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     String catid = await LoginCheck().getCatID(category);
@@ -189,8 +186,8 @@ class LoginCheck {
     print(map);
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/update_profile',
-        host: targethost);
+        path: '$commonUnencodedPath/update_profile',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri,
         body: map, headers: {HttpHeaders.authorizationHeader: authorization});
@@ -209,7 +206,6 @@ class LoginCheck {
   // *********************************** Forget password **************
   Future<dynamic> forgetPassword(String email) async {
     try {
-      String targethost = 'www.alodoctor-care.com';
       var map = new Map<String, dynamic>();
       map['email'] = email;
       map['user_type'] = "2";
@@ -217,8 +213,8 @@ class LoginCheck {
       print(map);
       var gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/forgot_password',
-          host: targethost);
+          path: '$commonUnencodedPath/forgot_password',
+          host: authority);
       print(gettokenuri);
       final response = await http.post(gettokenuri, body: map);
       print(response.body);
@@ -242,13 +238,11 @@ class LoginCheck {
   // *********************************** Verify OTP **************
   Future<dynamic> verifyOtp(int otp, int userId) async {
     try {
-      String targethost = 'www.alodoctor-care.com';
-
       print('inside');
       var gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/verify_code/$userId/$otp',
-          host: targethost);
+          path: '$commonUnencodedPath/verify_code/$userId/$otp',
+          host: authority);
       print(gettokenuri);
       final response = await http.put(gettokenuri);
       print(response.body);
@@ -272,7 +266,6 @@ class LoginCheck {
   Future<dynamic> changePassword(
       int userId, int password, int cpassword) async {
     try {
-      String targethost = 'www.alodoctor-care.com';
       var map = new Map<String, dynamic>();
       map['user_id'] = '$userId';
       map["password"] = '$password';
@@ -282,8 +275,8 @@ class LoginCheck {
       print(map);
       var gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/change_password',
-          host: targethost);
+          path: '$commonUnencodedPath/change_password',
+          host: authority);
       print(gettokenuri);
       final response = await http.post(gettokenuri, body: map);
       print(response.body);
@@ -303,7 +296,6 @@ class LoginCheck {
 
   Future SetFee(String fee) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     var map = new Map<String, dynamic>();
@@ -313,8 +305,8 @@ class LoginCheck {
     print(map);
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/consultation_fee',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/consultation_fee',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri,
         body: map, headers: {HttpHeaders.authorizationHeader: authorization});
@@ -329,7 +321,6 @@ class LoginCheck {
 
   Future setFeesPeriod(String period) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     var map = new Map<String, dynamic>();
@@ -339,8 +330,8 @@ class LoginCheck {
     print(map);
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/fees_period',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/fees_period',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri,
         body: map, headers: {HttpHeaders.authorizationHeader: authorization});
@@ -355,7 +346,6 @@ class LoginCheck {
 
   Future CreateSlot(List days, List Timings, int duration) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     Map data = {
@@ -372,8 +362,8 @@ class LoginCheck {
     print('inside');
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/createslot',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/createslot',
+        host: authority);
     print(gettokenuri);
     final response = await http.post(gettokenuri, body: maps, headers: {
       HttpHeaders.authorizationHeader: authorization,
@@ -394,7 +384,6 @@ class LoginCheck {
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
-    String targethost = 'www.alodoctor-care.com';
     // var map = new Map<String, dynamic>();
     //
     // map['file'] = img != null
@@ -409,32 +398,32 @@ class LoginCheck {
     if (index == 0) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/national_id_front/1',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/national_id_front/1',
+          host: authority);
       print(gettokenuri);
     } else if (index == 1) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/national_id_back/2',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/national_id_back/2',
+          host: authority);
       print(gettokenuri);
     } else if (index == 2) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/passport_front/3',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/passport_front/3',
+          host: authority);
       print(gettokenuri);
     } else if (index == 3) {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/passport_back/4',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/passport_back/4',
+          host: authority);
       print(gettokenuri);
     } else {
       gettokenuri = new Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/degree/5',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/degree/5',
+          host: authority);
       print(gettokenuri);
     }
 
@@ -472,7 +461,6 @@ class LoginCheck {
     var stream = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length = await imageFile.length();
-    String targethost = 'www.alodoctor-care.com';
     // var map = new Map<String, dynamic>();
     //
     // map['file'] = img != null
@@ -486,8 +474,8 @@ class LoginCheck {
     var gettokenuri;
     gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/update_profile_pic',
-        host: targethost);
+        path: '$commonUnencodedPath/update_profile_pic',
+        host: authority);
     print(gettokenuri);
 
     var request = new http.MultipartRequest("POST", gettokenuri);
@@ -522,7 +510,6 @@ class LoginCheck {
   //   // print('yo');
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  //   String targethost = 'www.alodoctor-care.com';
   //   // var map = new Map<String, dynamic>();
   //   //
   //   // map['file'] = img != null
@@ -536,8 +523,8 @@ class LoginCheck {
   //   var gettokenuri;
   //   gettokenuri = new Uri(
   //       scheme: 'https',
-  //       path: '/app-backend/public/api/doctor/prescription/' + Id,
-  //       host: targethost);
+  //       path: '$commonUnencodedPath/doctor/prescription/' + Id,
+  //       host: authority);
   //   print(gettokenuri);
 
   //   var request = new http.MultipartRequest("POST", gettokenuri);
@@ -577,7 +564,6 @@ class LoginCheck {
     // print('yo');
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String targethost = 'www.alodoctor-care.com';
     // var map = new Map<String, dynamic>();
     //
     // map['file'] = img != null
@@ -591,8 +577,8 @@ class LoginCheck {
     var gettokenuri;
     gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/prescription/' + Id,
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/prescription/' + Id,
+        host: authority);
     print(gettokenuri);
 
     var request = new http.MultipartRequest("POST", gettokenuri);
@@ -634,7 +620,6 @@ class LoginCheck {
   // ****************************** Delete files from prescription
   Future<dynamic> deletePrescription(int bookingId, String fileName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
 
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
@@ -643,8 +628,8 @@ class LoginCheck {
     var gettokenuri = new Uri(
         scheme: 'https',
         path:
-            '/app-backend/public/api/doctor/prescription/$bookingId/$fileName',
-        host: targethost);
+            '$commonUnencodedPath/doctor/prescription/$bookingId/$fileName',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.delete(gettokenuri,
@@ -662,7 +647,6 @@ class LoginCheck {
 
   Future<dynamic> UserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     var map = new Map<String, dynamic>();
     map['user_type'] = '2';
     map['device_token'] = '';
@@ -672,8 +656,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/details',
-        host: targethost);
+        path: '$commonUnencodedPath/details',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,
@@ -696,7 +680,6 @@ class LoginCheck {
     int index;
     List<String> categories = [];
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
 
     String token = prefs.getString('token');
     print('hey');
@@ -705,8 +688,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/categories',
-        host: targethost);
+        path: '$commonUnencodedPath/categories',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,
@@ -725,7 +708,6 @@ class LoginCheck {
   Future<String> getCatID(String category) async {
     int index;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String subCat;
     String token = prefs.getString('token');
     print('hey');
@@ -734,8 +716,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/categories',
-        host: targethost);
+        path: '$commonUnencodedPath/categories',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,
@@ -759,7 +741,6 @@ class LoginCheck {
   Future<List<String>> getSub(String category) async {
     int index;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     List<String> subCat = [];
     String token = prefs.getString('token');
     print('hey');
@@ -768,8 +749,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/categories',
-        host: targethost);
+        path: '$commonUnencodedPath/categories',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,
@@ -796,7 +777,6 @@ class LoginCheck {
   Future<List<int>> getSubId(String category) async {
     int index;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     List<int> subCat = [];
     String token = prefs.getString('token');
     print('hey');
@@ -805,8 +785,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/categories',
-        host: targethost);
+        path: '$commonUnencodedPath/categories',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,
@@ -832,14 +812,13 @@ class LoginCheck {
 
   Future<dynamic> getMyBookings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/mybookings',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/mybookings',
+        host: authority);
 
     try {
       final response = await http.get(gettokenuri,
@@ -860,14 +839,13 @@ class LoginCheck {
 
   Future<dynamic> getBookingsById(int bookingId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/bookingbyid/$bookingId',
-        host: targethost);
+        path: '$commonUnencodedPath/doctor/bookingbyid/$bookingId',
+        host: authority);
 
     try {
       final response = await http.get(gettokenuri,
@@ -889,7 +867,6 @@ class LoginCheck {
   // ****************************** LogOut
   Future<dynamic> logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
 
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
@@ -897,8 +874,8 @@ class LoginCheck {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/logout',
-        host: targethost);
+        path: '$commonUnencodedPath/logout',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.get(gettokenuri,

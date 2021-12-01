@@ -6,10 +6,9 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/doctor.dart';
+import '../utils/EnvironmentVariables.dart';
 
 class ProfileServer {
-  String authority = 'www.alodoctor-care.com';
-  String commonUnencodedPath = '/app-backend/public/api';
   Details currentUserProfileDetails;
   Future<String> getToken() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -57,12 +56,11 @@ class ProfileServer {
 // ***************************** Post Profile Pic ************************
   Future<String> postProfilepic(File profilePic) async {
     String token = await getToken();
-    String targethost = 'www.alodoctor-care.com';
     String authorization = 'Bearer ' + token;
     var gettokenuri = Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/update_profile_pic',
-        host: targethost);
+        path: '$commonUnencodedPath/update_profile_pic',
+        host: authority);
     var request = new http.MultipartRequest("POST", gettokenuri);
 
     var stream = new http.ByteStream(profilePic.openRead());
@@ -97,12 +95,11 @@ class ProfileServer {
     print(coverPhoto == null);
     String token = await getToken();
     if (coverPhoto != null) {
-      String targethost = 'www.alodoctor-care.com';
       String authorization = 'Bearer ' + token;
       var gettokenuri = Uri(
           scheme: 'https',
-          path: '/app-backend/public/api/doctor/update_banner',
-          host: targethost);
+          path: '$commonUnencodedPath/doctor/update_banner',
+          host: authority);
       var request = new http.MultipartRequest("POST", gettokenuri);
 
       var stream = new http.ByteStream(coverPhoto.openRead());

@@ -8,10 +8,9 @@ import 'package:alo_doctor_doctor/models/doctor.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/EnvironmentVariables.dart';
 
 class AgoraApis {
-  String authority = 'www.alodoctor-care.com';
-  String commonUnencodedPath = '/app-backend/public/api';
 
   Future getAgoraToken(
       String channelName, String pUid, String bookingId) async {
@@ -48,15 +47,14 @@ class AgoraApis {
 
   Future leaveChannel(String channelId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     print('inside');
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/leave_channel/$channelId',
-        host: targethost);
+        path: '$commonUnencodedPath/leave_channel/$channelId',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.put(gettokenuri,
@@ -128,7 +126,7 @@ class AgoraApis {
 
     var gettokenuri = new Uri(
         scheme: 'https',
-        path: '/app-backend/public/api/doctor/allslots',
+        path: '$commonUnencodedPath/doctor/allslots',
         host: authority);
     print(gettokenuri);
     try {
@@ -154,7 +152,6 @@ class AgoraApis {
 
   Future rescheduleBooking(String bookingId, String newSlotId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String targethost = 'www.alodoctor-care.com';
     String token = prefs.getString('token');
     String authorization = 'Bearer ' + token;
     print('inside');
@@ -162,8 +159,8 @@ class AgoraApis {
     var gettokenuri = new Uri(
         scheme: 'https',
         path:
-            '/app-backend/public/api/doctor/reschedule_booking/$bookingId/$newSlotId',
-        host: targethost);
+            '$commonUnencodedPath/doctor/reschedule_booking/$bookingId/$newSlotId',
+        host: authority);
     print(gettokenuri);
 
     final response = await http.put(gettokenuri,

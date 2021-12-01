@@ -217,7 +217,7 @@ class _UploadPrescriptionState extends State<UploadPrescription> {
         appBar: AppBar(
           elevation: 0,
           title: Text(
-            'Uplaod Prescription',
+            'Upload Prescription',
             style: Styles.regularHeading,
           ),
           centerTitle: true,
