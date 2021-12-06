@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/profile.dart';
 import '../models/doctor.dart';
-import '../utils/MyConstants.dart';
 import '../api/login.dart';
 
 class ProfileProvider with ChangeNotifier {
@@ -15,7 +14,7 @@ class ProfileProvider with ChangeNotifier {
 
   Details userProfileDetails = Details();
 
-  void setProfile() async {
+  Future<void> setProfile() async {
     userProfileDetails = await serverHandler.getUserProfile();
     notifyListeners();
     print('in Provider---------$userProfileDetails');
@@ -96,8 +95,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<String> getFee() async {
-    await Future.delayed(Duration(seconds: 1));
-    return Future.value(userProfileDetails.docFees);
+    return userProfileDetails.docFees;
   }
 
   void logOut(context) async {

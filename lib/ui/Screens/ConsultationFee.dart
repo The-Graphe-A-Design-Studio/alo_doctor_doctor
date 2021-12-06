@@ -47,7 +47,7 @@ class _ConsultationFeeState extends State<ConsultationFee> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   saveFeePeriod() async {
@@ -263,7 +263,14 @@ class _ConsultationFeeState extends State<ConsultationFee> {
                               onPrimary: Colors.black, // foreground
                             ),
                             onPressed: () {
-                              submitFee();
+                              if (fee == "" || fee == null) {
+                                Fluttertoast.showToast(
+                                  msg: "Please Enter Fee amount",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                );
+                              } else
+                                submitFee();
                               // Respond to button press
                             },
                             child: Text('Set Fee'),

@@ -39,13 +39,27 @@ class NavigationDrawer extends StatelessWidget {
                       : Container(
                           height: 50,
                           width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    '$baseUrl${data.currentUser.profilePicPath}'),
-                              )),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: AssetImage(
+                                'assets/images/user.png',
+                              ),
+                              image: NetworkImage(
+                                  '$baseUrl${data.currentUser.profilePicPath}'),
+                            ),
+                          ),
+                          // decoration: BoxDecoration(
+                          //   color: Colors.red,
+                          //   shape: BoxShape.circle,
+                          // borderRadius: BorderRadius.circular(100),
+                          // image: DecorationImage(
+                          //   fit: BoxFit.cover,
+                          //   image: NetworkImage(
+                          //       '$baseUrl${data.currentUser.profilePicPath}'),
+                          // ),
+                          // ),
                         ),
                   title: Text(
                     data.currentUser.name == null
