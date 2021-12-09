@@ -116,14 +116,19 @@ class _DashboardTabState extends State<DashboardTab> {
   @override
   void initState() {
     setData();
-    Provider.of<ProfileProvider>(context, listen: false).setProfile();
-    Provider.of<ProfileProvider>(context, listen: false).getFee().then((value) {
-      print(value);
-      if (value == null) {
-        setState(() {
-          isFeeEmpty = true;
-        });
-      }
+    Provider.of<ProfileProvider>(context, listen: false)
+        .setProfile()
+        .then((value) {
+      Provider.of<ProfileProvider>(context, listen: false)
+          .getFee()
+          .then((value) {
+        print(value);
+        if (value == null) {
+          setState(() {
+            isFeeEmpty = true;
+          });
+        }
+      });
     });
 
     super.initState();
@@ -155,7 +160,9 @@ class _DashboardTabState extends State<DashboardTab> {
                     Navigator.pushNamed(
                       context,
                       consultFee,
-                    );
+                    ).then((value) => setState(() {
+                          isFeeEmpty = false;
+                        }));
                   },
                 ),
               ],
@@ -165,6 +172,7 @@ class _DashboardTabState extends State<DashboardTab> {
   @override
   Widget build(BuildContext context) {
     if (isFeeEmpty) Future.delayed(Duration.zero, () => setFeePop(context));
+    print('Fee -- $isFeeEmpty');
     return RefreshIndicator(
       backgroundColor: Colors.grey.shade800,
       color: Colors.white,
