@@ -95,7 +95,7 @@ class NavigationDrawer extends StatelessWidget {
             // ListTile(
             //   leading: Image(
             //     image: AssetImage(
-            //       'assets/images/alo_logo.png',
+            //       'assets/images/alo-logo.jpg',
             //     ),
             //     height: 50.0,
             //     width: 50.0,

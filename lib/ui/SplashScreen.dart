@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Hero(
               tag: "WhiteLogo",
               child: Image(
-                image: AssetImage('assets/images/alo_logo.png'),
+                image: AssetImage('assets/images/alo-logo.jpg'),
                 height: 200.0,
                 width: 200.0,
               ),

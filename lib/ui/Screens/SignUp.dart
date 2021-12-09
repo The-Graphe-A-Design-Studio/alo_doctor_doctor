@@ -104,8 +104,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     Hero(
                       tag: "Logo",
                       child: Image(
-                        image: AssetImage('assets/images/alo_logo.png'),
-                        height: MediaQuery.of(context).size.height * 0.3,
+                        image: AssetImage('assets/images/alo-logo.jpg'),
+                        height: MediaQuery.of(context).size.height * 0.25,
                         width: MediaQuery.of(context).size.width * 0.58,
                       ),
                     ),

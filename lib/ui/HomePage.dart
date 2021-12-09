@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<ProfileProvider>(context, listen: false).setProfile();
+    // Provider.of<ProfileProvider>(context, listen: false).setProfile();
   }
 
   @override

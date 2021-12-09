@@ -76,6 +76,7 @@ class _DashboardTabState extends State<DashboardTab> {
   }
 
   bool isFeeEmpty = false;
+  bool isPopUpOpen = false;
 
   Future<void> setData() async {
     Provider.of<ProfileProvider>(context, listen: false).setProfile();
@@ -124,6 +125,7 @@ class _DashboardTabState extends State<DashboardTab> {
           .then((value) {
         print(value);
         if (value == null) {
+          // isFeeEmpty = true;
           setState(() {
             isFeeEmpty = true;
           });
@@ -135,6 +137,9 @@ class _DashboardTabState extends State<DashboardTab> {
   }
 
   void setFeePop(BuildContext context) {
+    setState(() {
+      isPopUpOpen = true;
+    });
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -153,15 +158,16 @@ class _DashboardTabState extends State<DashboardTab> {
                 TextButton(
                   child: Text("OK"),
                   onPressed: () {
-                    setState(() {
-                      isFeeEmpty = false;
-                    });
+                    // setState(() {
+                    //   isFeeEmpty = false;
+                    // });
                     Navigator.of(context).pop();
                     Navigator.pushNamed(
                       context,
                       consultFee,
                     ).then((value) => setState(() {
                           isFeeEmpty = false;
+                          isPopUpOpen = false;
                         }));
                   },
                 ),
@@ -171,7 +177,8 @@ class _DashboardTabState extends State<DashboardTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (isFeeEmpty) Future.delayed(Duration.zero, () => setFeePop(context));
+    if (isFeeEmpty && !isPopUpOpen)
+      Future.delayed(Duration.zero, () => setFeePop(context));
     print('Fee -- $isFeeEmpty');
     return RefreshIndicator(
       backgroundColor: Colors.grey.shade800,

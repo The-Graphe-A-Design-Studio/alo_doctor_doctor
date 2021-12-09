@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                 Hero(
                   tag: "Logo",
                   child: Image(
-                    image: AssetImage('assets/images/alo_logo.png'),
+                    image: AssetImage('assets/images/alo-logo.jpg'),
                     height: 200.0,
                     width: 200.0,
                   ),
@@ -254,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
               Hero(
                 tag: "Logo",
                 child: Image(
-                  image: AssetImage('assets/images/alo_logo.png'),
+                  image: AssetImage('assets/images/alo-logo.jpg'),
                   height: 80.0,
                   width: 80.0,
                 ),

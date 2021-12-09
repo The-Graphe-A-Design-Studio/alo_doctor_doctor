@@ -114,7 +114,7 @@ class _SignInPageState extends State<SignInPage> {
                   Hero(
                     tag: "Logo",
                     child: Image(
-                      image: AssetImage('assets/images/alo_logo.png'),
+                      image: AssetImage('assets/images/alo-logo.jpg'),
                       height: MediaQuery.of(context).size.height * 0.35,
                       width: MediaQuery.of(context).size.width * 0.58,
                     ),

@@ -170,7 +170,7 @@ class _PasswordResetState extends State<PasswordReset> {
                 Hero(
                   tag: "Logo",
                   child: Image(
-                    image: AssetImage('assets/images/alo_logo.png'),
+                    image: AssetImage('assets/images/alo-logo.jpg'),
                     height: 100,
                     width: 100,
                   ),
