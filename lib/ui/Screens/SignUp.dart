@@ -113,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       decoration: InputDecoration(labelText: 'E-mail'),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      validator: (value) => FormValidator.validateEmail(value),
+                      // validator: (value) => FormValidator.validateEmail(value),
                       onChanged: (value) {
                         registerData['email'] = value;
                       },

@@ -123,7 +123,7 @@ class _SignInPageState extends State<SignInPage> {
                     decoration: InputDecoration(labelText: 'E-mail'),
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    validator: (value) => FormValidator.validateEmail(value),
+                    // validator: (value) => FormValidator.validateEmail(value),
                     onChanged: (value) {
                       _authData['email'] = value;
                     },

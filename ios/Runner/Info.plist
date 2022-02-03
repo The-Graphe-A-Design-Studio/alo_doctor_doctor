@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>Alo Doctor - for Doctor</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -20,8 +22,32 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Not using Apple Music</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>Not using Calendars</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Using Camera for video Calling</string>
+    <key>NSContactsUsageDescription</key>
+    <string>Not using Contacts</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Not using Location</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Not using Location</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Not using Location</string>
+    <key>NSMotionUsageDescription</key>
+    <string>Not using motion</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Store order invoice</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Store order invoice</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Not using Speech Recognition</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
